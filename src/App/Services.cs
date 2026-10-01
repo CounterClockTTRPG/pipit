@@ -117,9 +117,12 @@ public partial class Services : Node
         return true;
     }
 
-    public XpAward AwardXp(IEnumerable<XpLine> lines)
+    /// <summary>Awards XP and unlocks any achievements earned by <paramref name="e"/> (or by streaks and levels).</summary>
+    public XpAward AwardXp(IEnumerable<XpLine> lines, AchievementEvent? e = null)
     {
-        var award = Progress.Award(lines, DateTime.Now);
+        var chapters = Songs.Songs.GroupBy(s => s.Chapter)
+            .ToDictionary(g => g.Key, g => (IReadOnlyList<string>)g.Select(s => s.Id).ToList());
+        var award = Progress.Award(lines, DateTime.Now, e ?? new AchievementEvent(), chapters, Instrument.Kind.ToString());
         JsonStore.Save(ProgressPath, Progress);
         XpAwarded?.Invoke(award);
         return award;

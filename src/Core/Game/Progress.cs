@@ -17,6 +17,8 @@ public sealed record XpLine(string Reason, int Amount);
 
 public sealed record XpAward(IReadOnlyList<XpLine> Lines, int LevelBefore, int LevelAfter)
 {
+    public IReadOnlyList<Achievement> Unlocked { get; init; } = Array.Empty<Achievement>();
+
     public int Total => Lines.Sum(l => l.Amount);
     public bool LevelledUp => LevelAfter > LevelBefore;
 }
@@ -34,6 +36,9 @@ public sealed class PlayerProgress
     public int StreakDays { get; set; }
     public int BestStreak { get; set; }
     public double PracticeMinutes { get; set; }
+    public int TrainerNotes { get; set; }
+    /// <summary>Unlocked achievements by id, with when.</summary>
+    public Dictionary<string, DateTime> Achievements { get; set; } = new();
     /// <summary>Keyed by "songId|recorderKind".</summary>
     public Dictionary<string, SongRecord> Songs { get; set; } = new();
 
@@ -47,6 +52,27 @@ public sealed class PlayerProgress
         if (!Songs.TryGetValue(key, out var record))
             Songs[key] = record = new SongRecord();
         return record;
+    }
+
+    /// <summary>
+    /// Applies an award and unlocks any achievements it earns (their XP is added too). The check
+    /// runs after the XP so that streaks and levels reached by this award count.
+    /// </summary>
+    public XpAward Award(IEnumerable<XpLine> lines, DateTime now, AchievementEvent e, IReadOnlyDictionary<int, IReadOnlyList<string>> songsByChapter, string recorderKind)
+    {
+        var award = Award(lines, now);
+        var all = award.Lines.ToList();
+        var unlocked = new List<Achievement>();
+        // Unlocking can raise the level, which can unlock "level-5": repeat until nothing new.
+        for (var found = Game.Achievements.Check(this, e, songsByChapter, recorderKind); found.Count > 0; found = Game.Achievements.Check(this, e, songsByChapter, recorderKind))
+            foreach (var a in found)
+            {
+                Achievements[a.Id] = now;
+                Xp += a.Xp;
+                all.Add(new XpLine("Achievement: " + a.Title, a.Xp));
+                unlocked.Add(a);
+            }
+        return new XpAward(all, award.LevelBefore, Level) { Unlocked = unlocked };
     }
 
     /// <summary>Applies an award: adds the daily/streak bonus when this is the day's first, then the XP.</summary>

@@ -42,6 +42,7 @@ public partial class HomeScreen : Screen
         Tile("Fingering trainer", "Show me a note, I play it", () => new TrainerScreen());
         Tile("Calibrate", "Teach Pipit your room and recorder", () => new CalibrationScreen());
         Tile("Studio", "Record and listen back", () => new StudioScreen());
+        Tile("Achievements", "What you have unlocked", () => new AchievementsScreen());
         Tile("Settings", "Microphone, recorder, names", () => new SettingsScreen());
 
         var center = new CenterContainer();

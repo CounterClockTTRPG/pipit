@@ -70,7 +70,10 @@ public partial class TrainerScreen : Screen
     {
         S.Audio.FrameReady -= OnFrame;
         if (_correct > _awarded)
+        {
+            S.Progress.TrainerNotes += _correct - _awarded;
             S.AwardXp(Pipit.Core.Game.XpRules.Trainer(_correct - _awarded));
+        }
         _awarded = _correct;
     }
 

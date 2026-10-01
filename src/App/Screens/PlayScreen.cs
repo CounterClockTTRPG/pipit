@@ -372,7 +372,12 @@ public partial class PlayScreen : Screen
             lines = XpRules.CasualRun(record, casual.Steps.Count, casual.Steps.Count(s => s.FirstTry), casual.Accuracy, DateTime.Now);
         }
         lines.Add(XpRules.Practice(minutes));
-        var award = S.AwardXp(lines);
+        S.Progress.PracticeMinutes += minutes;
+        var award = S.AwardXp(lines, new AchievementEvent
+        {
+            SongId = _song.Id, Casual = _mode == Mode.Casual, Run = _mode == Mode.Rhythm ? _performance : null,
+            CasualAccuracy = _casual?.Accuracy ?? 0, TempoFactor = _tempoFactor,
+        });
         ShowResults(award);
         SetState(State.Results);
         _feedback.Text = "";
@@ -419,9 +424,63 @@ public partial class PlayScreen : Screen
         var bar = new ProgressBar { MinValue = 0, MaxValue = 1, Value = Levels.Fraction(S.Progress.Xp), ShowPercentage = false, CustomMinimumSize = new Vector2(220, 14) };
         xp.AddChild(Ui.HBox(8, Ui.Label(award.LevelledUp ? string.Format(Ui.T("Level up! Level {0}"), level) : string.Format(Ui.T("Level {0}"), level), 18, award.LevelledUp ? PipitTheme.Accent : PipitTheme.Ink), bar));
 
+        foreach (var a in award.Unlocked)
+            summary.AddChild(Ui.Label($"{a.Icon}  {Ui.T("Achievement unlocked")}: {Ui.T(a.Title)}  (+{a.Xp} XP)", 18, PipitTheme.Accent));
+
+        var analysis = _mode == Mode.Rhythm && _performance is { } graded ? AnalysisPanel(graded) : null;
+        var analyse = Ui.Button("Show analysis", () => { if (analysis is not null) analysis.Visible = !analysis.Visible; }, 16);
+        analyse.Visible = analysis is not null;
+
         var replay = Ui.Button("♪ Listen to your take", ToggleReplay, 16);
         replay.Disabled = _takeSamples is not { Length: > 0 } || _mode == Mode.Casual;
-        _resultsBox.AddChild(Ui.HBox(30, Ui.Expand(summary), xp, Ui.VBox(8, replay, Ui.Button("Songs", Main.Instance.Back, 16))));
+        _resultsBox.AddChild(Ui.HBox(30, Ui.Expand(summary), xp, Ui.VBox(8, analyse, replay, Ui.Button("Songs", Main.Instance.Back, 16))));
+        if (analysis is not null)
+            _resultsBox.AddChild(analysis);
+    }
+
+    /// <summary>"Going well" and "To work on", from <see cref="RunAnalysis"/>; hidden until asked for.</summary>
+    private Control AnalysisPanel(GradedRun run)
+    {
+        var findings = RunAnalysis.Analyse(run);
+        Control Column(string title, Color color, IEnumerable<Finding> items)
+        {
+            var box = Ui.VBox(4, Ui.Label(title, 20, color));
+            var any = false;
+            foreach (var f in items)
+            {
+                box.AddChild(Ui.Text("• " + Describe(f), 16, PipitTheme.Ink));
+                any = true;
+            }
+            if (!any)
+                box.AddChild(Ui.Text(Ui.T("Nothing stood out."), 16, PipitTheme.InkSoft));
+            return Ui.Expand(box);
+        }
+        var panel = Ui.HBox(30, Column(Ui.T("Going well"), PipitTheme.Good, findings.Where(f => f.Positive)),
+            Column(Ui.T("To work on"), PipitTheme.Bad, findings.Where(f => !f.Positive)));
+        panel.Visible = false;
+        return panel;
+    }
+
+    private string Describe(Finding f)
+    {
+        var name = f.SoundingMidi is { } m ? S.NoteName(S.Recorder.SoundingToWritten(m)) : "";
+        return f.Kind switch
+        {
+            FindingKind.RhythmSteady => Ui.T("Your rhythm is steady."),
+            FindingKind.RhythmEarly => string.Format(Ui.T("You rush a little: notes come about {0:0} ms early. Listen for the click and wait for it."), f.Value),
+            FindingKind.RhythmLate => string.Format(Ui.T("You drag a little: notes come about {0:0} ms late. Get your fingers to the next note a bit sooner."), f.Value),
+            FindingKind.RhythmUneven => string.Format(Ui.T("Your rhythm is a bit uneven (notes vary by about ±{0:0} ms). Try a slower speed with the metronome."), f.Value),
+            FindingKind.LongNotesHeld => Ui.T("You hold the long notes for their full length."),
+            FindingKind.LongNotesShort => string.Format(Ui.T("You let long notes go too early (about {0:0}% of their length). Keep blowing until the next note."), f.Value * 100),
+            FindingKind.NotesShort => string.Format(Ui.T("Many notes are short ({0} of {1}). Let each note last until the next one starts."), f.Count, f.Total),
+            FindingKind.NoteInTune => string.Format(Ui.T("Your {0} is nicely in tune."), name),
+            FindingKind.NoteHigh => string.Format(Ui.T("Your {0} is a bit high (+{1:0} cents): blow it more gently."), name, f.Value),
+            FindingKind.NoteLow => string.Format(Ui.T("Your {0} is a bit low ({1:0} cents): blow it a little more firmly, and check the holes are sealed."), name, f.Value),
+            FindingKind.NoteSure => string.Format(Ui.T("You found {0} every time."), name),
+            FindingKind.NoteHard => string.Format(Ui.T("{0} was hard: {1} of {2} missed or wrong. Practise it in the fingering trainer."), name, f.Count, f.Total),
+            FindingKind.RepeatedNotesMerged => Ui.T("Repeated notes ran together. Tongue each one with a fresh \"du\"."),
+            _ => f.Kind.ToString(),
+        };
     }
 
     /// <summary>Keeps the last 20 run recordings next to the Studio's takes.</summary>
