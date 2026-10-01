@@ -26,7 +26,7 @@ public sealed record NoteJudgement(ExpectedNote Expected, NoteResult Result, Det
             * (InTune ? 1 : 0.8) * (HeldLongEnough ? 1 : 0.8);
 }
 
-public sealed record Performance(IReadOnlyList<NoteJudgement> Notes, int Extras, double TempoFactor)
+public sealed record GradedRun(IReadOnlyList<NoteJudgement> Notes, int Extras, double TempoFactor)
 {
     public int Hits => Notes.Count(n => n.Result == NoteResult.Hit);
 
@@ -54,7 +54,7 @@ public sealed record Performance(IReadOnlyList<NoteJudgement> Notes, int Extras,
 /// </summary>
 public static class Grader
 {
-    public static Performance Grade(IReadOnlyList<ExpectedNote> expected, IReadOnlyList<DetectedNote> played, Tolerances tol,
+    public static GradedRun Grade(IReadOnlyList<ExpectedNote> expected, IReadOnlyList<DetectedNote> played, Tolerances tol,
         double latencySeconds = 0, double tuningOffsetCents = 0, double tempoFactor = 1, double? until = null)
     {
         var used = new bool[played.Count];
@@ -99,6 +99,6 @@ public static class Grader
         var end = judgements.Count == 0 ? double.NegativeInfinity : judgements.Max(j => j.Expected.End) + latencySeconds;
         var extras = Enumerable.Range(0, played.Count)
             .Count(i => !used[i] && played[i].Onset <= end && played[i].Duration >= 0.08);
-        return new Performance(judgements, extras, tempoFactor);
+        return new GradedRun(judgements, extras, tempoFactor);
     }
 }

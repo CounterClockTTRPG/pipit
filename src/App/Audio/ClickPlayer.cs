@@ -44,6 +44,13 @@ public partial class ClickPlayer : Node
         _pending.Sort((a, b) => a.Time.CompareTo(b.Time));
     }
 
+    /// <summary>Clicks at the given capture times, each with its own accent (bar downbeats).</summary>
+    public void Schedule(IEnumerable<(double Time, bool Accent)> clicks)
+    {
+        _pending.AddRange(clicks);
+        _pending.Sort((a, b) => a.Time.CompareTo(b.Time));
+    }
+
     public void Stop()
     {
         _pending.Clear();

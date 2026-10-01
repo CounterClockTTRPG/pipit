@@ -5,6 +5,7 @@ using System.Linq;
 using Godot;
 using Pipit.App.Audio;
 using Pipit.Core.Analysis;
+using Pipit.Core.Game;
 using Pipit.Core.Instruments;
 using Pipit.Core.Music;
 using Pipit.Core.Settings;
@@ -28,6 +29,15 @@ public partial class Services : Node
     public static string UserDir => ProjectSettings.GlobalizePath("user://");
     public static string SettingsPath => Path.Combine(UserDir, "settings.json");
     public static string RecordingsDir => Path.Combine(UserDir, "recordings");
+    public static string RunsDir => Path.Combine(RecordingsDir, "runs");
+    public static string ProgressPath => Path.Combine(UserDir, "progress.json");
+
+    public SongLibrary Songs { get; private set; } = null!;
+    /// <summary>XP, levels and song records (one player until M4 adds profiles).</summary>
+    public PlayerProgress Progress { get; private set; } = new();
+
+    /// <summary>Raised after XP is awarded, with the award (for toasts and the home screen).</summary>
+    public event Action<XpAward>? XpAwarded;
 
     /// <summary>The recorder currently being played.</summary>
     public InstrumentProfile Instrument => Settings.ActiveInstrument;
@@ -50,6 +60,10 @@ public partial class Services : Node
         AddChild(Clicks);
         Audio.SelectDevice(Settings.InputDevice);
         ApplyInstrument();
+        Songs = SongLibrary.Load(name => FileAccess.GetFileAsString("res://data/songs/" + name));
+        foreach (var error in Songs.Errors)
+            GD.PushError("Song: " + error);
+        Progress = JsonStore.LoadOrDefault<PlayerProgress>(ProgressPath);
     }
 
     public FingeringChart ChartFor(FingeringSystem system)
@@ -102,6 +116,18 @@ public partial class Services : Node
         Save();
         return true;
     }
+
+    public XpAward AwardXp(IEnumerable<XpLine> lines)
+    {
+        var award = Progress.Award(lines, DateTime.Now);
+        JsonStore.Save(ProgressPath, Progress);
+        XpAwarded?.Invoke(award);
+        return award;
+    }
+
+    public SongRecord SongRecord(string songId) => Progress.Song(songId, Instrument.Kind.ToString());
+
+    public void SaveProgress() => JsonStore.Save(ProgressPath, Progress);
 
     public double? DeviceGate => Settings.GateRmsByDevice.TryGetValue(Audio.CurrentDevice, out var g) ? g : null;
     public double? DeviceLatencyMs => Settings.LatencyMsByDevice.TryGetValue(Audio.CurrentDevice, out var l) ? l : null;

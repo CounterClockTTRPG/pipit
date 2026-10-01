@@ -66,7 +66,15 @@ public partial class TrainerScreen : Screen
         Restart();
     }
 
-    public override void Exit() => S.Audio.FrameReady -= OnFrame;
+    public override void Exit()
+    {
+        S.Audio.FrameReady -= OnFrame;
+        if (_correct > _awarded)
+            S.AwardXp(Pipit.Core.Game.XpRules.Trainer(_correct - _awarded));
+        _awarded = _correct;
+    }
+
+    private int _awarded;
 
     private void Restart()
     {

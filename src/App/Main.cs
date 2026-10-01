@@ -88,6 +88,22 @@ public partial class Main : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-tuning.png"));
         Back();
+        // Songs: the library, a song before starting, and during "Listen".
+        Show(new LibraryScreen());
+        for (var i = 0; i < 20; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library.png"));
+        Back();
+        var play = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
+        Show(play);
+        for (var i = 0; i < 20; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "play-ready.png"));
+        play.DebugListen();
+        await ToSignal(GetTree().CreateTimer(3.2), SceneTreeTimer.SignalName.Timeout);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "play-listen.png"));
+        Back();
+
         // The Studio conductor during a held note and during the rest after it.
         var studio = new StudioScreen();
         Show(studio);
@@ -184,7 +200,7 @@ public partial class Main : Control
 
     private void StartSmoke()
     {
-        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen() })
+        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]) })
             _smokeScreens.Enqueue(make);
         _smokeFrame = 0;
     }

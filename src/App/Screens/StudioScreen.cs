@@ -23,6 +23,8 @@ public partial class StudioScreen : Screen
     private readonly Label _summary;
     private readonly Button _record, _guided, _play, _delete, _star;
     private readonly OptionButton _sessions;
+    private readonly HSlider _speed = new() { MinValue = 50, MaxValue = 120, Step = 5, Value = 100, CustomMinimumSize = new Vector2(150, 0) };
+    private readonly Label _speedLabel = new() { Text = "100%" };
     private readonly LevelMeter _meter = new();
     private readonly AudioStreamPlayer _player = new();
 
@@ -57,7 +59,7 @@ public partial class StudioScreen : Screen
         var left = Ui.MinSize(Ui.VBox(10,
             _record,
             Ui.Text("Guided takes record what Pipit asks for, so they can check recognition and become test recordings.", 14, PipitTheme.InkSoft),
-            _sessions, _guided,
+            _sessions, Ui.HBox(8, Ui.Label("Speed", 16), Ui.Expand(_speed), _speedLabel), _guided,
             Ui.Label("Takes", 20, PipitTheme.Accent), _takes,
             Ui.HBox(8, _play, _star, _delete), openFolder,
             Ui.HBox(8, Ui.Label("Input", 14, PipitTheme.InkSoft), Ui.Expand(_meter))), 340, 0);
@@ -68,6 +70,7 @@ public partial class StudioScreen : Screen
         _beat = Ui.Label("", 22, PipitTheme.Accent, HorizontalAlignment.Center);
         _conductor = Ui.Card(Ui.HBox(24, Ui.Expand(Ui.VBox(6, _beat, _now, _next, _beatDots)), Ui.MinSize(_diagram, 200, 300)));
         _conductor.Visible = false;
+        _speed.ValueChanged += v => _speedLabel.Text = $"{v:0}%";
 
         var right = Ui.VBox(12, _conductor, Ui.Expand(_view, true, true), _summary);
         AddChild(Ui.HBox(24, left, Ui.Expand(right, true, true)));
@@ -142,6 +145,7 @@ public partial class StudioScreen : Screen
     private void StartGuided()
     {
         var session = GuidedSessions.All[_sessions.Selected];
+        session = session with { Tempo = session.Tempo * _speed.Value / 100 };
         _session = session;
         var lead = 0.5;
         var now = S.Audio.Now;
@@ -359,6 +363,7 @@ public partial class StudioScreen : Screen
         _record.Disabled = _session is not null;
         _guided.Disabled = recording;
         _sessions.Disabled = recording;
+        _speed.Editable = !recording;
         _play.Disabled = recording || _selected is null;
         _delete.Disabled = recording || _selected is null;
         _star.Disabled = recording || _selected is null;
