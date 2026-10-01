@@ -1,0 +1,17 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Pipit</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Core and the tests are their own projects; the Godot SDK would otherwise glob them in. -->
+    <Compile Remove="src/Core/**" />
+    <Compile Remove="tests/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="src/Core/Pipit.Core.csproj" />
+  </ItemGroup>
+</Project>
