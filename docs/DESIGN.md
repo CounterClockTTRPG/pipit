@@ -24,7 +24,7 @@ Status: **draft for review**. Nothing is built yet. Section 16 lists the open qu
 | Fingering | Baroque **and** German, chosen per instrument profile |
 | Instruments | Several **instrument profiles** per user (e.g. "Mollenhauer Canta, baroque") |
 | Note names | Fixed Do (Do Ré Mi Fa Sol La Si, Do = C), letter names optional |
-| UI language | Switchable EN / NL / FR |
+| UI language | Switchable EN / NL / FR for the interface; **lessons in EN and NL** (French falls back to English) |
 | Platform | Windows desktop, developed from WSL like `../godot/godot` |
 | Microphone | Device picker with a live level meter; the Windows default input is preselected |
 | Recording | In-app WAV recording: free takes, guided test-fixture sessions, replay of play-along runs |
@@ -382,7 +382,7 @@ If the speakers play while the mic listens, the grader can hear the app instead 
 Pitch detection is built for one sound at a time; a mix of two recorder-like tones
 confuses it. The plan uses several layers:
 
-1. **Headphones mode** (recommended, and selected automatically when the leak test
+1. **Headphones mode** (the default for accompaniment, confirmed fine by the user; selected automatically when the leak test
    passes): with headphones on, almost nothing leaks into the mic, and every
    accompaniment feature is available.
 2. **Speaker mode**, where the leak test decides what is allowed:
@@ -396,7 +396,7 @@ confuses it. The plan uses several layers:
      what you should be playing, is ignored.
    - **Volume ducking.** Accompaniment volume is capped at the level the leak test
      found safe.
-3. **Echo cancellation (stretch goal).** The app has the exact signal it sent to the
+3. **Echo cancellation (dropped for now; headphones are acceptable).** The app has the exact signal it sent to the
    speakers, so an adaptive filter (NLMS) could subtract it from the mic signal. This
    only comes in if layers 1 and 2 are not enough in practice.
 
@@ -429,7 +429,8 @@ In highway mode the app's parts are shown as faint ghost lanes, or hidden.
 ### 11.1 Format
 Each lesson is a folder `data/lessons/<id>/` with `lesson.json` (id, chapter, the
 notes it introduces, its prerequisites) and one page file per language (`en.md`,
-`nl.md`, `fr.md`). A missing language falls back to English. Pages are written in a
+`nl.md`, and optionally `fr.md`). Lessons are written in English and Dutch; a missing
+language falls back to English. Pages are written in a
 small markdown subset (headings, paragraphs, bold, italics, lists) plus **blocks**
 that become live controls:
 
@@ -540,7 +541,7 @@ Each profile has a **player style**: *Young player* or *Standard*.
 | | Young player | Standard |
 |---|---|---|
 | Pip | always present, talks more | appears for tips and celebrations |
-| Text | short sentences, larger font, lesson text read aloud where a recording exists | normal |
+| Text | short sentences and a larger font, written for readers aged 9 and up (no read-aloud needed) | normal |
 | Feedback | arrows and faces ("a bit high ↑"), no cents or milliseconds | numbers available |
 | Difficulty default | Relaxed | Normal |
 | Note names | Do-names always shown above notes | toggleable |
@@ -602,18 +603,13 @@ Each milestone ends with something you can run and try with your own recorder.
 
 ---
 
-## 16. Open questions
+## 16. Answers to the open questions
 
-1. **Test recordings.** In M1, will you run the guided fixture sessions with your
-   soprano (about 10 minutes)? Recordings from your tenor and alto as well would be
-   valuable.
-2. **Microphone.** Which microphones do you have (built-in, USB, headset)? The more
-   variety in the fixtures, the more robust the noise gate and latency defaults.
-3. **Headphones.** Are you happy to use headphones for accompaniment levels? Otherwise
-   speaker mode carries more weight and echo cancellation may move up the list.
-4. **Lesson languages.** I'll write the lessons in English first. Should I also
-   translate them into NL and FR, or would you rather review or write those yourself?
-5. **Young players.** Roughly what age are the youngest players? From about 6–7, text
-   needs to be read aloud or kept minimal, which affects lesson design.
-6. **Pip's look.** Should Pip look like a real meadow pipit (brown, streaky) or be a
-   cartoon bird in brighter colours? I'd suggest a cartoon based on the real bird.
+| Question | Answer | Consequence |
+|---|---|---|
+| Test recordings | Yes, via the guided sessions | M1 ends with fixtures from the user's soprano (tenor and alto when available) |
+| Microphones | Built-in laptop mic only (on this PC) | Tune for a built-in mic. Windows "audio enhancements" (noise suppression, automatic gain) can smear note onsets and cut quiet notes, so the mic-check screen detects this and suggests switching them off |
+| Headphones | Fine for accompaniment | Headphones mode is the default for accompaniment; echo cancellation is dropped |
+| Lesson languages | EN and NL | Each lesson is written in both; the French UI falls back to English lessons |
+| Youngest player | 9 | The Young player style keeps text short and simple, without read-aloud |
+| Pip's look | Cartoonish | A friendly cartoon bird with features of the real pipit (streaky chest, slim beak) in warm, bright colours |
