@@ -88,6 +88,20 @@ public partial class Main : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-tuning.png"));
         Back();
+        // A sheet of characteristic fingerings: all covered, forked Fa, Sol, a half hole, thumb off, pinched thumb.
+        var sheet = new HBoxContainer();
+        sheet.SetAnchorsPreset(LayoutPreset.FullRect);
+        AddChild(sheet);
+        foreach (var step in new[] { 0, 3, 5, 7, 14, 16 })
+        {
+            var d = new Views.FingeringDiagram { Fingering = Services.Instance.Chart.Primary(step), CustomMinimumSize = new Vector2(210, 520) };
+            var label = Ui.Label(Services.Instance.NoteName(Services.Instance.Recorder.BottomWrittenMidi + step), 28, PipitTheme.Ink, HorizontalAlignment.Center);
+            sheet.AddChild(Ui.VBox(4, label, d));
+        }
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "fingerings.png"));
+        sheet.QueueFree();
         GD.Print("SHOTS " + dir);
         GetTree().Quit();
     }

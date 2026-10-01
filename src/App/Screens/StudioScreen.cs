@@ -66,7 +66,7 @@ public partial class StudioScreen : Screen
         _now = Ui.Label("", 84, PipitTheme.Ink, HorizontalAlignment.Center);
         _next = Ui.Label("", 22, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _beat = Ui.Label("", 22, PipitTheme.Accent, HorizontalAlignment.Center);
-        _conductor = Ui.Card(Ui.HBox(24, Ui.Expand(Ui.VBox(6, _beat, _now, _next, _beatDots)), Ui.MinSize(_diagram, 120, 300)));
+        _conductor = Ui.Card(Ui.HBox(24, Ui.Expand(Ui.VBox(6, _beat, _now, _next, _beatDots)), Ui.MinSize(_diagram, 250, 300)));
         _conductor.Visible = false;
 
         var right = Ui.VBox(12, _conductor, Ui.Expand(_view, true, true), _summary);
