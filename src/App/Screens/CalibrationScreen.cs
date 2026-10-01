@@ -72,7 +72,10 @@ public partial class CalibrationScreen : Screen
     private void Go(Step step)
     {
         _step = step;
-        _frames.Clear();
+        // Only the listening steps start a fresh collection: the result steps still need the
+        // frames just collected (clearing here made every latency result "0 notes heard").
+        if (step is Step.Silence or Step.Latency)
+            _frames.Clear();
         _progress.Value = 0;
         _progress.Visible = step is Step.Silence;
         _beats.Stop();
