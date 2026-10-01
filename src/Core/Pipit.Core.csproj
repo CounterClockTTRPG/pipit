@@ -7,4 +7,8 @@
     <RootNamespace>Pipit.Core</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- SoundFont synthesizer in pure C# (MIT): natural recorder voice and accompaniment. -->
+    <PackageReference Include="MeltySynth" Version="2.4.1" />
+  </ItemGroup>
 </Project>

@@ -53,19 +53,42 @@ public static class SongParser
         var pickup = root.TryGetProperty("pickup", out var pk) ? ParseDuration(pk.GetString() ?? "", id) : 0;
         if (!root.TryGetProperty("parts", out var partsJson) || partsJson.GetArrayLength() == 0)
             throw new SongFormatException($"{id}: no parts");
-
-        var parts = new List<SongPart>();
-        foreach (var p in partsJson.EnumerateArray())
+        SongPart ReadPart(JsonElement p, string defaultId, bool accompaniment)
         {
-            var partId = p.TryGetProperty("id", out var pid) ? pid.GetString() ?? "melody" : "melody";
+            var partId = p.TryGetProperty("id", out var pid) ? pid.GetString() ?? defaultId : defaultId;
             var context = $"{id}/{partId}";
             var music = p.GetProperty("music").GetString() ?? throw new SongFormatException($"{context}: no music");
-            var (bars, performance) = ParseMusic(music, time, pickup, context);
-            parts.Add(new SongPart(partId,
-                p.TryGetProperty("name", out var n) ? n.GetString() ?? partId : partId,
-                p.TryGetProperty("instrument", out var ins) ? ins.GetString() ?? "soprano" : "soprano",
-                bars, performance));
+            // Accompaniment may start with rests and need not follow the pickup bar rule.
+            var (bars, performance) = ParseMusic(music, time, accompaniment ? 0 : pickup, context, validate: !accompaniment);
+            if (accompaniment && pickup > 0)
+                performance = performance.Select(n => n with { StartBeat = n.StartBeat - pickup }).ToList();
+            var instrument = p.TryGetProperty("instrument", out var ins) ? ins.GetString() ?? "soprano" : "soprano";
+            return new SongPart(partId, p.TryGetProperty("name", out var n) ? n.GetString() ?? partId : partId, accompaniment ? "accompaniment" : instrument, bars, performance)
+            {
+                Sound = p.TryGetProperty("sound", out var snd) ? snd.GetString() ?? "recorder" : "recorder",
+                SoundingOffset = accompaniment ? 0 : instrument.Equals("soprano", StringComparison.OrdinalIgnoreCase) ? 12 : 0,
+            };
         }
+
+        var parts = partsJson.EnumerateArray().Select((p, i) => ReadPart(p, i == 0 ? "melody" : $"part{i + 1}", false)).ToList();
+
+        // A round: more entries of the first part, each starting "every" bars later.
+        if (root.TryGetProperty("round", out var round))
+        {
+            var entries = round.GetProperty("entries").GetInt32();
+            var every = round.GetProperty("everyBars").GetDouble() * time.BarBeats;
+            var first = parts[0];
+            for (var k = 1; k < entries; k++)
+                parts.Add(first with
+                {
+                    Id = $"entry{k + 1}", Name = $"Entry {k + 1}",
+                    Performance = first.Performance.Select(n => n with { StartBeat = n.StartBeat + k * every }).ToList(),
+                });
+        }
+
+        var accompaniment = root.TryGetProperty("accompaniment", out var acc)
+            ? acc.EnumerateArray().Select((p, i) => ReadPart(p, $"accompaniment{i + 1}", true)).ToList()
+            : new List<SongPart>();
 
         return new Song
         {
@@ -80,6 +103,7 @@ public static class SongParser
             Key = Str("key", "C"),
             Pickup = pickup,
             Parts = parts,
+            Accompaniment = accompaniment,
             About = Texts("about"),
             Tip = Texts("tip"),
         };
@@ -97,7 +121,7 @@ public static class SongParser
     private sealed record Token(Mark Mark, WrittenNote? Note = null);
 
     /// <summary>Parses one part's music into written bars and the performed note sequence.</summary>
-    public static (IReadOnlyList<Bar> Bars, IReadOnlyList<PerformedNote> Performance) ParseMusic(string music, TimeSignature time, double pickup, string context)
+    public static (IReadOnlyList<Bar> Bars, IReadOnlyList<PerformedNote> Performance) ParseMusic(string music, TimeSignature time, double pickup, string context, bool validate = true)
     {
         var tokens = Tokenise(music, context);
 
@@ -136,7 +160,8 @@ public static class SongParser
             }
         }
         CloseBar();
-        Validate(bars, time, pickup, context);
+        if (validate)
+            Validate(bars, time, pickup, context);
 
         // Performance order: expand |: ... :| with optional [1 / [2 endings.
         var order = PerformanceOrder(tokens, context);

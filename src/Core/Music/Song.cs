@@ -53,7 +53,17 @@ public sealed record PerformedNote(int Index, Pitch Pitch, double StartBeat, dou
     public double EndBeat => StartBeat + Beats;
 }
 
-public sealed record SongPart(string Id, string Name, string Instrument, IReadOnlyList<Bar> Bars, IReadOnlyList<PerformedNote> Performance);
+/// <summary>
+/// A part of a song. Playable parts have a recorder <see cref="Instrument"/>; accompaniment
+/// parts are only ever played by the app, with a General MIDI <see cref="Sound"/>.
+/// </summary>
+public sealed record SongPart(string Id, string Name, string Instrument, IReadOnlyList<Bar> Bars, IReadOnlyList<PerformedNote> Performance)
+{
+    /// <summary>The General MIDI sound the app uses when it plays this part.</summary>
+    public string Sound { get; init; } = "recorder";
+    /// <summary>Written pitch + this = sounding pitch when the app plays the part (12 for a soprano part).</summary>
+    public int SoundingOffset { get; init; }
+}
 
 public sealed class Song
 {
@@ -78,8 +88,27 @@ public sealed class Song
     /// <summary>A playing tip for this song, per language.</summary>
     public IReadOnlyDictionary<string, string> Tip { get; init; } = new Dictionary<string, string>();
 
-    /// <summary>The part the player plays (the first one, until parts can be chosen).</summary>
+    /// <summary>The part the player plays: the first one (see <see cref="WithPartFirst"/>).</summary>
     public SongPart Melody => Parts[0];
+
+    /// <summary>Parts only the app plays (bass lines, drones, consort voices).</summary>
+    public IReadOnlyList<SongPart> Accompaniment { get; init; } = Array.Empty<SongPart>();
+
+    public bool HasOtherParts => Parts.Count > 1 || Accompaniment.Count > 0;
+
+    /// <summary>The same song with another playable part as the player's.</summary>
+    public Song WithPartFirst(int index)
+    {
+        var parts = Parts.ToList();
+        var chosen = parts[index];
+        parts.RemoveAt(index);
+        parts.Insert(0, chosen);
+        return new Song
+        {
+            Id = Id, Titles = Titles, Composer = Composer, Chapter = Chapter, Level = Level, Source = Source, Tempo = Tempo,
+            Time = Time, Key = Key, Pickup = Pickup, Parts = parts, Accompaniment = Accompaniment, About = About, Tip = Tip,
+        };
+    }
 
     public string Title(string language) =>
         Titles.TryGetValue(language, out var t) ? t : Titles.TryGetValue("en", out var en) ? en : Titles.Values.First();
@@ -97,6 +126,9 @@ public sealed class Song
         (Melody.Performance.Min(n => n.Pitch.Midi), Melody.Performance.Max(n => n.Pitch.Midi));
 
     public double TotalBeats => Melody.Performance.Count == 0 ? 0 : Melody.Performance.Max(n => n.EndBeat);
+
+    /// <summary>The end of the last note of any part, so accompaniment can outlast the player's part.</summary>
+    public double EndBeat => Parts.Concat(Accompaniment).SelectMany(p => p.Performance).Select(n => n.EndBeat).DefaultIfEmpty(0).Max();
 
     public override string ToString() => string.Create(CultureInfo.InvariantCulture, $"{Id} ({Parts.Count} part(s), {Melody.Performance.Count} notes)");
 }
