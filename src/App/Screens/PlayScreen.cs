@@ -532,7 +532,10 @@ public partial class PlayScreen : Screen
         var buttons = Ui.VBox(8, analyse, replay, back);
         if (nextStep is not null)
             buttons.AddChild(nextStep);
-        _resultsBox.AddChild(Ui.HBox(30, Ui.Expand(summary), xp, buttons));
+        var pip = new PipView { CustomMinimumSize = new Vector2(120, 120) };
+        var good = _mode == Mode.Rhythm ? _performance?.Stars > 0 : _casual?.Accuracy >= 80;
+        pip.SetMood(good ? PipMood.Cheering : PipMood.Thinking, good ? 3 : double.PositiveInfinity, PipMood.Singing);
+        _resultsBox.AddChild(Ui.HBox(30, pip, Ui.Expand(summary), xp, buttons));
         if (analysis is not null)
             _resultsBox.AddChild(analysis);
     }

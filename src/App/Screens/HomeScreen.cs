@@ -1,11 +1,14 @@
 using Godot;
 using Pipit.App.UI;
+using Pipit.App.Views;
 
 namespace Pipit.App.Screens;
 
 public partial class HomeScreen : Screen
 {
     private readonly Label _instrument;
+    private readonly PipView _pip = new() { CustomMinimumSize = new Vector2(170, 170) };
+    private double _idle;
     private readonly OptionButton _picker = new();
     private readonly Label _level;
     private readonly ProgressBar _xpBar = new() { MinValue = 0, MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new Vector2(260, 16) };
@@ -16,7 +19,10 @@ public partial class HomeScreen : Screen
 
     public HomeScreen()
     {
-        var title = Ui.Label("Pipit", 88, PipitTheme.Accent, HorizontalAlignment.Center);
+        var titleText = Ui.Label("Pipit", 88, PipitTheme.Accent, HorizontalAlignment.Center);
+        var titleRow = new CenterContainer();
+        titleRow.AddChild(Ui.HBox(10, _pip, Ui.VBox(0, Ui.Spacer(), titleText, Ui.Spacer())));
+        var title = titleRow;
         var tagline = Ui.Label("Learn the recorder, one note at a time", 24, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _instrument = Ui.Label("", 18, PipitTheme.InkSoft);
         _picker.ItemSelected += ix => { S.SetActiveInstrument((string)_picker.GetItemMetadata((int)ix)); Enter(); };
@@ -28,13 +34,13 @@ public partial class HomeScreen : Screen
         instrumentRow.AddChild(Ui.HBox(12, Ui.Label("Recorder:", 20), _picker, _instrument));
         _hint = Ui.Label("", 18, PipitTheme.Bad, HorizontalAlignment.Center);
 
-        var grid = new GridContainer { Columns = 3 };
+        var grid = new GridContainer { Columns = 4 };
         grid.AddThemeConstantOverride("h_separation", 16);
         grid.AddThemeConstantOverride("v_separation", 16);
         void Tile(string text, string sub, System.Func<Screen> make)
         {
             var b = Ui.Button(text + "\n" + Ui.T(sub), () => Main.Instance.Show(make()), 22);
-            b.CustomMinimumSize = new Vector2(300, 110);
+            b.CustomMinimumSize = new Vector2(275, 100);
             grid.AddChild(b);
         }
         Tile("Study", "Learn step by step, with Pip", () => new StudyScreen());
@@ -51,8 +57,26 @@ public partial class HomeScreen : Screen
         AddChild(center);
     }
 
+    public override void _Process(double delta)
+    {
+        _idle += delta;
+        if (_idle > 60 && _pip.Mood != PipMood.Dozing)
+            _pip.SetMood(PipMood.Dozing);
+    }
+
+    public override void _Input(InputEvent e)
+    {
+        if (e is InputEventMouseMotion or InputEventKey or InputEventMouseButton)
+        {
+            _idle = 0;
+            if (_pip.Mood == PipMood.Dozing)
+                _pip.SetMood(PipMood.Cheering, 1.2);
+        }
+    }
+
     public override void Enter()
     {
+        _pip.SetMood(PipMood.Singing, 2.0);
         var i = S.Instrument;
         _picker.Clear();
         foreach (var each in S.Settings.Instruments)

@@ -33,7 +33,7 @@ public static partial class LessonBlocks
         ListBlock l => Rich(string.Join("\n", l.Items.Select(i => "•  " + i))),
         DirectiveBlock d => d.Name switch
         {
-            "pip" => Pip(d.Text ?? ""),
+            "pip" => Pip(d.Text ?? "", d.Arg("mood")),
             "fingering" => Fingering(Pitch.Parse(d.Arg("note"))),
             "staff" => Staff(d),
             "play" => Listen(d, context),
@@ -72,11 +72,20 @@ public static partial class LessonBlocks
         return label;
     }
 
-    private static Control Pip(string text)
+    /// <summary>Pip with a speech bubble. Praise bubbles (after=task) cheer when they are shown.</summary>
+    private static Control Pip(string text, string mood)
     {
+        var pip = new PipView { CustomMinimumSize = new Vector2(96, 96) };
+        if (System.Enum.TryParse<PipMood>(mood, true, out var m))
+            pip.SetMood(m);
         var panel = new PanelContainer();
-        panel.AddThemeStyleboxOverride("panel", PipitTheme.Box(PipitTheme.Accent with { A = 0.12f }, PipitTheme.Accent, 12));
-        panel.AddChild(Ui.HBox(14, Ui.Label("🐦", 34), Ui.Expand(Ui.VBox(2, Ui.Label("Pip", 16, PipitTheme.Accent), Ui.Text(text, 19, PipitTheme.Ink)))));
+        panel.AddThemeStyleboxOverride("panel", PipitTheme.Box(PipitTheme.Accent with { A = 0.12f }, PipitTheme.Accent, 10));
+        panel.AddChild(Ui.HBox(12, pip, Ui.Expand(Ui.VBox(2, Ui.Spacer(), Ui.Label("Pip", 16, PipitTheme.Accent), Ui.Text(text, 19, PipitTheme.Ink), Ui.Spacer()))));
+        panel.VisibilityChanged += () =>
+        {
+            if (panel.Visible && panel.IsInsideTree() && panel.GetMeta("praise", false).AsBool())
+                pip.SetMood(PipMood.Cheering, 2.5, PipMood.Singing);
+        };
         return panel;
     }
 

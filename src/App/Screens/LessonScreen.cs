@@ -40,6 +40,7 @@ public partial class LessonScreen : Screen
             else if (block is DirectiveBlock { Name: "pip" } pip && pip.Arg("after") == "task" && _tasks.Count > 0)
             {
                 var previous = _tasks[^1];
+                control.SetMeta("praise", true);
                 control.Visible = previous.Done;
                 previous.Completed += () => control.Visible = true;
             }

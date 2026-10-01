@@ -94,6 +94,27 @@ public partial class Main : Control
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "achievements.png"));
         Back();
 
+        // Pip in every mood, large, after the moods have settled and animated a little.
+        var pipSheet = new ColorRect { Color = PipitTheme.Paper };
+        pipSheet.SetAnchorsPreset(LayoutPreset.FullRect);
+        AddChild(pipSheet);
+        var pips = new HBoxContainer();
+        pips.SetAnchorsPreset(LayoutPreset.FullRect);
+        pipSheet.AddChild(pips);
+        var moods = System.Enum.GetValues<Views.PipMood>();
+        foreach (var mood in moods)
+        {
+            var pip = new Views.PipView { CustomMinimumSize = new Vector2(210, 210) };
+            pip.SetMood(mood);
+            var cell = new PanelContainer();
+            cell.AddThemeStyleboxOverride("panel", new StyleBoxFlat { BgColor = PipitTheme.Paper });
+            cell.AddChild(Ui.VBox(4, pip, Ui.Label(mood.ToString(), 18, PipitTheme.Ink, HorizontalAlignment.Center)));
+            pips.AddChild(cell);
+        }
+        await ToSignal(GetTree().CreateTimer(1.6), SceneTreeTimer.SignalName.Timeout);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "pip-moods.png"));
+        pipSheet.QueueFree();
+
         // The study path and two lesson pages (top, and scrolled to an exercise).
         Show(new StudyScreen());
         for (var i = 0; i < 20; i++)
