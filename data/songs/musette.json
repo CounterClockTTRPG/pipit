@@ -1,0 +1,30 @@
+{
+  "id": "musette",
+  "title": {
+    "en": "Musette",
+    "nl": "Musette",
+    "fr": "Musette"
+  },
+  "composer": "Anonymous",
+  "chapter": 0,
+  "tempo": 80,
+  "time": "2/4",
+  "key": "F",
+  "source": "Mutopia Project edition (BWV Anh. 126, transposed from D to F major), Public Domain; melody line converted with tools/midi2pipit.py",
+  "about": {
+    "en": "A musette is a small French bagpipe, and this piece imitates one: on the keyboard the left hand plays a drone, a note that keeps sounding like a bagpipe's. It is another piece from Anna Magdalena Bach's music book, by an unknown composer.",
+    "nl": "Een musette is een kleine Franse doedelzak, en dit stuk bootst er een na: op het klavier speelt de linkerhand een bourdon, een noot die blijft klinken zoals bij een doedelzak. Het is nog een stuk uit het muziekboek van Anna Magdalena Bach, van een onbekende componist."
+  },
+  "tip": {
+    "en": "Moved up from D to F major so it fits the soprano and has only one new fingering: Si♭. Big jumps between octaves: keep the thumb ready.",
+    "nl": "Verhoogd van D naar F majeur zodat het op de sopraan past, met maar één nieuwe greep: Si♭. Grote sprongen tussen octaven: houd de duim klaar."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C6/q Bb5/s A5/s G5/s F5/s | C6/q Bb5/s A5/s G5/s F5/s | A4/s Bb4/s C5/e Bb4/e A4/e | G4/e C5/e A4/e F4/e | C6/q Bb5/s A5/s G5/s F5/s | C6/q Bb5/s A5/s G5/s F5/s | A4/s Bb4/s C5/e Bb4/e A4/e | G4/e C5/e F4/q | E5/s F5/s G5/e E5/s F5/s G5/e | C6/e G5/e G5/q | C6/e G5/e C6/e G5/e | F5/s E5/s D5/s C5/s D5/e G4/e | G5/e Gb5/e G4/e F5/e~ | F5/e E5/e C6/e B5/e | G5/e Gb5/e G4/e F5/e~ | F5/e E5/e C6/e B5/e | G5/s Gb5/s E5/s Gb5/s G5/s Gb5/s E5/s Gb5/s | G5/e B4/e C5/e F5/e | E5/s F5/s G5/e C5/e F4/e | E4/s F4/s G4/e C4/q"
+    }
+  ]
+}

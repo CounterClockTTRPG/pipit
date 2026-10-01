@@ -1,0 +1,30 @@
+{
+  "id": "bach-prelude-first-half",
+  "title": {
+    "en": "Prélude, BWV 1007 (first half)",
+    "nl": "Prélude, BWV 1007 (eerste helft)",
+    "fr": "Prélude, BWV 1007 (first half)"
+  },
+  "composer": "Johann Sebastian Bach",
+  "chapter": 0,
+  "tempo": 60,
+  "time": "4/4",
+  "key": "G",
+  "source": "Mutopia Project edition of BWV 1007 (Public Domain), MIDI converted with tools/midi2pipit.py, transposed up two octaves",
+  "about": {
+    "en": "Bach wrote six suites for solo cello around 1720, when he worked for the court of Köthen. They were almost forgotten until the young cellist Pablo Casals found a copy in a second-hand music shop in Barcelona in 1890, practised them for years and made them famous. This Prélude is one of the best-known pieces of music ever written for a single instrument: a melody hidden inside a stream of broken chords.",
+    "nl": "Bach schreef zes suites voor cello solo rond 1720, toen hij aan het hof van Köthen werkte. Ze waren bijna vergeten tot de jonge cellist Pablo Casals in 1890 een exemplaar vond in een tweedehands muziekwinkel in Barcelona, ze jarenlang oefende en ze beroemd maakte. Deze Prélude is een van de bekendste stukken ooit geschreven voor één instrument: een melodie verstopt in een stroom van gebroken akkoorden."
+  },
+  "tip": {
+    "en": "The first half, up to the famous pause on high Re. It uses the whole range of the recorder, from the lowest Do to the highest Re, with many pinched-thumb notes. Practise a few bars at a time at a slow speed.",
+    "nl": "De eerste helft, tot de beroemde pauze op hoge Re. Het gebruikt het hele bereik van de blokfluit, van de laagste Do tot de hoogste Re, met veel noten met geknepen duim. Oefen telkens een paar maten aan een trage snelheid."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Prélude (cello part, two octaves up)",
+      "instrument": "soprano",
+      "music": "G4/s D5/s B5/s A5/s B5/s D5/s B5/s D5/s G4/s D5/s B5/s A5/s B5/s D5/s B5/s D5/s | G4/s E5/s C6/s B5/s C6/s E5/s C6/s E5/s G4/s E5/s C6/s B5/s C6/s E5/s C6/s E5/s | G4/s F#5/s C6/s B5/s C6/s F#5/s C6/s F#5/s G4/s F#5/s C6/s B5/s C6/s F#5/s C6/s F#5/s | G4/s G5/s B5/s A5/s B5/s G5/s B5/s G5/s G4/s G5/s B5/s A5/s B5/s G5/s B5/s F#5/s | G4/s E5/s B5/s A5/s B5/s G5/s F#5/s G5/s E5/s G5/s F#5/s G5/s B4/s D5/s C#5/s B4/s | C#5/s G5/s A5/s G5/s A5/s G5/s A5/s G5/s C#5/s G5/s A5/s G5/s A5/s G5/s A5/s G5/s | F#5/s A5/s D6/s C#6/s D6/s A5/s G5/s A5/s F#5/s A5/s G5/s A5/s D5/s F#5/s E5/s D5/s | E4/s B4/s G5/s F#5/s G5/s B4/s G5/s B4/s E4/s B4/s G5/s F#5/s G5/s B4/s G5/s B4/s | E4/s C#5/s D5/s E5/s D5/s C#5/s B4/s A4/s G5/s F#5/s E5/s D6/s C#6/s B5/s A5/s G5/s | F#5/s E5/s D5/s D6/s A5/s D6/s F#5/s A5/s D5/s E5/s F#5/s A5/s G5/s F#5/s E5/s D5/s | G#5/s D5/s F5/s E5/s F5/s D5/s G#5/s D5/s B5/s D5/s F5/s E5/s F5/s D5/s G#5/s D5/s | C5/s E5/s A5/s B5/s C6/s A5/s E5/s D5/s C5/s E5/s A5/s B5/s C6/s A5/s F#5/s E5/s | D#5/s F#5/s D#5/s F#5/s A5/s F#5/s A5/s F#5/s D#5/s F#5/s D#5/s F#5/s A5/s F#5/s A5/s F#5/s | G5/s F#5/s E5/s G5/s F#5/s G5/s A5/s F#5/s G5/s F#5/s E5/s D5/s C5/s B4/s A4/s G4/s | F#4/s C5/s D5/s C5/s D5/s C5/s D5/s C5/s F#4/s C5/s D5/s C5/s D5/s C5/s D5/s C5/s | G4/s B4/s F5/s E5/s F5/s B4/s F5/s B4/s G4/s B4/s F5/s E5/s F5/s B4/s F5/s B4/s | G4/s C5/s E5/s D5/s E5/s C5/s E5/s C5/s G4/s C5/s E5/s D5/s E5/s C5/s E5/s C5/s | G4/s F#5/s C6/s B5/s C6/s F#5/s C6/s F#5/s G4/s F#5/s C6/s B5/s C6/s F#5/s C6/s F#5/s | G4/s D5/s B5/s A5/s B5/s G5/s F#5/s E5/s D5/s C5/s B4/s A4/s G4/s F#4/s E4/s D4/s | C#4/s A4/s E5/s F#5/s G5/s E5/s F#5/s G5/s C#4/s A4/s E5/s F#5/s G5/s E5/s F#5/s G5/s | C4/s A4/s D5/s E5/s F#5/s D5/s E5/s F#5/s C4/s A4/s D5/s E5/s F#5/s D5/s E5/s F#5/s | C4/s A4/s D5/s F#5/s A5/s C#6/s D6/h~ D6/e"
+    }
+  ]
+}

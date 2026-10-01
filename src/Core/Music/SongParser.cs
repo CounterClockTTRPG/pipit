@@ -73,6 +73,8 @@ public static class SongParser
             Titles = titles,
             Composer = Str("composer", ""),
             Chapter = root.TryGetProperty("chapter", out var ch) ? ch.GetInt32() : 0,
+            Level = root.TryGetProperty("level", out var lv) ? lv.GetInt32() : null,
+            Source = Str("source", ""),
             Tempo = root.TryGetProperty("tempo", out var tempo) ? tempo.GetDouble() : 90,
             Time = time,
             Key = Str("key", "C"),

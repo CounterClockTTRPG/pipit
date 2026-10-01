@@ -1,0 +1,30 @@
+{
+  "id": "fairest-isle",
+  "title": {
+    "en": "Fairest Isle",
+    "nl": "Fairest Isle",
+    "fr": "Fairest Isle"
+  },
+  "composer": "Henry Purcell",
+  "chapter": 0,
+  "tempo": 60,
+  "time": "3/4",
+  "key": "Bb",
+  "source": "Mutopia Project edition (Purcell, King Arthur), Public Domain; melody line converted with tools/midi2pipit.py",
+  "about": {
+    "en": "A song from Purcell's \"King Arthur\" (1691), with words by the poet John Dryden. Venus, the goddess of love, sings it in praise of Britain, the \"fairest isle\". Purcell was the greatest English composer of his time; he died at only 36.",
+    "nl": "Een lied uit Purcells \"King Arthur\" (1691), op tekst van de dichter John Dryden. Venus, de godin van de liefde, zingt het als lofzang op Groot-Brittannië, het \"mooiste eiland\". Purcell was de grootste Engelse componist van zijn tijd; hij werd maar 36."
+  },
+  "tip": {
+    "en": "Slow and singing: hold every note for its full length and breathe only at the ends of phrases.",
+    "nl": "Traag en zangerig: houd elke noot voor zijn volle lengte en adem alleen aan het einde van een zin."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/q F5/h | Bb4/h F5/q | G5/e F5/e G5/e Ab5/e G5/q | F5/h D5/q | D5/e Eb5/e F5/q C5/q | D5/e C5/e Bb4/q A4/q | G4/e A4/e Bb4/q C5/q | A4/h. | D5/q F5/h | Bb4/h F5/q | G5/e F5/e G5/e Ab5/e G5/q | F5/h D5/q | D5/e Eb5/e F5/q C5/q | D5/e C5/e Bb4/q A4/q | G4/e A4/e Bb4/q C5/q | A4/h. | C5/q A4/h | D5/h Bb4/q | Eb5/q C5/h | D5/h D5/q | D5/e Eb5/e F5/e G5/e F5/q | B4/h C5/q | C5/e D5/e Eb5/q C5/q | C5/h. | F5/q D5/h | Bb4/h D5/q | Eb5/e D5/e C5/e D5/e C5/q | C5/q F4/q F4/q | Bb4/e A4/e G4/q Eb5/q | Eb5/e D5/e C5/q F5/q | F5/e Eb5/e D5/q C5/e Bb4/e | Bb4/h."
+    }
+  ]
+}

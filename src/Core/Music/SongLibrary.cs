@@ -1,8 +1,9 @@
 namespace Pipit.Core.Music;
 
 /// <summary>
-/// All songs, in learning order (chapter, then file order within the chapter as listed in
-/// data/songs/index.json). Files that fail to parse are reported, not silently skipped.
+/// All songs: the learning path in chapter order (file order within a chapter, as listed in
+/// data/songs/index.json), then the repertoire (chapter 0) from easiest to hardest. Files that
+/// fail to parse are reported, not silently skipped.
 /// </summary>
 public sealed class SongLibrary
 {
@@ -29,7 +30,10 @@ public sealed class SongLibrary
                 errors.Add($"{file}: {e.Message}");
             }
         }
-        var order = songs.Select((s, i) => (s, i)).OrderBy(p => p.s.Chapter).ThenBy(p => p.i).Select(p => p.s).ToList();
+        var order = songs.Select((s, i) => (s, i))
+            .OrderBy(p => p.s.Chapter == 0 ? int.MaxValue : p.s.Chapter)
+            .ThenBy(p => p.s.Chapter == 0 ? Music.Difficulty.Estimate(p.s).Score : 0)
+            .ThenBy(p => p.i).Select(p => p.s).ToList();
         return new SongLibrary(order, errors);
     }
 

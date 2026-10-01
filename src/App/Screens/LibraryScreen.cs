@@ -32,8 +32,11 @@ public partial class LibraryScreen : Screen
             child.QueueFree();
         foreach (var chapter in S.Songs.Songs.GroupBy(s => s.Chapter))
         {
-            _list.AddChild(Ui.Label(string.Format(Ui.T("Chapter {0}"), chapter.Key), 28, PipitTheme.Accent));
-            if (ChapterNotes.TryGetValue(chapter.Key, out var notes))
+            var repertoire = chapter.Key == 0;
+            _list.AddChild(Ui.Label(repertoire ? Ui.T("Repertoire") : string.Format(Ui.T("Chapter {0}"), chapter.Key), 28, PipitTheme.Accent));
+            if (repertoire)
+                _list.AddChild(Ui.Label("More music, from easiest to hardest. The dots show how hard a piece is.", 17, PipitTheme.InkSoft));
+            else if (ChapterNotes.TryGetValue(chapter.Key, out var notes))
                 _list.AddChild(Ui.Label(notes, 17, PipitTheme.InkSoft));
             var grid = new GridContainer { Columns = 3 };
             grid.AddThemeConstantOverride("h_separation", 14);
@@ -43,9 +46,10 @@ public partial class LibraryScreen : Screen
                 var record = S.SongRecord(song.Id);
                 var stars = new string('★', record.BestStars) + new string('☆', 3 - record.BestStars);
                 var playable = song.Melody.Performance.All(n => S.Recorder.InRange(n.Pitch.Midi));
-                var button = Ui.Button(song.Title(S.Settings.Language) + "\n" + stars + (record.Plays > 0 ? $"  {record.BestAccuracy:0}%" : ""),
+                var dots = new string('●', song.Difficulty) + new string('○', 5 - song.Difficulty);
+                var button = Ui.Button(song.Title(S.Settings.Language) + "\n" + (repertoire ? song.Composer + "  " + dots + "\n" : "") + stars + (record.Plays > 0 ? $"  {record.BestAccuracy:0}%" : ""),
                     () => Main.Instance.Show(new PlayScreen(song)), 20);
-                button.CustomMinimumSize = new Vector2(330, 90);
+                button.CustomMinimumSize = new Vector2(330, repertoire ? 110 : 90);
                 button.Disabled = !playable;
                 button.TooltipText = playable ? song.Composer : Ui.T("Some notes are outside this recorder's range.");
                 grid.AddChild(button);

@@ -53,6 +53,7 @@ public partial class Services : Node
     {
         Settings = JsonStore.LoadOrDefault<AppSettings>(SettingsPath).Normalize();
         JsonStore.Save(SettingsPath, Settings); // persists any migration straight away
+        ApplyFullscreen();
         Audio = new AudioHub { Name = "AudioHub" };
         AddChild(Audio);
         Clicks = new ClickPlayer { Name = "Clicks" };
@@ -64,6 +65,20 @@ public partial class Services : Node
         foreach (var error in Songs.Errors)
             GD.PushError("Song: " + error);
         Progress = JsonStore.LoadOrDefault<PlayerProgress>(ProgressPath);
+    }
+
+    public void SetFullscreen(bool on)
+    {
+        Settings.Fullscreen = on;
+        ApplyFullscreen();
+        Save();
+    }
+
+    private void ApplyFullscreen()
+    {
+        if (DisplayServer.GetName() == "headless")
+            return;
+        DisplayServer.WindowSetMode(Settings.Fullscreen ? DisplayServer.WindowMode.Fullscreen : DisplayServer.WindowMode.Windowed);
     }
 
     public FingeringChart ChartFor(FingeringSystem system)

@@ -1,0 +1,30 @@
+{
+  "id": "minuet-in-g-minor",
+  "title": {
+    "en": "Minuet in G minor",
+    "nl": "Menuet in g klein",
+    "fr": "Menuet en sol mineur"
+  },
+  "composer": "Christian Petzold",
+  "chapter": 0,
+  "tempo": 96,
+  "time": "3/4",
+  "key": "Gm",
+  "source": "Mutopia Project edition (BWV Anh. 115), Public Domain; melody line converted with tools/midi2pipit.py",
+  "about": {
+    "en": "The sad twin of the famous Minuet in G: in Anna Magdalena Bach's music book the two are written one after the other, and they are by the same composer. Minor keys sound darker; listen to the difference.",
+    "nl": "De droevige tweelingbroer van het bekende Menuet in G: in het muziekboek van Anna Magdalena Bach staan ze na elkaar, en ze zijn van dezelfde componist. Mineur klinkt donkerder; luister naar het verschil."
+  },
+  "tip": {
+    "en": "New fingerings for Si♭ (thumb, 1, 3, 4) and Mi♭. Practise them in the fingering trainer first.",
+    "nl": "Nieuwe grepen voor Si♭ (duim, 1, 3, 4) en Mi♭. Oefen ze eerst in de vingertrainer."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "Bb5/q A5/q G5/q | A5/q D5/q D5/q | G5/q G4/e A4/e Bb4/e C5/e | D5/h. | Eb5/q F5/e Eb5/e D5/e C5/e | D5/q Eb5/e D5/e C5/e Bb4/e | C5/q D5/e C5/e Bb4/e C5/e | A4/h. | Bb5/q A5/q G5/q | A5/q D5/q D5/q | G5/q G4/e A4/e Bb4/e C5/e | D5/h. | F5/q G5/e F5/e Eb5/e D5/e | Eb5/q F5/e Eb5/e D5/e C5/e | D5/q G5/q C5/q | Bb4/h. | D5/q Bb4/e C5/e D5/e E5/e | F5/q G5/q A5/q | Bb5/q G5/e A5/e Bb5/e G5/e | A5/q G5/e A5/e F5/q | F4/e G4/e A4/e Bb4/e C5/e D5/e | Eb5/q D5/q C5/q | F5/q Bb4/q A4/q | Bb4/h. | G4/q D5/e C5/e D5/q | G4/q Eb5/e D5/e Eb5/q | G4/e D5/e Gb4/e C5/e G4/e Bb4/e | A4/h R/q | D4/e E4/e Gb4/e G4/e A4/e Bb4/e | C5/q Bb4/q A4/q | Bb4/e C5/s D5/s G4/q Gb4/q | G4/h."
+    }
+  ]
+}

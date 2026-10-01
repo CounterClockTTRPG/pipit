@@ -48,7 +48,13 @@ public sealed class Song
     public required string Id { get; init; }
     public required IReadOnlyDictionary<string, string> Titles { get; init; }
     public string Composer { get; init; } = "";
+    /// <summary>Learning-path chapter; 0 for repertoire (outside the path, sorted by difficulty).</summary>
     public int Chapter { get; init; }
+    /// <summary>Manual difficulty (1-5) overriding the estimate, or null.</summary>
+    public int? Level { get; init; }
+    /// <summary>Where the notes come from (edition, licence), for the credits.</summary>
+    public string Source { get; init; } = "";
+    public int Difficulty => Music.Difficulty.Estimate(this).Level;
     public double Tempo { get; init; } = 90;
     public TimeSignature Time { get; init; } = new(4, 4);
     public string Key { get; init; } = "C";

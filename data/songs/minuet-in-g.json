@@ -1,0 +1,30 @@
+{
+  "id": "minuet-in-g",
+  "title": {
+    "en": "Minuet in G",
+    "nl": "Menuet in G",
+    "fr": "Menuet en sol"
+  },
+  "composer": "Christian Petzold",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "3/4",
+  "key": "G",
+  "source": "Mutopia Project edition (BWV Anh. 114), Public Domain; melody line converted with tools/midi2pipit.py",
+  "about": {
+    "en": "For 250 years this was thought to be by Bach, because it is in the little music book Bach gave his wife Anna Magdalena in 1725. In the 1970s it turned out to be by Christian Petzold, an organist in Dresden. In 1965 the pop group The Toys turned it into the hit \"A Lover's Concerto\".",
+    "nl": "Tweehonderdvijftig jaar lang dacht men dat dit van Bach was, omdat het in het muziekboekje staat dat Bach in 1725 aan zijn vrouw Anna Magdalena gaf. In de jaren zeventig bleek het van Christian Petzold te zijn, een organist in Dresden. In 1965 maakte de popgroep The Toys er de hit \"A Lover's Concerto\" van."
+  },
+  "tip": {
+    "en": "A minuet is a dance in three: count \"ONE two three\". The second half climbs to high notes with the pinched thumb.",
+    "nl": "Een menuet is een dans in drie: tel \"EEN twee drie\". De tweede helft klimt naar hoge noten met de geknepen duim."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/q G4/e A4/e B4/e C5/e | D5/q G4/q G4/q | E5/q C5/e D5/e E5/e F#5/e | G5/q G4/q G4/q | C5/q D5/e C5/e B4/e A4/e | B4/q C5/e B4/e A4/e G4/e | F#4/q G4/e A4/e B4/e G4/e | A4/h. | D5/q G4/e A4/e B4/e C5/e | D5/q G4/q G4/q | E5/q C5/e D5/e E5/e F#5/e | G5/q G4/q G4/q | C5/q D5/e C5/e B4/e A4/e | B4/q C5/e B4/e A4/e G4/e | A4/q B4/e A4/e G4/e F#4/e | G4/h. | B5/q G5/e A5/e B5/e G5/e | A5/q D5/e E5/e F#5/e D5/e | G5/q E5/e F#5/e G5/e D5/e | C#5/q B4/e C#5/e A4/q | A4/e B4/e C#5/e D5/e E5/e F#5/e | G5/q F#5/q E5/q | F#5/q A4/q C#5/q | D5/h. | D5/q G4/e F#4/e G4/q | E5/q G4/e F#4/e G4/q | D5/q C5/q B4/q | A4/e G4/e F#4/e G4/e A4/q | D4/e E4/e F#4/e G4/e A4/e B4/e | C5/q B4/q A4/q | B4/e D5/e G4/q F#4/q | G4/h."
+    }
+  ]
+}

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Pipit.Core.Tests;
 
-public class SongLibraryTests
+public class SongLibraryTests(Xunit.Abstractions.ITestOutputHelper output)
 {
     private static SongLibrary Library => SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name)));
 
@@ -21,8 +21,8 @@ public class SongLibraryTests
     {
         var library = Library;
         Assert.Empty(library.Errors);
-        Assert.Equal(7, library.Songs.Count);
-        Assert.Equal(library.Songs.Count, Directory.GetFiles(Repo.Data("songs"), "*.json").Length - 1); // all listed in index.json
+        // Every song file is listed in index.json (and loads).
+        Assert.Equal(Directory.GetFiles(Repo.Data("songs"), "*.json").Length - 1, library.Songs.Count);
     }
 
     [Fact]
@@ -55,8 +55,30 @@ public class SongLibraryTests
     }
 
     [Fact]
-    public void Songs_are_in_learning_order() =>
-        Assert.Equal(Library.Songs.Select(s => s.Chapter).OrderBy(c => c), Library.Songs.Select(s => s.Chapter));
+    public void Learning_path_first_then_repertoire_by_difficulty()
+    {
+        var songs = Library.Songs;
+        var path = songs.TakeWhile(s => s.Chapter > 0).Select(s => s.Chapter).ToList();
+        Assert.Equal(path.OrderBy(c => c), path);
+        var repertoire = songs.SkipWhile(s => s.Chapter > 0).ToList();
+        Assert.All(repertoire, s => Assert.Equal(0, s.Chapter));
+        var scores = repertoire.Select(s => Difficulty.Estimate(s).Score).ToList();
+        Assert.Equal(scores.OrderBy(x => x), scores);
+    }
+
+    [Fact]
+    public void Difficulty_estimates_are_sensible()
+    {
+        var lib = Library;
+        foreach (var s in lib.Songs)
+        {
+            var d = Difficulty.Estimate(s);
+            output.WriteLine($"{s.Id,-26} level {d.Level}  score {d.Score:0.0}  nps {d.NotesPerSecond:0.0} range {d.Range} acc {d.Accidentals:P0} high {d.High:P0} leaps {d.Leaps:P0}");
+        }
+        Assert.Equal(1, lib.Get("hot-cross-buns")!.Difficulty);
+        Assert.True(lib.Get("bach-prelude-first-half")!.Difficulty >= 4);
+        Assert.True(lib.Get("ode-to-joy")!.Difficulty < lib.Get("minuet-in-g")!.Difficulty);
+    }
 
     [Theory]
     [InlineData("au-clair-de-la-lune", 22)]   // 11 notes, repeated

@@ -15,6 +15,7 @@ public sealed class AppSettings
     public int SchemaVersion { get; set; } = CurrentSchema;
     public string Language { get; set; } = "en";
     public NoteNaming Naming { get; set; } = NoteNaming.FixedDo;
+    public bool Fullscreen { get; set; }
     /// <summary>Godot input device name; "Default" follows the Windows default device.</summary>
     public string InputDevice { get; set; } = "Default";
     public Dictionary<string, double> LatencyMsByDevice { get; set; } = new();

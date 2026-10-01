@@ -34,7 +34,8 @@ public partial class SettingsScreen : Screen
             Ui.Label("Your recorders", 26, PipitTheme.Accent),
             editor,
             Ui.Label("Language"), language,
-            Ui.Label("Note names"), naming);
+            Ui.Label("Note names"), naming,
+            FullscreenToggle());
 
         // Microphone column.
         _devices = Ui.MinSize(new ItemList(), 0, 200);
@@ -59,6 +60,13 @@ public partial class SettingsScreen : Screen
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         scroll.AddChild(Ui.Expand(columns));
         AddChild(scroll);
+    }
+
+    private static CheckBox FullscreenToggle()
+    {
+        var box = new CheckBox { Text = Ui.T("Full screen (F11)"), ButtonPressed = S.Settings.Fullscreen };
+        box.Toggled += S.SetFullscreen;
+        return box;
     }
 
     private async void RunCheck()

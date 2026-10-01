@@ -200,6 +200,8 @@ public partial class Main : Control
     {
         if (e.IsActionPressed("ui_cancel"))
             Back();
+        else if (e is InputEventKey { Pressed: true, Echo: false, Keycode: Key.F11 })
+            Services.Instance.SetFullscreen(!Services.Instance.Settings.Fullscreen);
     }
 
     // ---- smoke test: `-- --smoke` visits every screen and quits (scripts/test.sh) ----------
