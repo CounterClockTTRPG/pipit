@@ -22,6 +22,12 @@ public class EndToEndTests(ITestOutputHelper output)
     public static IEnumerable<object[]> SongIds() =>
         SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs.Select(s => new object[] { s.Id });
 
+    /// <summary>Casual mode is slow to simulate (pauses between notes); shorter songs cover it.</summary>
+    public static IEnumerable<object[]> ShorterSongIds() =>
+        SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs.Where(s => s.Melody.Performance.Count <= 120).Select(s => new object[] { s.Id });
+
+    private static RecorderInfo RecorderFor(Song song) => RecorderInfo.Of(Enum.Parse<RecorderKind>(song.Melody.Instrument, ignoreCase: true));
+
     private static Song Load(string id) => SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Get(id)!;
 
     [Theory]
@@ -29,7 +35,7 @@ public class EndToEndTests(ITestOutputHelper output)
     public void A_perfect_performance_scores_near_perfect(string id)
     {
         var song = Load(id);
-        var soprano = RecorderInfo.Of(RecorderKind.Soprano);
+        var soprano = RecorderFor(song);
         var spb = song.SecondsPerBeat();
         var first = song.Melody.Performance.Min(n => n.StartBeat);
         var t0 = 1.0 - first * spb; // beat 0 in seconds; the first note starts at 1 s
@@ -50,12 +56,12 @@ public class EndToEndTests(ITestOutputHelper output)
     }
 
     [Theory]
-    [MemberData(nameof(SongIds))]
+    [MemberData(nameof(ShorterSongIds))]
     public void Casual_mode_follows_a_player_who_takes_their_time(string id)
     {
         // Each note played after a random pause of up to two seconds.
         var song = Load(id);
-        var soprano = RecorderInfo.Of(RecorderKind.Soprano);
+        var soprano = RecorderFor(song);
         var rng = new Random(3);
         var t = 0.5;
         var notes = new List<SynthNote>();

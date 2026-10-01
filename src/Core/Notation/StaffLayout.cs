@@ -162,14 +162,15 @@ public static class StaffLayout
     }
 
     /// <summary>
-    /// Groups eighths and sixteenths within one beat (a dotted quarter in compound time), gives each
+    /// Groups eighths and sixteenths within one beat (see below for the beat unit), gives each
     /// group a common stem direction (away from the note furthest from the middle line) and a
     /// straight beam that clears every notehead by a full stem length at its shortest.
     /// </summary>
     private static void Beam(List<PlacedNote> notes, TimeSignature time, LayoutOptions o)
     {
+        // Beam per beat: a dotted quarter in compound time (6/8), a half note in 2/2 and 3/2.
         var compound = time.Lower == 8 && time.Upper % 3 == 0;
-        var unit = compound ? 1.5 : 1.0;
+        var unit = compound ? 1.5 : time.Lower == 2 ? 2.0 : 1.0;
         var group = new List<PlacedNote>();
         var id = 0;
         void Flush()

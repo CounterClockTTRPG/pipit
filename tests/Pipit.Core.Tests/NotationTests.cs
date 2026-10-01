@@ -91,6 +91,14 @@ public class NotationTests
     }
 
     [Fact]
+    public void Cut_time_beams_eighths_in_fours()
+    {
+        var notes = Notes(Engrave("G4/e A4 B4 C5 D5 C5 B4 A4", "2/2"));
+        Assert.Equal(notes[0].BeamGroup, notes[3].BeamGroup);
+        Assert.NotEqual(notes[3].BeamGroup, notes[4].BeamGroup);
+    }
+
+    [Fact]
     public void Lines_break_and_fill_the_width()
     {
         var systems = Engrave(string.Join(" | ", Enumerable.Repeat("G4/q A4 B4 C5", 12)), width: 60);

@@ -152,7 +152,7 @@ public partial class Main : Control
         Back();
 
         // The score view for songs covering different notation.
-        foreach (var id in new[] { "ode-to-joy", "jingle-bells", "minuet-in-g-minor", "bach-prelude-opening", "musette", "greensleeves", "amazing-grace" })
+        foreach (var id in new[] { "ode-to-joy", "jingle-bells", "minuet-in-g-minor", "bach-prelude-opening", "musette", "greensleeves", "amazing-grace", "bransle-champaigne-diminutions", "ductia" })
         {
             var scoreScreen = new PlayScreen(Services.Instance.Songs.Get(id)!);
             Show(scoreScreen);

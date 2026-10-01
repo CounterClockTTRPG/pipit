@@ -22,16 +22,18 @@ public class SongLibraryTests(Xunit.Abstractions.ITestOutputHelper output)
     {
         var library = Library;
         Assert.Empty(library.Errors);
-        // Every song file is listed in index.json (and loads).
-        Assert.Equal(Directory.GetFiles(Repo.Data("songs"), "*.json").Length - 1, library.Songs.Count);
+        // Every song file (including personal/) is listed in index.json and loads.
+        Assert.Equal(Directory.GetFiles(Repo.Data("songs"), "*.json", SearchOption.AllDirectories).Length - 1, library.Songs.Count);
     }
 
     [Fact]
-    public void Songs_fit_a_soprano()
+    public void Songs_fit_the_recorder_they_are_written_for()
     {
-        var soprano = RecorderInfo.Of(RecorderKind.Soprano);
         foreach (var song in Library.Songs)
-            Assert.All(song.Melody.Performance, n => Assert.True(soprano.InRange(n.Pitch.Midi), $"{song.Id}: {n.Pitch}"));
+        {
+            var recorder = RecorderInfo.Of(Enum.Parse<RecorderKind>(song.Melody.Instrument, ignoreCase: true));
+            Assert.All(song.Melody.Performance, n => Assert.True(recorder.InRange(n.Pitch.Midi), $"{song.Id}: {n.Pitch} on {song.Melody.Instrument}"));
+        }
     }
 
     [Fact]
