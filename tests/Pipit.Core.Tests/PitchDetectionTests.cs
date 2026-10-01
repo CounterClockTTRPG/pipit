@@ -188,6 +188,11 @@ public class CalibrationTests
     }
 }
 
+/// <summary>Timing tests run alone: in parallel with the rest of the suite they measure the other tests.</summary>
+[CollectionDefinition("Timing", DisableParallelization = true)]
+public class TimingCollection;
+
+[Collection("Timing")]
 public class PitchPerformanceTests(Xunit.Abstractions.ITestOutputHelper output)
 {
     [Fact]
