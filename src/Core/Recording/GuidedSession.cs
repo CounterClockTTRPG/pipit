@@ -18,6 +18,36 @@ public sealed record GuidedSession(string Id, string Title, string Instructions,
     public double SecondsPerBeat => 60.0 / Tempo;
     public double TotalBeats => Events.Sum(e => e.Beats);
 
+    public IReadOnlyList<NoteSpan> Spans()
+    {
+        var spans = new List<NoteSpan>();
+        var beat = 0.0;
+        foreach (var e in Events)
+        {
+            if (e.Step is { } step)
+                spans.Add(new NoteSpan(step, beat, e.Beats));
+            beat += e.Beats;
+        }
+        return spans;
+    }
+
+    /// <summary>The cue at a beat (negative during the count-in).</summary>
+    public Cue CueAt(double beat)
+    {
+        var spans = Spans();
+        var current = spans.FirstOrDefault(n => beat >= n.StartBeat && beat < n.StartBeat + n.Beats);
+        if (current is not null)
+        {
+            var after = spans.FirstOrDefault(n => n.StartBeat > current.StartBeat);
+            return new Cue(current.Step, true, after?.Step, false);
+        }
+        var upcoming = spans.FirstOrDefault(n => n.StartBeat > beat);
+        if (upcoming is null)
+            return new Cue(null, false, null, beat >= 0);
+        var following = spans.FirstOrDefault(n => n.StartBeat > upcoming.StartBeat);
+        return new Cue(upcoming.Step, false, following?.Step, false);
+    }
+
     /// <summary>The schedule in seconds from the first beat after the count-in.</summary>
     public IReadOnlyList<ScheduledNote> Schedule(RecorderInfo recorder, double referenceA = Pitch.DefaultReferenceA)
     {
@@ -37,6 +67,17 @@ public sealed record GuidedSession(string Id, string Title, string Instructions,
 }
 
 public sealed record ScheduledNote(int Step, int WrittenMidi, int SoundingMidi, double Start, double End);
+
+/// <summary>
+/// What the conductor shows at a moment. <see cref="Step"/> is the note to have under your
+/// fingers: the note being played, or during a rest or the count-in the one that comes next,
+/// so the player always prepares the right fingering. <see cref="Playing"/> says whether it
+/// should sound now; <see cref="Following"/> is the note after it, for a small "next" hint.
+/// </summary>
+public sealed record Cue(int? Step, bool Playing, int? Following, bool Finished);
+
+/// <summary>A note in beats from the first beat after the count-in.</summary>
+public sealed record NoteSpan(int Step, double StartBeat, double Beats);
 
 public static class GuidedSessions
 {
@@ -80,7 +121,7 @@ public static class GuidedSessions
     public static GuidedSession Get(string id) => All.First(s => s.Id == id);
 
     private static GuidedSession LongTones(string id, string title, int[] steps) => new(
-        id, title, "Hold each note steadily for two beats, breathe during the rests.",
+        id, title, "Start each note on \"Play!\" and keep blowing steadily until the orange bar ends (two beats). Breathe during the rests, while you put your fingers on the next note.",
         60, steps.SelectMany(s => new[] { new SessionEvent(s, 2), new SessionEvent(null, 1) }).ToList());
 
     private static IEnumerable<SessionEvent> Repeat(int step, int count, double beats) =>

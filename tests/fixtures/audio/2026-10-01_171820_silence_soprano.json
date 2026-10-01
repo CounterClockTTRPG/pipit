@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "name": "2026-10-01_171820_silence_soprano",
+  "recordedAt": "2026-10-01T17:18:20.5296506+02:00",
+  "sampleRate": 48000,
+  "durationSeconds": 10.5049375,
+  "inputDevice": "Default",
+  "session": "silence",
+  "tempo": 60,
+  "latencyMs": 76.17053315111377,
+  "instrument": "soprano",
+  "fingering": "baroque",
+  "referenceA": 440,
+  "gateRms": 0.012915426130973736,
+  "notes": [],
+  "starred": false
+}

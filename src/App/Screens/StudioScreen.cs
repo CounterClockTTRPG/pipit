@@ -132,6 +132,13 @@ public partial class StudioScreen : Screen
         _recording.AddRange(skip > 0 ? samples.Skip(skip) : samples);
     }
 
+    /// <summary>For `--shots`: start a guided session by id.</summary>
+    public void DebugStartGuided(string id)
+    {
+        _sessions.Selected = GuidedSessions.All.ToList().FindIndex(g => g.Id == id);
+        StartGuided();
+    }
+
     private void StartGuided()
     {
         var session = GuidedSessions.All[_sessions.Selected];
@@ -144,16 +151,12 @@ public partial class StudioScreen : Screen
         var beats = (int)Math.Ceiling(GuidedSession.CountInBeats + session.TotalBeats);
         var beatTimes = Enumerable.Range(0, beats).Select(b => countInStart + b * session.SecondsPerBeat).ToList();
         S.Clicks.Schedule(beatTimes, 4);
-        // A beat is a "play" beat when a note starts on it.
-        var noteBeats = new HashSet<int>();
-        double at = 0;
-        foreach (var e in session.Events)
-        {
-            if (e.Step is not null && Math.Abs(at - Math.Round(at)) < 1e-9)
-                noteBeats.Add(GuidedSession.CountInBeats + (int)Math.Round(at));
-            at += e.Beats;
-        }
-        _beatDots.Start(beatTimes, GuidedSession.CountInBeats, noteBeats.Contains);
+        // Whole-beat notes get a dot and a hold bar; notes starting off the beat still sound
+        // with the clicks but have no dot of their own.
+        var spans = session.Spans()
+            .Where(n => Math.Abs(n.StartBeat - Math.Round(n.StartBeat)) < 1e-9)
+            .Select(n => (GuidedSession.CountInBeats + (int)Math.Round(n.StartBeat), n.Beats)).ToList();
+        _beatDots.Start(beatTimes, GuidedSession.CountInBeats, spans);
         _stopAt = _sessionStart + session.TotalBeats * session.SecondsPerBeat + 1.0;
         _conductor.Visible = true;
         UpdateButtons();
@@ -189,6 +192,7 @@ public partial class StudioScreen : Screen
             Fingering = S.Instrument.Fingering,
             ReferenceA = S.Instrument.ReferenceA,
             GateRms = S.DeviceGate,
+            TuningOffsetCents = S.Instrument.MeasuredOffsetCents,
         };
         if (session is not null)
         {
@@ -222,51 +226,30 @@ public partial class StudioScreen : Screen
             _view.Playhead = _player.GetPlaybackPosition();
     }
 
-    /// <summary>Shows what to play at a given beat (negative during the count-in).</summary>
+    /// <summary>
+    /// Shows what to play at a given beat (negative during the count-in). During rests the next
+    /// note is shown, so the fingers are ready when "Play!" comes.
+    /// </summary>
     private void Conduct(GuidedSession session, double beat)
     {
-        if (beat < 0)
+        var cue = session.CueAt(beat);
+        _beat.Text = beat < 0
+            ? string.Format(Ui.T("Get ready… {0}"), (int)Math.Ceiling(-beat))
+            : string.Format(Ui.T("Beat {0} of {1}"), Math.Min((int)beat + 1, (int)Math.Ceiling(session.TotalBeats)), (int)Math.Ceiling(session.TotalBeats));
+        if (cue.Step is not { } step)
         {
-            _beat.Text = string.Format(Ui.T("Get ready… {0}"), (int)Math.Ceiling(-beat));
-            var first = session.Events.FirstOrDefault(e => e.Step is not null);
-            ShowEvent(first, session.Events.SkipWhile(e => e != first).Skip(1).FirstOrDefault(e => e.Step is not null));
+            _now.Text = Ui.T(cue.Finished ? "Done!" : "");
+            _next.Text = "";
+            _diagram.Fingering = null;
             return;
         }
-        _beat.Text = string.Format(Ui.T("Beat {0} of {1}"), (int)beat + 1, (int)Math.Ceiling(session.TotalBeats));
-        double start = 0;
-        for (var i = 0; i < session.Events.Count; i++)
-        {
-            var e = session.Events[i];
-            if (beat < start + e.Beats)
-            {
-                ShowEvent(e, session.Events.Skip(i + 1).FirstOrDefault(n => n.Step is not null));
-                return;
-            }
-            start += e.Beats;
-        }
-        _now.Text = Ui.T("Done!");
-        _next.Text = "";
-        _diagram.Fingering = null;
-    }
-
-    private void ShowEvent(SessionEvent? e, SessionEvent? next)
-    {
-        if (e?.Step is { } step)
-        {
-            var written = S.Recorder.BottomWrittenMidi + step;
-            _now.Text = S.NoteName(written);
-            _now.Modulate = Colors.White;
-            _diagram.Fingering = S.FingeringFor(written);
-            _diagram.Dimmed = false;
-        }
-        else
-        {
-            _now.Text = Ui.T("rest");
-            _now.Modulate = new Color(1, 1, 1, 0.4f);
-            _diagram.Dimmed = true;
-            _diagram.QueueRedraw();
-        }
-        _next.Text = next?.Step is { } n ? Ui.T("next: ") + S.NoteName(S.Recorder.BottomWrittenMidi + n) : "";
+        var written = S.Recorder.BottomWrittenMidi + step;
+        _now.Text = cue.Playing ? S.NoteName(written) : Ui.T("Get ready: ") + S.NoteName(written);
+        _now.Modulate = cue.Playing ? Colors.White : new Color(1, 1, 1, 0.6f);
+        _diagram.Fingering = S.FingeringFor(written);
+        _diagram.Dimmed = false;
+        _diagram.QueueRedraw();
+        _next.Text = cue.Following is { } f ? Ui.T("then: ") + S.NoteName(S.Recorder.BottomWrittenMidi + f) : "";
     }
 
     // ---- takes -------------------------------------------------------------------------

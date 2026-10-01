@@ -81,3 +81,63 @@ public class RecordingTests
         finally { File.Delete(path); File.Delete(path + ".corrupt"); }
     }
 }
+
+public class ConductorTests
+{
+    // Long tones: Do (2 beats), rest (1), Re (2), rest (1), ...
+    private static readonly GuidedSession LongTones = GuidedSessions.Get("long-tones-low");
+
+    [Fact]
+    public void During_a_note_the_cue_is_that_note()
+    {
+        var cue = LongTones.CueAt(0.5);
+        Assert.Equal(new Cue(0, true, 2, false), cue);
+    }
+
+    [Fact]
+    public void During_a_rest_the_cue_is_the_next_note_not_the_previous_one()
+    {
+        // Beat 2.5 is the rest after Do: the fingers should already be on Re.
+        var cue = LongTones.CueAt(2.5);
+        Assert.Equal(2, cue.Step);
+        Assert.False(cue.Playing);
+        Assert.Equal(4, cue.Following);
+    }
+
+    [Fact]
+    public void Count_in_prepares_the_first_note()
+    {
+        var cue = LongTones.CueAt(-2);
+        Assert.Equal(0, cue.Step);
+        Assert.False(cue.Playing);
+    }
+
+    [Fact]
+    public void After_the_last_note_the_session_is_finished()
+    {
+        var cue = LongTones.CueAt(LongTones.TotalBeats + 0.1);
+        Assert.True(cue.Finished);
+        Assert.Null(cue.Step);
+    }
+
+    [Fact]
+    public void Spans_carry_note_lengths()
+    {
+        var spans = LongTones.Spans();
+        Assert.Equal(8, spans.Count);
+        Assert.Equal(new NoteSpan(2, 3, 2), spans[1]);
+    }
+
+    [Fact]
+    public void Verifier_allows_for_the_recorders_tuning()
+    {
+        // Do played 60 cents sharp on a recorder calibrated at +20: still Do, not Do#.
+        var take = new TakeInfo { TuningOffsetCents = 20, Notes = { new TakeNote(0, 60, 72, 0, 1) } };
+        var frames = Enumerable.Range(0, 100)
+            .Select(i => new Pipit.Core.Analysis.PitchFrame(i * 0.01, 0, 1, 0.1, true, 72.6, 72.6)).ToList();
+        var check = Assert.Single(TakeVerifier.Verify(take, frames));
+        Assert.True(check.Recognised);
+        Assert.Equal(40, check.CentsOff, 6);
+        Assert.False(Assert.Single(TakeVerifier.Verify(new TakeInfo { Notes = take.Notes }, frames)).Recognised);
+    }
+}

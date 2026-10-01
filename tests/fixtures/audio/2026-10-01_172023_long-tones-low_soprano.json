@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "name": "2026-10-01_172023_long-tones-low_soprano",
+  "recordedAt": "2026-10-01T17:20:23.2535036+02:00",
+  "sampleRate": 48000,
+  "durationSeconds": 29.502604166666668,
+  "inputDevice": "Default",
+  "session": "long-tones-low",
+  "tempo": 60,
+  "latencyMs": 76.17053315111377,
+  "instrument": "soprano",
+  "fingering": "baroque",
+  "referenceA": 440,
+  "gateRms": 0.012915426130973736,
+  "notes": [
+    {
+      "step": 0,
+      "writtenMidi": 60,
+      "soundingMidi": 72,
+      "start": 4.5,
+      "end": 6.5
+    },
+    {
+      "step": 2,
+      "writtenMidi": 62,
+      "soundingMidi": 74,
+      "start": 7.5,
+      "end": 9.5
+    },
+    {
+      "step": 4,
+      "writtenMidi": 64,
+      "soundingMidi": 76,
+      "start": 10.5,
+      "end": 12.5
+    },
+    {
+      "step": 5,
+      "writtenMidi": 65,
+      "soundingMidi": 77,
+      "start": 13.5,
+      "end": 15.5
+    },
+    {
+      "step": 7,
+      "writtenMidi": 67,
+      "soundingMidi": 79,
+      "start": 16.5,
+      "end": 18.5
+    },
+    {
+      "step": 9,
+      "writtenMidi": 69,
+      "soundingMidi": 81,
+      "start": 19.5,
+      "end": 21.5
+    },
+    {
+      "step": 11,
+      "writtenMidi": 71,
+      "soundingMidi": 83,
+      "start": 22.5,
+      "end": 24.5
+    },
+    {
+      "step": 12,
+      "writtenMidi": 72,
+      "soundingMidi": 84,
+      "start": 25.5,
+      "end": 27.5
+    }
+  ],
+  "starred": false
+}

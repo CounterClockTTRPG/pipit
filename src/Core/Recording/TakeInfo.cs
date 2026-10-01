@@ -25,6 +25,8 @@ public sealed class TakeInfo
     public RecorderKind Instrument { get; set; }
     public FingeringSystem Fingering { get; set; }
     public double ReferenceA { get; set; } = 440;
+    /// <summary>The recorder's calibrated overall offset at recording time; the verifier allows for it.</summary>
+    public double TuningOffsetCents { get; set; }
     public double? GateRms { get; set; }
     public List<TakeNote> Notes { get; set; } = new();
     public bool Starred { get; set; }

@@ -1,39 +1,49 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Pipit.App.UI;
 
 namespace Pipit.App.Views;
 
 /// <summary>
-/// Shows when to play: a row of beat dots (count-in dots numbered 1-4, play dots in orange), a
-/// ball that bounces from dot to dot and lands exactly on each beat, and a big cue above
-/// ("1", "2", "3", "4", then "Play!") that flashes on the beat. Beats are in capture-clock seconds.
+/// Shows when to play and how long to hold: a row of beat dots (count-in dots numbered 1-4), a
+/// big orange dot where a note starts with an orange bar across the beats it is held, small grey
+/// dots for rests, a ball that bounces from dot to dot and lands exactly on each beat, and a big
+/// cue above ("1".."4", "Play!", "hold…", "rest"). Beats are in capture-clock seconds.
 /// </summary>
 public partial class BeatIndicator : Control
 {
     private IReadOnlyList<double> _beats = Array.Empty<double>();
     private int _countIn;
-    private Func<int, bool> _isPlayBeat = _ => true;
+    // Notes as (first beat index, length in beats); null means every beat after the count-in is a short note.
+    private IReadOnlyList<(int Beat, double Beats)>? _notes;
 
     /// <summary>How many dots to show around the current beat (long sessions scroll).</summary>
     public int Window { get; set; } = 12;
 
     public BeatIndicator() => CustomMinimumSize = new Vector2(400, 150);
 
-    public void Start(IReadOnlyList<double> beats, int countIn, Func<int, bool>? isPlayBeat = null)
+    public void Start(IReadOnlyList<double> beats, int countIn, IReadOnlyList<(int Beat, double Beats)>? notes = null)
     {
         _beats = beats;
         _countIn = countIn;
-        _isPlayBeat = isPlayBeat ?? (_ => true);
+        _notes = notes;
         Visible = true;
     }
+
+    private bool StartsNote(int beat) => beat >= _countIn && (_notes is null || _notes.Any(n => n.Beat == beat));
+
+    /// <summary>The note being held at a beat that is not its first beat, if any.</summary>
+    private bool Holds(double beat) => _notes is not null && _notes.Any(n => beat > n.Beat && beat < n.Beat + n.Beats);
 
     public void Stop()
     {
         _beats = Array.Empty<double>();
         Visible = false;
     }
+
+    private double BeatLength(int i) => i + 1 < _beats.Count ? _beats[i + 1] - _beats[i] : i > 0 ? _beats[i] - _beats[i - 1] : 1;
 
     public override void _Process(double delta)
     {
@@ -59,12 +69,25 @@ public partial class BeatIndicator : Control
         float X(int i) => x0 + (i - first) * spacing;
         var font = PipitTheme.Font;
 
+        // Hold bars behind the dots: from a note's first beat to where it is released.
+        if (_notes is not null)
+            foreach (var (beat, length) in _notes)
+            {
+                if (beat + length < first || beat > last || length <= 1)
+                    continue;
+                var x1 = X(beat);
+                var x2 = X(beat) + (float)(length * spacing) - spacing * 0.35f;
+                DrawLine(new Vector2(x1, dotsY), new Vector2(Math.Min(x2, Size.X), dotsY), PipitTheme.Accent with { A = 0.55f }, 10, true);
+                DrawLine(new Vector2(x2, dotsY - 9), new Vector2(x2, dotsY + 9), PipitTheme.Accent, 3, true); // release mark
+            }
+
         for (var i = first; i <= last; i++)
         {
             var countIn = i < _countIn;
-            var play = !countIn && _isPlayBeat(i);
-            var r = countIn ? 10f : play ? 15f : 8f;
-            var color = countIn ? PipitTheme.InkSoft : play ? PipitTheme.Accent : PipitTheme.PaperDark;
+            var play = StartsNote(i);
+            var held = !countIn && !play && Holds(i);
+            var r = countIn ? 10f : play ? 15f : held ? 6f : 7f;
+            var color = countIn ? PipitTheme.InkSoft : play || held ? PipitTheme.Accent : PipitTheme.WoodEdge;
             var done = i <= current;
             if (i == current)
             {
@@ -72,7 +95,7 @@ public partial class BeatIndicator : Control
                 var since = (float)(now - _beats[i]);
                 r *= 1 + 0.6f * Math.Max(0, 1 - since / 0.25f);
             }
-            if (done)
+            if (done || held)
                 DrawCircle(new Vector2(X(i), dotsY), r, color);
             DrawArc(new Vector2(X(i), dotsY), r, 0, Mathf.Tau, 32, color, 3, true);
             if (countIn)
@@ -101,8 +124,12 @@ public partial class BeatIndicator : Control
             (cue, cueColor) = ((current + 1).ToString(), PipitTheme.InkSoft); // "1, 2, 3, 4", like the dots
         else if (current >= _beats.Count - 1 && sinceBeat > 0.4)
             (cue, cueColor) = (Ui.T("Done"), PipitTheme.InkSoft);
-        else if (_isPlayBeat(current) && sinceBeat < 0.3)
+        else if (StartsNote(current) && sinceBeat < 0.4)
             (cue, cueColor) = (Ui.T("Play!"), PipitTheme.Accent);
+        else if (_notes is not null && Holds(current + sinceBeat / BeatLength(current)))
+            (cue, cueColor) = (Ui.T("hold…"), PipitTheme.Accent);
+        else if (_notes is not null)
+            (cue, cueColor) = (Ui.T("rest"), PipitTheme.InkSoft);
         else
             (cue, cueColor) = ("", PipitTheme.Ink);
         if (cue != "")

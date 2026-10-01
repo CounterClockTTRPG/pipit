@@ -88,6 +88,19 @@ public partial class Main : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-tuning.png"));
         Back();
+        // The Studio conductor during a held note and during the rest after it.
+        var studio = new StudioScreen();
+        Show(studio);
+        studio.DebugStartGuided("long-tones-low");
+        var t0 = Services.Instance.Audio.Now;
+        foreach (var (at, file) in new[] { (5.8, "studio-note.png"), (7.7, "studio-rest.png") })
+        {
+            while (Services.Instance.Audio.Now - t0 < at)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, file));
+        }
+        Back();
+
         // A sheet of characteristic fingerings: all covered, forked Fa, Sol, a half hole, thumb off, pinched thumb.
         var sheet = new HBoxContainer();
         sheet.SetAnchorsPreset(LayoutPreset.FullRect);
