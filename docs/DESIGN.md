@@ -465,7 +465,8 @@ Sol ends with you playing a correct Sol, not just reading about it.
 | Reading music | The staff and treble clef · Note lengths & rests · Time signatures & counting · Ties, dots, pickups · Sharps & flats · Repeats |
 | Notes | A short lesson for every new note, attached to its chapter in the learning path |
 | Technique | Half-holing (double holes) · The pinched thumb and the upper octave · Slurs vs. tonguing · Long tones & steady pitch |
-| Your instrument | Baroque vs. German fingering · Care: warming up, condensation, drying, oiling (wooden instruments) |
+| Your instrument | Baroque vs. German fingering, with a live comparison: play Fa with the forked and the simple fingering and see how many cents apart they are on *your* recorder (suggested by the user after finding the simple Fa themselves) · Care: warming up, condensation, drying, oiling (wooden instruments) |
+| Technique, learned the hard way | Low notes need gentle air (beginners overblow them sharp; the tuner shows it) · Breaking into the high octave: seal the holes, pinch the thumb, faster (not more) air |
 | History | Medieval & Renaissance consorts · The Baroque golden age (Van Eyck, Handel, Telemann) · Decline and the 20th-century revival (Dolmetsch, school recorders, German fingering) |
 
 History lessons are short (one page, two or three pictures, one sound example), and

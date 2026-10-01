@@ -1,0 +1,13 @@
+{
+  "id": "hot-cross-buns",
+  "title": { "en": "Hot Cross Buns" },
+  "composer": "Traditional (England)",
+  "chapter": 1,
+  "tempo": 80,
+  "time": "4/4",
+  "key": "G",
+  "parts": [
+    { "id": "melody", "name": "Melody", "instrument": "soprano",
+      "music": "B4/q A4 G4/h | B4/q A4 G4/h | G4/e G4 G4 G4 A4 A4 A4 A4 | B4/q A4 G4/h" }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "lightly-row",
+  "title": { "en": "Lightly Row", "de": "Hänschen klein" },
+  "composer": "Traditional (Germany)",
+  "chapter": 2,
+  "tempo": 96,
+  "time": "4/4",
+  "key": "G",
+  "parts": [
+    { "id": "melody", "name": "Melody", "instrument": "soprano",
+      "music": "D5/q B4 B4/h | C5/q A4 A4/h | G4/q A4 B4 C5 | D5 D5 D5/h | D5/q B4 B4/h | C5/q A4 A4/h | G4/q B4 D5 D5 | G4/w" }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "au-clair-de-la-lune",
+  "title": { "fr": "Au clair de la lune", "nl": "In de maneschijn", "en": "By the Light of the Moon" },
+  "composer": "Traditional (France)",
+  "chapter": 1,
+  "tempo": 84,
+  "time": "4/4",
+  "key": "G",
+  "parts": [
+    { "id": "melody", "name": "Melody", "instrument": "soprano",
+      "music": "|: G4/q G4 G4 A4 | B4/h A4 | G4/q B4 A4 A4 | G4/w :|" }
+  ]
+}

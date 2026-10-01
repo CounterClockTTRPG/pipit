@@ -1,0 +1,13 @@
+{
+  "id": "mary-had-a-little-lamb",
+  "title": { "en": "Mary Had a Little Lamb" },
+  "composer": "Traditional (United States)",
+  "chapter": 1,
+  "tempo": 92,
+  "time": "4/4",
+  "key": "G",
+  "parts": [
+    { "id": "melody", "name": "Melody", "instrument": "soprano",
+      "music": "B4/q A4 G4 A4 | B4 B4 B4/h | A4/q A4 A4/h | B4/q D5 D5/h | B4/q A4 G4 A4 | B4 B4 B4 B4 | A4 A4 B4 A4 | G4/w" }
+  ]
+}

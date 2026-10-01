@@ -1,0 +1,13 @@
+{
+  "id": "jingle-bells",
+  "title": { "en": "Jingle Bells" },
+  "composer": "James Lord Pierpont",
+  "chapter": 2,
+  "tempo": 104,
+  "time": "4/4",
+  "key": "G",
+  "parts": [
+    { "id": "melody", "name": "Melody (chorus)", "instrument": "soprano",
+      "music": "|: B4/q B4 B4/h | B4/q B4 B4/h | B4/q D5 G4/q. A4/e | B4/w | C5/q C5 C5/q. C5/e | C5/q B4 B4 B4/e B4 | [1 B4/q A4 A4 B4 | A4/h D5 :| [2 D5/q D5 C5 A4 | G4/w" }
+  ]
+}
