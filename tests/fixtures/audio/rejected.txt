@@ -1,0 +1,3 @@
+# Guided takes that are not valid ground truth; scripts/import-fixtures.sh skips them.
+# One take name per line, with the reason.
+2026-10-01_172023_long-tones-low_soprano   played one note late throughout (conductor showed the previous fingering during rests, fixed in d0d461b)

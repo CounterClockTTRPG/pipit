@@ -18,12 +18,19 @@ pattern="${1:-*}"
 list=false
 [ "$pattern" = "--list" ] && { list=true; pattern="*"; }
 
+# Takes listed in rejected.txt (first word of each non-comment line) are never imported.
+rejected="$(grep -v '^#' "$dst/rejected.txt" 2>/dev/null | awk '{print $1}')"
+
 count=0
 for json in "$src"/$pattern.json; do
     [ -e "$json" ] || continue
     name="$(basename "$json" .json)"
     # Only guided takes carry ground truth.
     grep -q '"session": "' "$json" || continue
+    if grep -qx "$name" <<<"$rejected"; then
+        $list && echo "$name  (rejected, see rejected.txt)"
+        continue
+    fi
     if $list; then
         echo "$name$([ -e "$dst/$name.json" ] && echo '  (imported)')"
         continue
