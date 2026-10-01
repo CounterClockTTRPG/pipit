@@ -1,0 +1,36 @@
+[
+  { "chapter": 1, "title": { "en": "First notes: Si, La, Sol", "nl": "Eerste noten: Si, La, Sol" },
+    "steps": [
+      { "lesson": "meet-the-recorder" },
+      { "lesson": "si-and-la" },
+      { "lesson": "the-staff" },
+      { "lesson": "note-lengths" },
+      { "lesson": "sol" },
+      { "lesson": "eighth-notes" },
+      { "song": "hot-cross-buns" },
+      { "lesson": "repeat-signs" },
+      { "song": "au-clair-de-la-lune" },
+      { "lesson": "high-re" },
+      { "song": "mary-had-a-little-lamb" }
+    ] },
+  { "chapter": 2, "title": { "en": "Higher: Do' and Re'", "nl": "Hoger: Do' en Re'" },
+    "steps": [
+      { "lesson": "high-do" },
+      { "lesson": "rests" },
+      { "lesson": "dotted-notes" },
+      { "song": "ode-to-joy" },
+      { "song": "lightly-row" },
+      { "lesson": "endings" },
+      { "song": "jingle-bells" }
+    ] },
+  { "chapter": 3, "title": { "en": "Low Re", "nl": "Lage Re" },
+    "steps": [
+      { "lesson": "low-re" },
+      { "song": "ode-to-joy-full" }
+    ] },
+  { "chapter": 4, "title": { "en": "The low notes", "nl": "De lage noten" },
+    "steps": [
+      { "lesson": "low-notes" },
+      { "song": "twinkle" }
+    ] }
+]

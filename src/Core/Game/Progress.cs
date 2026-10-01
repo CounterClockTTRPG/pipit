@@ -37,6 +37,8 @@ public sealed class PlayerProgress
     public int BestStreak { get; set; }
     public double PracticeMinutes { get; set; }
     public int TrainerNotes { get; set; }
+    /// <summary>Study-path lessons completed (their tasks all done).</summary>
+    public HashSet<string> LessonsDone { get; set; } = new();
     /// <summary>Unlocked achievements by id, with when.</summary>
     public Dictionary<string, DateTime> Achievements { get; set; } = new();
     /// <summary>Keyed by "songId|recorderKind".</summary>
@@ -151,6 +153,8 @@ public static class XpRules
         record.BestCasualAccuracy = Math.Max(record.BestCasualAccuracy, accuracy);
         return Played(record, lines, now);
     }
+
+    public static List<XpLine> Lesson(bool firstTime) => new() { new("Lesson finished", firstTime ? 25 : 5) };
 
     public static List<XpLine> Trainer(int correct) => new() { new("Fingering trainer", correct) };
 

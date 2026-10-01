@@ -22,6 +22,7 @@ public static class Achievements
 {
     public static readonly IReadOnlyList<Achievement> All = new[]
     {
+        new Achievement("first-lesson", "First lesson", "Finish a lesson on the study path.", 20, "📖"),
         new Achievement("first-song", "First song", "Play a song all the way through.", 20, "♪"),
         new Achievement("first-star", "First star", "Earn a star on any song.", 20, "★"),
         new Achievement("three-stars", "Three stars", "Earn all three stars on a song.", 50, "★★★"),
@@ -52,6 +53,7 @@ public static class Achievements
         }
 
         var run = e.Run;
+        Check("first-lesson", progress.LessonsDone.Count > 0);
         Check("first-song", e.SongId is not null);
         Check("first-star", run?.Stars >= 1);
         Check("three-stars", run?.Stars == 3);
