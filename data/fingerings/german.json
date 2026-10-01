@@ -1,0 +1,11 @@
+{
+  "system": "german",
+  "source": "Differences from baroque per https://aswltd.com/finger.htm (fourth and raised fourth in both octaves)",
+  "base": "baroque",
+  "overrides": [
+    { "semitone": 5,  "fingerings": ["xxxxxooo"] },
+    { "semitone": 6,  "fingerings": ["xxxxoxxx"] },
+    { "semitone": 17, "fingerings": ["pxxxxooo"] },
+    { "semitone": 18, "fingerings": ["pxxxoxox"] }
+  ]
+}
