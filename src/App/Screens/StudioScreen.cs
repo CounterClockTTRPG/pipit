@@ -30,6 +30,7 @@ public partial class StudioScreen : Screen
     private readonly PanelContainer _conductor;
     private readonly Label _now, _next, _beat;
     private readonly FingeringDiagram _diagram = new();
+    private readonly BeatIndicator _beatDots = new();
 
     private List<float>? _recording;
     private double _recordStart = double.NaN;
@@ -65,7 +66,7 @@ public partial class StudioScreen : Screen
         _now = Ui.Label("", 84, PipitTheme.Ink, HorizontalAlignment.Center);
         _next = Ui.Label("", 22, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _beat = Ui.Label("", 22, PipitTheme.Accent, HorizontalAlignment.Center);
-        _conductor = Ui.Card(Ui.HBox(24, Ui.Expand(Ui.VBox(6, _beat, _now, _next)), Ui.MinSize(_diagram, 120, 300)));
+        _conductor = Ui.Card(Ui.HBox(24, Ui.Expand(Ui.VBox(6, _beat, _now, _next, _beatDots)), Ui.MinSize(_diagram, 120, 300)));
         _conductor.Visible = false;
 
         var right = Ui.VBox(12, _conductor, Ui.Expand(_view, true, true), _summary);
@@ -141,7 +142,18 @@ public partial class StudioScreen : Screen
         var countInStart = now + lead + 0.5;
         _sessionStart = countInStart + GuidedSession.CountInBeats * session.SecondsPerBeat;
         var beats = (int)Math.Ceiling(GuidedSession.CountInBeats + session.TotalBeats);
-        S.Clicks.Schedule(Enumerable.Range(0, beats).Select(b => countInStart + b * session.SecondsPerBeat), 4);
+        var beatTimes = Enumerable.Range(0, beats).Select(b => countInStart + b * session.SecondsPerBeat).ToList();
+        S.Clicks.Schedule(beatTimes, 4);
+        // A beat is a "play" beat when a note starts on it.
+        var noteBeats = new HashSet<int>();
+        double at = 0;
+        foreach (var e in session.Events)
+        {
+            if (e.Step is not null && Math.Abs(at - Math.Round(at)) < 1e-9)
+                noteBeats.Add(GuidedSession.CountInBeats + (int)Math.Round(at));
+            at += e.Beats;
+        }
+        _beatDots.Start(beatTimes, GuidedSession.CountInBeats, noteBeats.Contains);
         _stopAt = _sessionStart + session.TotalBeats * session.SecondsPerBeat + 1.0;
         _conductor.Visible = true;
         UpdateButtons();
@@ -152,6 +164,7 @@ public partial class StudioScreen : Screen
         var samples = _recording!.ToArray();
         _recording = null;
         S.Clicks.Stop();
+        _beatDots.Stop();
         _conductor.Visible = false;
         var session = _session;
         _session = null;

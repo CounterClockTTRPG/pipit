@@ -17,6 +17,8 @@ public partial class SettingsScreen : Screen
     private AudioStreamPlayer? _testPlayer;
     private float[]? _testBuffer;
     private int _testFill;
+    private readonly Button _checkButton;
+    private readonly Label _checkStatus;
 
     public override string Title => "Settings";
 
@@ -57,10 +59,14 @@ public partial class SettingsScreen : Screen
         _devices.ItemSelected += ix => S.SelectDevice(_devices.GetItemText((int)ix));
         _testStatus = Ui.Text("", 16, PipitTheme.InkSoft);
         _testButton = Ui.Button("Test: record 3 s and play back", StartTest, 18);
+        _checkButton = Ui.Button("Check for Windows voice processing", RunCheck, 18);
+        _checkStatus = Ui.Text("", 16, PipitTheme.InkSoft);
         var mic = Ui.VBox(10,
             Ui.Label("Microphone", 26, PipitTheme.Accent),
             Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
             _devices, _meter, _testButton, _testStatus,
+            Ui.Text("The check plays a short tone through your speakers (take headphones off) and listens whether the microphone keeps hearing it.", 15, PipitTheme.InkSoft),
+            _checkButton, _checkStatus,
             Ui.Label("Tips", 20, PipitTheme.Ink),
             Ui.Text("• No signal at all? Check Windows Settings → Privacy & security → Microphone → \"Let desktop apps access your microphone\".\n" +
                      "• Windows \"audio enhancements\" (noise suppression, automatic gain) can swallow quiet notes and blur the start of notes. " +
@@ -71,6 +77,29 @@ public partial class SettingsScreen : Screen
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         scroll.AddChild(Ui.Expand(columns));
         AddChild(scroll);
+    }
+
+    private async void RunCheck()
+    {
+        _checkButton.Disabled = true;
+        _checkStatus.Modulate = Colors.White;
+        _checkStatus.Text = Ui.T("Listening… (you will hear a beep)");
+        var tester = new Audio.MicTester();
+        AddChild(tester);
+        var result = await tester.Run();
+        tester.QueueFree();
+        if (!IsInsideTree())
+            return;
+        _checkButton.Disabled = false;
+        (_checkStatus.Text, _checkStatus.Modulate) = result.Verdict switch
+        {
+            Core.Analysis.MicCheckVerdict.Ok => (Ui.T("Good: the microphone hears steady notes."), PipitTheme.Good),
+            Core.Analysis.MicCheckVerdict.Suppressed => (Ui.T("Windows voice processing is removing steady tones, so held notes disappear. " +
+                "Open Windows Settings → System → Sound → Input → your microphone, set \"Audio enhancements\" to Off and switch off \"Voice clarity\" if you have it. Then check again."), PipitTheme.Bad),
+            _ => (Ui.T("The microphone did not hear the test tone at all. Either headphones are on or the volume is muted, or Windows echo cancellation is removing Pipit's own sound. " +
+                "Turn the volume up and take headphones off; if it still fails, set \"Audio enhancements\" to Off for your microphone (Windows Settings → System → Sound → Input) and check again."), PipitTheme.Warn),
+        };
+        _checkStatus.Text += $"  ({result.OnsetDb:0} → {result.SustainDb:0} dB)";
     }
 
     private static void Changed()

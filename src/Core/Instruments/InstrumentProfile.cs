@@ -19,5 +19,6 @@ public sealed class InstrumentProfile
     public Dictionary<int, double> PerNoteOffsetCents { get; set; } = new();
     public double MinutesPlayed { get; set; }
 
+    [System.Text.Json.Serialization.JsonIgnore]
     public RecorderInfo Info => RecorderInfo.Of(Kind);
 }

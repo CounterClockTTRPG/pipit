@@ -16,7 +16,7 @@ public partial class CalibrationScreen : Screen
 {
     private enum Step { Intro, Silence, Latency, LatencyResult, Tuning, Done }
 
-    private const double LatencyTempo = 80;
+    private const double LatencyTempo = 60;
     private const int LatencyCountIn = 4, LatencyAnswers = 8;
     private static readonly int[] TuningSteps = { 0, 2, 4, 5, 7, 9, 11, 12 };
 
@@ -24,6 +24,9 @@ public partial class CalibrationScreen : Screen
     private readonly FingeringDiagram _diagram = new();
     private readonly LevelMeter _meter = new();
     private readonly Button _primary, _secondary;
+    private readonly BeatIndicator _beats = new() { Visible = false };
+    private List<float>? _audio;
+    private double _audioStart;
     private readonly ProgressBar _progress = new() { MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new Vector2(0, 14) };
 
     private Step _step = Step.Intro;
@@ -44,7 +47,7 @@ public partial class CalibrationScreen : Screen
         _status = Ui.Text("", 20, PipitTheme.InkSoft);
         _primary = Ui.Button("", OnPrimary);
         _secondary = Ui.Button("", OnSecondary);
-        var text = Ui.VBox(16, _heading, _body, _progress, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),
+        var text = Ui.VBox(16, _heading, _body, _progress, _beats, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),
             Ui.HBox(12, Ui.Label("Input", 16, PipitTheme.InkSoft), Ui.Expand(_meter)));
         AddChild(Ui.HBox(40, Ui.Expand(text, true, true), Ui.MinSize(_diagram, 170, 400)));
     }
@@ -54,12 +57,14 @@ public partial class CalibrationScreen : Screen
         S.ApplyInstrument();
         _diagram.Keyed = S.Instrument.Keyed;
         S.Audio.FrameReady += OnFrame;
+        S.Audio.SamplesCaptured += OnSamples;
         Go(Step.Intro);
     }
 
     public override void Exit()
     {
         S.Audio.FrameReady -= OnFrame;
+        S.Audio.SamplesCaptured -= OnSamples;
         S.Clicks.Stop();
         S.ApplyInstrument(); // restores the gate if we left during the silence step
     }
@@ -69,7 +74,8 @@ public partial class CalibrationScreen : Screen
         _step = step;
         _frames.Clear();
         _progress.Value = 0;
-        _progress.Visible = step is Step.Silence or Step.Latency;
+        _progress.Visible = step is Step.Silence;
+        _beats.Stop();
         _diagram.Visible = step is Step.Tuning or Step.Latency;
         _secondary.Visible = false;
         _primary.Visible = true;
@@ -100,6 +106,9 @@ public partial class CalibrationScreen : Screen
                 var clicks = Enumerable.Range(0, LatencyCountIn + LatencyAnswers).Select(i => start + i * beat).ToList();
                 _answerClicks = clicks.Skip(LatencyCountIn).ToList();
                 S.Clicks.Schedule(clicks, 4);
+                _beats.Start(clicks, LatencyCountIn);
+                _audio = new List<float>();
+                _audioStart = double.NaN;
                 _phaseStart = start;
                 _phaseEnd = clicks[^1] + 1.0;
                 break;
@@ -116,6 +125,9 @@ public partial class CalibrationScreen : Screen
                 break;
         }
     }
+
+    /// <summary>For `--shots`: jump straight to the clicks step.</summary>
+    public void DebugStartLatency() => Go(Step.Latency);
 
     private void Set(string heading, string body, string primary)
     {
@@ -155,6 +167,32 @@ public partial class CalibrationScreen : Screen
         }
     }
 
+    /// <summary>Keeps the latency step's audio, so a failed calibration can be inspected later.</summary>
+    private void OnSamples(float[] samples, double time)
+    {
+        if (_step != Step.Latency || _audio is null)
+            return;
+        if (double.IsNaN(_audioStart))
+            _audioStart = time;
+        _audio.AddRange(samples);
+    }
+
+    private void SaveLatencyAudio(List<PitchFrame> frames)
+    {
+        if (_audio is null || _audio.Count == 0)
+            return;
+        var dir = System.IO.Path.Combine(Services.UserDir, "diagnostics");
+        System.IO.Directory.CreateDirectory(dir);
+        Core.Recording.WavFile.Write(System.IO.Path.Combine(dir, "calibration-latency.wav"), _audio.ToArray(), S.Audio.SampleRate);
+        var voiced = frames.Count(f => f.Voiced);
+        var peak = frames.Count == 0 ? -120 : frames.Max(f => f.Db);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "calibration-latency.txt"),
+            $"device={S.Audio.CurrentDevice}\nrate={S.Audio.SampleRate}\naudioStart={_audioStart:R}\ngate={S.Audio.GateRms:R}\n" +
+            $"clicks={string.Join(",", _answerClicks.Select(c => (c - _audioStart).ToString("R", System.Globalization.CultureInfo.InvariantCulture)))}\n" +
+            $"frames={frames.Count} voiced={voiced} peakDb={peak:0.0}\n");
+        _audio = null;
+    }
+
     public override void _Process(double delta)
     {
         _meter.Db = S.Audio.LevelDb;
@@ -190,11 +228,18 @@ public partial class CalibrationScreen : Screen
     {
         var onsets = Calibration.NoteOnsets(_frames);
         _latency = Calibration.Latency(_answerClicks, onsets);
+        SaveLatencyAudio(_frames);
+        var peakDb = _frames.Count == 0 ? -120 : _frames.Max(f => f.Db);
+        var voicedFrames = _frames.Count(f => f.Voiced);
         _secondary.Visible = true;
         _secondary.Text = Ui.T("Try again");
         if (_latency is null)
         {
-            Set("2 · Play on the clicks", string.Format(Ui.T("Pipit heard {0} of the 8 notes. Play each one clearly, a little louder, and stop between notes."), onsets.Count), "Try again");
+            // Loud enough but hardly any pitched frames: something is removing the steady part of the notes.
+            var suppressed = peakDb > -45 && voicedFrames < 40;
+            Set("2 · Play on the clicks", string.Format(Ui.T("Pipit heard {0} of the 8 notes."), onsets.Count) + " " + Ui.T(suppressed
+                ? "The microphone picks up sound, but the notes vanish almost immediately. Windows voice processing is probably removing them: go to Settings and run \"Check for Windows voice processing\"."
+                : "Play each one clearly, a little louder, and stop briefly between notes."), "Try again");
             _secondary.Visible = false;
             return;
         }

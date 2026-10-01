@@ -48,6 +48,14 @@ public partial class Main : Control
             MicProbe();
         if (OS.GetCmdlineUserArgs().Contains("--shots"))
             Screenshots();
+        if (OS.GetCmdlineUserArgs().Contains("--miccheck"))
+            MicCheckAndQuit();
+        if (OS.GetCmdlineUserArgs().Contains("--loopback"))
+        {
+            var d = new Diagnostics();
+            AddChild(d);
+            d.Loopback();
+        }
     }
 
     /// <summary>`-- --shots`: saves a PNG of every screen to user://shots and quits (needs a window).</summary>
@@ -67,7 +75,22 @@ public partial class Main : Control
             if (make is not null)
                 Back();
         }
+        var calibrate = new CalibrationScreen();
+        Show(calibrate);
+        calibrate.DebugStartLatency();
+        await ToSignal(GetTree().CreateTimer(3.3), SceneTreeTimer.SignalName.Timeout);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-beats.png"));
+        Back();
         GD.Print("SHOTS " + dir);
+        GetTree().Quit();
+    }
+
+    /// <summary>`-- --miccheck`: the Settings speaker-to-microphone check, printed, then quit.</summary>
+    private async void MicCheckAndQuit()
+    {
+        var tester = new Audio.MicTester();
+        AddChild(tester);
+        await tester.Run();
         GetTree().Quit();
     }
 

@@ -30,6 +30,16 @@ input devices and reports what the microphone delivered in 3 s (headless alone u
 audio driver, so it never hears anything). `-- --smoke` visits every screen and quits; test.sh
 runs it.
 
+Hardware checks (they play sound through the speakers): `-- --miccheck` runs the Settings
+speaker-to-mic check; `-- --loopback` adds a level timeline and click arrival times.
+
+**Laptop microphone arrays run Windows/Realtek voice processing** (noise suppression, echo
+cancellation). Verified on this machine: a steady 784 Hz tone arrives at about -21 dBFS and then
+becomes exact digital zeros while still sounding, so held recorder notes vanish. The fix is
+"Audio enhancements: Off" for the microphone in Windows Settings. `MicCheck` detects it
+(Suppressed); calibration hints at it when notes are loud but barely pitched. A failed latency
+calibration keeps its audio in `user://diagnostics/` for inspection.
+
 ## Environment notes
 
 - Godot and the .NET SDK are Windows executables; the project is passed to them as a UNC
