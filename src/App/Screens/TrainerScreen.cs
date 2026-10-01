@@ -54,7 +54,7 @@ public partial class TrainerScreen : Screen
 
         var controls = Ui.HBox(16, Ui.Label("Notes:"), range, _random, _showFingering, Ui.Spacer(), Ui.Button("Skip", Next, 18));
         var center = Ui.VBox(8, _target, _feedback, _gauge, _score);
-        var main = Ui.HBox(40, Ui.Expand(center), Ui.MinSize(_diagram, 250, 420));
+        var main = Ui.HBox(40, Ui.Expand(center), Ui.MinSize(_diagram, 200, 420));
         AddChild(Ui.VBox(20, controls, Ui.Expand(main, true, true)));
     }
 

@@ -49,7 +49,7 @@ public partial class CalibrationScreen : Screen
         _secondary = Ui.Button("", OnSecondary);
         var text = Ui.VBox(16, _heading, _body, _progress, _beats, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),
             Ui.HBox(12, Ui.Label("Input", 16, PipitTheme.InkSoft), Ui.Expand(_meter)));
-        AddChild(Ui.HBox(40, Ui.Expand(text, true, true), Ui.MinSize(_diagram, 250, 400)));
+        AddChild(Ui.HBox(40, Ui.Expand(text, true, true), Ui.MinSize(_diagram, 200, 400)));
     }
 
     public override void Enter()
