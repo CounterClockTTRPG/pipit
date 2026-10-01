@@ -1,18 +1,126 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Pipit.Core.Music;
+using Pipit.App.Screens;
+using Pipit.App.UI;
 
 namespace Pipit.App;
 
-/// <summary>Placeholder front screen for M0: proves the Godot assembly can use Pipit.Core.</summary>
+/// <summary>Root of the app: theme, top bar with a back button, and a stack of screens.</summary>
 public partial class Main : Control
 {
+    private readonly Stack<Screen> _stack = new();
+    private Control _content = null!;
+    private Label _title = null!;
+    private Button _back = null!;
+    private int _smokeFrame = -1;
+    private readonly Queue<System.Func<Screen>> _smokeScreens = new();
+
+    public static Main Instance { get; private set; } = null!;
+
     public override void _Ready()
     {
-        var title = (string)ProjectSettings.GetSetting("application/config/name");
-        GetWindow().Title = title;
-        GetNode<Label>("%Title").Text = title;
-        var scale = "C4 D4 E4 F4 G4 A4 B4".Split(' ').Select(p => NoteNames.Name(Pitch.Parse(p)));
-        GetNode<Label>("%Subtitle").Text = string.Join("  ", scale);
+        Instance = this;
+        GetWindow().Title = (string)ProjectSettings.GetSetting("application/config/name");
+        Theme = PipitTheme.Build();
+        SetAnchorsPreset(LayoutPreset.FullRect);
+
+        AddChild(new ColorRect { Color = PipitTheme.Paper, AnchorRight = 1, AnchorBottom = 1 });
+        var layout = Ui.VBox(0);
+        layout.SetAnchorsPreset(LayoutPreset.FullRect);
+        AddChild(layout);
+
+        var bar = new PanelContainer();
+        bar.AddThemeStyleboxOverride("panel", new StyleBoxFlat { BgColor = PipitTheme.PaperDark, ContentMarginLeft = 16, ContentMarginRight = 16, ContentMarginTop = 8, ContentMarginBottom = 8 });
+        _back = Ui.Button("← Back", Back, 18);
+        _title = Ui.Label("", 24, PipitTheme.Ink);
+        bar.AddChild(Ui.HBox(16, _back, _title));
+        layout.AddChild(bar);
+
+        _content = Ui.Expand(new Control(), true, true);
+        layout.AddChild(_content);
+
+        Show(new HomeScreen());
+
+        if (OS.GetCmdlineUserArgs().Contains("--smoke"))
+            StartSmoke();
+        if (OS.GetCmdlineUserArgs().Contains("--micprobe"))
+            MicProbe();
+    }
+
+    /// <summary>`-- --micprobe`: lists input devices, listens for 3 s, prints what arrived, quits.</summary>
+    private async void MicProbe()
+    {
+        var audio = Services.Instance.Audio;
+        GD.Print($"MICPROBE driver={AudioServer.GetDriverName()} mix_rate={AudioServer.GetMixRate()} device='{audio.CurrentDevice}'");
+        GD.Print("MICPROBE devices: " + string.Join(" | ", Audio.AudioHub.InputDevices()));
+        long samples = 0;
+        double peakDb = -120;
+        var voiced = 0;
+        audio.SamplesCaptured += (s, _) => samples += s.Length;
+        audio.FrameReady += f => { peakDb = System.Math.Max(peakDb, f.Db); if (f.Voiced) voiced++; };
+        await ToSignal(GetTree().CreateTimer(3.0), SceneTreeTimer.SignalName.Timeout);
+        GD.Print($"MICPROBE samples={samples} ({samples / AudioServer.GetMixRate():0.00} s) peak={peakDb:0.0} dBFS voiced_frames={voiced}");
+        GetTree().Quit();
+    }
+
+    public void Show(Screen screen)
+    {
+        if (_stack.TryPeek(out var current))
+        {
+            current.Exit();
+            _content.RemoveChild(current);
+        }
+        _stack.Push(screen);
+        Attach(screen);
+    }
+
+    public void Back()
+    {
+        if (_stack.Count <= 1)
+            return;
+        var leaving = _stack.Pop();
+        leaving.Exit();
+        leaving.QueueFree();
+        Attach(_stack.Peek());
+    }
+
+    private void Attach(Screen screen)
+    {
+        screen.SetAnchorsPreset(LayoutPreset.FullRect);
+        _content.AddChild(screen);
+        _title.Text = Ui.T(screen.Title);
+        _back.Visible = _stack.Count > 1;
+        screen.Enter();
+    }
+
+    public override void _UnhandledInput(InputEvent e)
+    {
+        if (e.IsActionPressed("ui_cancel"))
+            Back();
+    }
+
+    // ---- smoke test: `-- --smoke` visits every screen and quits (scripts/test.sh) ----------
+
+    private void StartSmoke()
+    {
+        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen() })
+            _smokeScreens.Enqueue(make);
+        _smokeFrame = 0;
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_smokeFrame < 0 || ++_smokeFrame % 15 != 0)
+            return;
+        if (_stack.Count > 1)
+            Back();
+        else if (_smokeScreens.Count > 0)
+            Show(_smokeScreens.Dequeue()());
+        else
+        {
+            GD.Print("SMOKE OK");
+            GetTree().Quit();
+        }
     }
 }

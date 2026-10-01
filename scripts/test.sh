@@ -18,5 +18,13 @@ log="$(timeout 120 "$GODOT" --headless --path "$PROJECT_UNC" --quit-after 30 2>&
 if grep -E "^(ERROR|SCRIPT ERROR)" <<<"$log"; then boot_status=1; fi
 [ "$boot_status" -eq 0 ] || printf '%s\n' "$log" | tail -40
 
-echo "==> core tests: $([ $core_status -eq 0 ] && echo ok || echo FAILED), boot: $([ $boot_status -eq 0 ] && echo ok || echo FAILED)"
-[ $core_status -eq 0 ] && [ $boot_status -eq 0 ]
+# Smoke run: Main visits every screen (Enter/Exit, audio subscriptions) and prints SMOKE OK.
+echo "==> headless smoke run through every screen"
+smoke_status=0
+log="$(timeout 120 "$GODOT" --headless --path "$PROJECT_UNC" -- --smoke 2>&1)" || smoke_status=$?
+if grep -E "^(ERROR|SCRIPT ERROR)" <<<"$log" || ! grep -q "SMOKE OK" <<<"$log"; then smoke_status=1; fi
+[ "$smoke_status" -eq 0 ] || printf '%s\n' "$log" | tail -40
+
+ok() { [ "$1" -eq 0 ] && echo ok || echo FAILED; }
+echo "==> core tests: $(ok $core_status), boot: $(ok $boot_status), smoke: $(ok $smoke_status)"
+[ $core_status -eq 0 ] && [ $boot_status -eq 0 ] && [ $smoke_status -eq 0 ]

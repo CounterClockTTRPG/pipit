@@ -608,7 +608,7 @@ Each milestone ends with something you can run and try with your own recorder.
 | Question | Answer | Consequence |
 |---|---|---|
 | Test recordings | Yes, via the guided sessions | M1 ends with fixtures from the user's soprano (tenor and alto when available) |
-| Microphones | Built-in laptop mic only (on this PC) | Tune for a built-in mic. Windows "audio enhancements" (noise suppression, automatic gain) can smear note onsets and cut quiet notes, so the mic-check screen detects this and suggests switching them off |
+| Microphones | Built-in laptop mic only (on this PC) | Tune for a built-in mic. Windows "audio enhancements" (noise suppression, automatic gain) can smear note onsets and cut quiet notes. The Settings screen explains how to switch them off; automatic detection is not attempted yet |
 | Headphones | Fine for accompaniment | Headphones mode is the default for accompaniment; echo cancellation is dropped |
 | Lesson languages | EN and NL | Each lesson is written in both; the French UI falls back to English lessons |
 | Youngest player | 9 | The Young player style keeps text short and simple, without read-aloud |
