@@ -94,6 +94,26 @@ public partial class Main : Control
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "achievements.png"));
         Back();
 
+        // The study path and two lesson pages (top, and scrolled to an exercise).
+        Show(new StudyScreen());
+        for (var i = 0; i < 20; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "study.png"));
+        Back();
+        foreach (var id in new[] { "meet-the-recorder", "si-and-la", "the-staff" })
+        {
+            var lessonScreen = new LessonScreen(Services.Instance.LoadLesson(id)!);
+            Show(lessonScreen);
+            for (var i = 0; i < 20; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, $"lesson-{id}.png"));
+            lessonScreen.DebugScrollToEnd();
+            for (var i = 0; i < 10; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, $"lesson-{id}-end.png"));
+            Back();
+        }
+
         // Songs: the library, a song before starting, and during "Listen".
         Show(new LibraryScreen());
         for (var i = 0; i < 20; i++)
@@ -227,7 +247,7 @@ public partial class Main : Control
 
     private void StartSmoke()
     {
-        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen() })
+        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen(), () => new StudyScreen(), () => new LessonScreen(Services.Instance.LoadLesson("meet-the-recorder")!), () => new LessonScreen(Services.Instance.LoadLesson("si-and-la")!) })
             _smokeScreens.Enqueue(make);
         _smokeFrame = 0;
     }

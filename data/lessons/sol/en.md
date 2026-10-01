@@ -14,4 +14,4 @@ On the staff, Sol sits on the **second line from the bottom**.
 
 ::exercise "Si, La, Sol" music="B4/q A4 G4/h | B4/q A4 G4/h" tempo=66
 
-::pip "Three notes already! That's enough for your first song."
+::pip "Three notes already! That's enough for your first song." after=task

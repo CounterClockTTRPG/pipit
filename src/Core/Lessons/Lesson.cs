@@ -116,18 +116,21 @@ public static partial class LessonParser
         if (!m.Success)
             throw new InvalidDataException($"{context}: cannot read directive '::{body}'");
         var name = m.Groups["name"].Value;
-        string? positional = m.Groups["text"].Success ? m.Groups["text"].Value : null;
+        string? positional = m.Groups["text"].Success ? Unescape(m.Groups["text"].Value) : null;
         var args = new Dictionary<string, string>();
         foreach (Match a in ArgRegex().Matches(m.Groups["rest"].Value))
-            args[a.Groups["key"].Value] = a.Groups["q"].Success ? a.Groups["q"].Value : a.Groups["v"].Value;
+            args[a.Groups["key"].Value] = a.Groups["q"].Success ? Unescape(a.Groups["q"].Value) : a.Groups["v"].Value;
         return new DirectiveBlock(name, positional, args);
     }
 
-    [GeneratedRegex("""^(?<name>[a-z]+)\s*(?:"(?<text>[^"]*)")?(?<rest>.*)$""")]
+    // Quoted strings may contain \" (an escaped quote).
+    [GeneratedRegex("""^(?<name>[a-z]+)\s*(?:"(?<text>(?:[^"\\]|\\.)*)")?(?<rest>.*)$""")]
     private static partial Regex DirectiveRegex();
 
-    [GeneratedRegex("""(?<key>[a-z]+)=(?:"(?<q>[^"]*)"|(?<v>\S+))""")]
+    [GeneratedRegex("""(?<key>[a-z]+)=(?:"(?<q>(?:[^"\\]|\\.)*)"|(?<v>\S+))""")]
     private static partial Regex ArgRegex();
+
+    private static string Unescape(string text) => text.Replace("\\\"", "\"");
 
     /// <summary>A quiz's options from "Right* | Wrong | Wrong": the starred one is correct.</summary>
     public static (IReadOnlyList<string> Options, int Correct) QuizOptions(DirectiveBlock quiz)

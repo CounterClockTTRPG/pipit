@@ -42,6 +42,8 @@ public partial class StaffView : Control, ISongView
     public int? WaitingFor { get; set; }
     public string Overlay { get; set; } = "";
     public bool ShowNames { get; set; } = true;
+    /// <summary>False for static snippets (lessons): no cursor, no highlighted note.</summary>
+    public bool ShowCursor { get; set; } = true;
     public Func<Pitch, string> NoteLabel { get; set; } = p => p.ToString();
 
     public StaffView()
@@ -100,7 +102,7 @@ public partial class StaffView : Control, ISongView
             return;
         EnsureLayout();
         // Keep the current line about a third of a line from the top.
-        var current = CurrentPlace();
+        var current = ShowCursor ? CurrentPlace() : null;
         var target = current is { } c ? Math.Max(0, c.System * SystemHeight - SystemHeight * 0.35f) : 0;
         target = Math.Min(target, Math.Max(0, _systems.Count * SystemHeight - Size.Y + Space * 2));
         _scroll += (target - _scroll) * (float)Math.Min(1, delta * 5);
@@ -135,7 +137,7 @@ public partial class StaffView : Control, ISongView
         var sp = Space;
         var fontSize = (int)Math.Round(sp * 4);
         var ink = PipitTheme.Ink;
-        var current = CurrentPlace();
+        var current = ShowCursor ? CurrentPlace() : null;
 
         for (var s = 0; s < _systems.Count; s++)
         {

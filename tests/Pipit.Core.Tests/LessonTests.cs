@@ -37,6 +37,14 @@ public class LessonParserTests
     }
 
     [Fact]
+    public void Escaped_quotes_inside_quoted_text()
+    {
+        var pip = (DirectiveBlock)LessonParser.Parse("""::pip "Tongue every note with \"du\", so each starts clearly." mood=happy""")[0];
+        Assert.Equal("Tongue every note with \"du\", so each starts clearly.", pip.Text);
+        Assert.Equal("happy", pip.Arg("mood"));
+    }
+
+    [Fact]
     public void Quiz_without_an_answer_is_an_error() =>
         Assert.Throws<InvalidDataException>(() => LessonParser.QuizOptions((DirectiveBlock)LessonParser.Parse("::quiz \"Q\" options=\"A | B\"")[0]));
 }

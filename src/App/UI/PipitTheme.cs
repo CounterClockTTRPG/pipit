@@ -19,12 +19,18 @@ public static class PipitTheme
     public static readonly Color WoodEdge = new("b48a55");
 
     public static Font Font { get; } = MakeFont();
+    public static Font BoldFont { get; } = MakeFont(bold: true);
+    public static Font ItalicFont { get; } = MakeFont(italic: true);
 
-    private static Font MakeFont()
+    private static Font MakeFont(bool bold = false, bool italic = false)
     {
         // Segoe UI is on every Windows machine; Segoe UI Symbol supplies ♯ and ♭.
         var symbols = new SystemFont { FontNames = new[] { "Segoe UI Symbol", "DejaVu Sans" } };
-        return new SystemFont { FontNames = new[] { "Segoe UI", "Arial" }, Fallbacks = new Godot.Collections.Array<Font> { symbols } };
+        return new SystemFont
+        {
+            FontNames = new[] { "Segoe UI", "Arial" }, FontWeight = bold ? 700 : 400, FontItalic = italic,
+            Fallbacks = new Godot.Collections.Array<Font> { symbols },
+        };
     }
 
     public static Theme Build()

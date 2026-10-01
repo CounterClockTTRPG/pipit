@@ -37,6 +37,7 @@ public partial class HomeScreen : Screen
             b.CustomMinimumSize = new Vector2(300, 110);
             grid.AddChild(b);
         }
+        Tile("Study", "Learn step by step, with Pip", () => new StudyScreen());
         Tile("Songs", "Play along, or at your own pace", () => new LibraryScreen());
         Tile("Tuner", "What note am I playing?", () => new TunerScreen());
         Tile("Fingering trainer", "Show me a note, I play it", () => new TrainerScreen());

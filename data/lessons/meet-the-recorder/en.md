@@ -25,4 +25,4 @@ Cover the back hole with your thumb and the first hole on the front with your le
 
 ::try "Play Si and hold it for a moment" note=B4 hold=1
 
-::pip "Well done! That's your first note."
+::pip "Well done! That's your first note." after=task

@@ -25,4 +25,4 @@ Sluit het gaatje achteraan met je duim en het eerste gaatje vooraan met je linke
 
 ::try "Speel Si en houd hem even aan" note=B4 hold=1
 
-::pip "Goed gedaan! Dat is je eerste noot."
+::pip "Goed gedaan! Dat is je eerste noot." after=task

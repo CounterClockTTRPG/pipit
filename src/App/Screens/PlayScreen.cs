@@ -70,8 +70,11 @@ public partial class PlayScreen : Screen
 
     public override string Title => _song.Title(S.Settings.Language);
 
-    public PlayScreen(Song song)
+    private readonly bool _fromPath;
+
+    public PlayScreen(Song song, bool fromPath = false)
     {
+        _fromPath = fromPath;
         _song = song;
         _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
@@ -513,7 +516,23 @@ public partial class PlayScreen : Screen
 
         var replay = Ui.Button("♪ Listen to your take", ToggleReplay, 16);
         replay.Disabled = _takeSamples is not { Length: > 0 } || _mode == Mode.Casual;
-        _resultsBox.AddChild(Ui.HBox(30, Ui.Expand(summary), xp, Ui.VBox(8, analyse, replay, Ui.Button("Songs", Main.Instance.Back, 16))));
+        // On the study path, say whether this song step is now done and offer the next step.
+        var pathStep = new Core.Lessons.PathStep(Core.Lessons.StepKind.Song, _song.Id);
+        Button? nextStep = null;
+        if (_fromPath)
+        {
+            var done = Core.Lessons.StudyPath.SongDone(S.SongRecord(_song.Id));
+            summary.AddChild(Ui.Text(Ui.T(done
+                ? "✓ This step of the study path is done."
+                : "To finish this step: earn a star in Rhythm mode, or find at least 80% of the notes first time in Casual mode."), 16, done ? PipitTheme.Good : PipitTheme.InkSoft));
+            if (done && S.Study.After(pathStep) is { } next)
+                nextStep = Ui.Button("Next step →", () => { Main.Instance.Back(); StudyScreen.Open(next); }, 16);
+        }
+        var back = Ui.Button(_fromPath ? "Study path" : "Songs", Main.Instance.Back, 16);
+        var buttons = Ui.VBox(8, analyse, replay, back);
+        if (nextStep is not null)
+            buttons.AddChild(nextStep);
+        _resultsBox.AddChild(Ui.HBox(30, Ui.Expand(summary), xp, buttons));
         if (analysis is not null)
             _resultsBox.AddChild(analysis);
     }

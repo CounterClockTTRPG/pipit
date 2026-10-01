@@ -14,4 +14,4 @@ Op de notenbalk staat Sol op de **tweede lijn van onderen**.
 
 ::exercise "Si, La, Sol" music="B4/q A4 G4/h | B4/q A4 G4/h" tempo=66
 
-::pip "Al drie noten! Genoeg voor je eerste liedje."
+::pip "Al drie noten! Genoeg voor je eerste liedje." after=task

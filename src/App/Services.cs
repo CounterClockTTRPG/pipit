@@ -7,6 +7,7 @@ using Pipit.App.Audio;
 using Pipit.Core.Analysis;
 using Pipit.Core.Game;
 using Pipit.Core.Instruments;
+using Pipit.Core.Lessons;
 using Pipit.Core.Music;
 using Pipit.Core.Settings;
 using FileAccess = Godot.FileAccess;
@@ -33,6 +34,30 @@ public partial class Services : Node
     public static string ProgressPath => Path.Combine(UserDir, "progress.json");
 
     public SongLibrary Songs { get; private set; } = null!;
+
+    public StudyPath Study { get; private set; } = null!;
+    private readonly Dictionary<string, Lesson?> _lessons = new();
+
+    /// <summary>A lesson from res://data/lessons/&lt;id&gt;/, cached; null (and an error) if it does not load.</summary>
+    public Lesson? LoadLesson(string id)
+    {
+        if (_lessons.TryGetValue(id, out var cached))
+            return cached;
+        try
+        {
+            var lesson = LessonParser.Load(id, file =>
+            {
+                var path = $"res://data/lessons/{id}/{file}";
+                return FileAccess.FileExists(path) ? FileAccess.GetFileAsString(path) : null;
+            });
+            return _lessons[id] = lesson;
+        }
+        catch (Exception e) when (e is InvalidDataException or System.Text.Json.JsonException)
+        {
+            GD.PushError($"Lesson {id}: {e.Message}");
+            return _lessons[id] = null;
+        }
+    }
 
     /// <summary>Bravura, the SMuFL music font (SIL OFL), for the score view.</summary>
     public Font? MusicFont { get; private set; }
@@ -69,6 +94,7 @@ public partial class Services : Node
             GD.PushError("Song: " + error);
         Progress = JsonStore.LoadOrDefault<PlayerProgress>(ProgressPath);
         MusicFont = LoadMusicFont();
+        Study = StudyPath.Parse(FileAccess.GetFileAsString("res://data/path.json"));
     }
 
     /// <summary>
