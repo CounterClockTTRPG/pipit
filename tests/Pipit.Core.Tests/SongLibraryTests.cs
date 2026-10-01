@@ -13,6 +13,7 @@ public class SongLibraryTests
     {
         [1] = new[] { "G4", "A4", "B4", "D5" },
         [2] = new[] { "G4", "A4", "B4", "C5", "D5" },
+        [3] = new[] { "D4", "E4", "G4", "A4", "B4", "C5", "D5" },
     };
 
     [Fact]
@@ -20,7 +21,7 @@ public class SongLibraryTests
     {
         var library = Library;
         Assert.Empty(library.Errors);
-        Assert.Equal(6, library.Songs.Count);
+        Assert.Equal(7, library.Songs.Count);
         Assert.Equal(library.Songs.Count, Directory.GetFiles(Repo.Data("songs"), "*.json").Length - 1); // all listed in index.json
     }
 
@@ -61,6 +62,7 @@ public class SongLibraryTests
     [InlineData("au-clair-de-la-lune", 22)]   // 11 notes, repeated
     [InlineData("jingle-bells", 51)]          // 2 x 20 shared notes + 6 (first ending) + 5 (second)
     [InlineData("hot-cross-buns", 17)]
+    [InlineData("ode-to-joy-full", 62)]        // 4 lines of 15/16 notes
     public void Note_counts(string id, int count) => Assert.Equal(count, Library.Get(id)!.Melody.Performance.Count);
 
     [Fact]

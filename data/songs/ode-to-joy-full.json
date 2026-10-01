@@ -1,0 +1,29 @@
+{
+  "id": "ode-to-joy-full",
+  "title": {
+    "en": "Ode to Joy (full theme)",
+    "nl": "Ode aan de vreugde (volledig thema)",
+    "fr": "Hymne à la joie (thème complet)"
+  },
+  "composer": "Ludwig van Beethoven",
+  "chapter": 3,
+  "tempo": 88,
+  "time": "4/4",
+  "key": "G",
+  "about": {
+    "en": "The whole theme as Beethoven wrote it: two lines you already know, a middle part that climbs and falls, then the first line once more. In the symphony the theme starts very quietly in the cellos and basses, and the orchestra and then the choir take it up until everyone sings.",
+    "nl": "Het hele thema zoals Beethoven het schreef: twee regels die je al kent, een middendeel dat klimt en daalt, en dan nog eens de eerste regel. In de symfonie begint het thema heel stil bij de cello's en contrabassen, waarna het orkest en het koor het overnemen tot iedereen zingt."
+  },
+  "tip": {
+    "en": "New note at the end of the middle part: low Re. Cover every hole except the bottom double hole, and blow very gently. The quick Si-Do pairs are eighth notes: two notes in one beat.",
+    "nl": "Nieuwe noot op het einde van het middendeel: lage Re. Bedek alle gaatjes behalve het onderste dubbele gaatje, en blaas heel zacht. De snelle Si-Do-paartjes zijn achtste noten: twee noten in één tel."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | B4/q. A4/e A4/h | B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | A4/q. G4/e G4/h || A4/q A4 B4 G4 | A4/q B4/e C5 B4/q G4 | A4/q B4/e C5 B4/q A4 | G4/q A4 D4/h || B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | A4/q. G4/e G4/h"
+    }
+  ]
+}

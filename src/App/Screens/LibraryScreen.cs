@@ -12,6 +12,7 @@ public partial class LibraryScreen : Screen
     {
         [1] = "Your first notes: Si, La, Sol",
         [2] = "New notes: high Do and Re",
+        [3] = "New note: low Re",
     };
 
     private readonly VBoxContainer _list = Ui.VBox(14);
