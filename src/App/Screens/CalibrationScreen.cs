@@ -132,6 +132,9 @@ public partial class CalibrationScreen : Screen
     /// <summary>For `--shots`: jump straight to the clicks step.</summary>
     public void DebugStartLatency() => Go(Step.Latency);
 
+    /// <summary>For `--shots`: jump straight to the tuning step.</summary>
+    public void DebugStartTuning() => Go(Step.Tuning);
+
     private void Set(string heading, string body, string primary)
     {
         _heading.Text = Ui.T(heading);

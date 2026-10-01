@@ -81,6 +81,13 @@ public partial class Main : Control
         await ToSignal(GetTree().CreateTimer(3.3), SceneTreeTimer.SignalName.Timeout);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-beats.png"));
         Back();
+        var tuning = new CalibrationScreen();
+        Show(tuning);
+        tuning.DebugStartTuning();
+        for (var i = 0; i < 20; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "calibrate-tuning.png"));
+        Back();
         GD.Print("SHOTS " + dir);
         GetTree().Quit();
     }

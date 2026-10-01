@@ -7,9 +7,11 @@ using Pipit.Core.Instruments;
 namespace Pipit.App.Views;
 
 /// <summary>
-/// Front view of a recorder with the thumb hole drawn beside hole 1. Closed holes are filled,
-/// open ones outlined; a half-covered double hole has one of its pair filled; the pinched thumb
-/// is half filled with a slash. Left-hand holes are tinted blue, right-hand ones brown.
+/// Front view of a recorder with the thumb hole drawn beside hole 1. Covered holes are dark and
+/// open holes white, the same for both hands, so "covered or not" is the only thing the colour
+/// says (tinting by hand made covered right-hand holes look open). The hands are marked with
+/// L / R brackets instead. A half-covered double hole has one of its pair dark; the pinched
+/// thumb is half dark with a slash. A legend sits underneath.
 /// </summary>
 public partial class FingeringDiagram : Control
 {
@@ -31,12 +33,13 @@ public partial class FingeringDiagram : Control
     /// <summary>Greys the diagram out (for "no note" states) without hiding it.</summary>
     public bool Dimmed { get; set; }
 
-    public FingeringDiagram() => CustomMinimumSize = new Vector2(120, 340);
+    public FingeringDiagram() => CustomMinimumSize = new Vector2(170, 370);
 
     public override void _Draw()
     {
         var w = Size.X;
-        var h = Size.Y;
+        const float legendH = 34;
+        var h = Size.Y - legendH;
         // Body: a tapered tube with a beak at the top.
         var bodyW = Math.Min(w * 0.42f, h * 0.16f);
         var cx = w * 0.58f;
@@ -67,33 +70,55 @@ public partial class FingeringDiagram : Control
         var r = Math.Min(bodyW * 0.22f, h * 0.03f);
         var y0 = top + h * 0.22f;
         var step = (bottom - h * 0.1f - y0) / 7.6f;
+        float HoleY(int i) => y0 + step * (i + (i >= 3 ? 0.6f : 0));
+        var color = PipitTheme.Ink with { A = alpha };
         for (var i = 0; i < 7; i++)
         {
-            var y = y0 + step * (i + (i >= 3 ? 0.6f : 0));
-            var color = (i < 3 ? PipitTheme.LeftHand : PipitTheme.RightHand) with { A = alpha };
             var state = _fingering.Holes[i];
             if (i >= 5 && !_keyed)
-                DoubleHole(new Vector2(cx, y), r, state, color);
+                DoubleHole(new Vector2(cx, HoleY(i)), r, state, color);
             else
-                Hole(new Vector2(cx, y), r, state == HoleState.Closed ? 1 : state == HoleState.Half ? 0.5f : 0, color);
+                Hole(new Vector2(cx, HoleY(i)), r, state == HoleState.Closed ? 1 : state == HoleState.Half ? 0.5f : 0, color);
         }
+
+        // Hand brackets on the right of the body.
+        var font = PipitTheme.Font;
+        var bx = cx + bodyW * 0.5f + 8;
+        void Bracket(float yTop, float yBottom, string label, Color c)
+        {
+            DrawPolyline(new[] { new Vector2(bx, yTop), new Vector2(bx + 6, yTop), new Vector2(bx + 6, yBottom), new Vector2(bx, yBottom) }, c, 2, true);
+            DrawString(font, new Vector2(bx + 10, (yTop + yBottom) / 2 + 7), label, HorizontalAlignment.Left, -1, 18, c);
+        }
+        Bracket(HoleY(0) - step * 0.85f, HoleY(2) + r, Ui.T("L"), PipitTheme.LeftHand with { A = alpha });
+        Bracket(HoleY(3) - r, HoleY(6) + r, Ui.T("R"), PipitTheme.RightHand with { A = alpha });
 
         // Thumb hole: beside the body at the height of hole 1, labelled.
         var thumb = new Vector2(cx - bodyW * 0.5f - r * 2.2f, y0 - step * 0.35f);
-        var thumbColor = PipitTheme.LeftHand with { A = alpha };
         var fill = _fingering.Thumb switch { HoleState.Closed => 1f, HoleState.Pinched => 0.5f, _ => 0f };
-        Hole(thumb, r, fill, thumbColor);
+        Hole(thumb, r, fill, color);
         if (_fingering.Thumb == HoleState.Pinched)
             DrawLine(thumb + new Vector2(-r * 1.2f, r * 1.2f), thumb + new Vector2(r * 1.2f, -r * 1.2f), PipitTheme.Ink with { A = alpha }, 2, true);
-        var font = PipitTheme.Font;
         DrawString(font, thumb + new Vector2(-r * 0.6f, -r * 1.6f), "Ø", HorizontalAlignment.Left, -1, (int)(r * 1.3f), PipitTheme.InkSoft with { A = alpha });
 
         if (_fingering.BellCovered)
             DrawArc(new Vector2(cx, bottom + 2), bodyW * 0.6f, 0, Mathf.Pi, 16, PipitTheme.Bad with { A = alpha }, 3, true);
+
+        // Legend: covered, open, half.
+        var ly = Size.Y - legendH / 2;
+        var lr = 7f;
+        var lx = 4f;
+        foreach (var (f, text) in new[] { (1f, Ui.T("covered")), (0f, Ui.T("open")), (0.5f, Ui.T("half")) })
+        {
+            Hole(new Vector2(lx + lr, ly), lr, f, PipitTheme.Ink);
+            DrawString(font, new Vector2(lx + lr * 2 + 4, ly + 5), text, HorizontalAlignment.Left, -1, 13, PipitTheme.InkSoft);
+            lx += lr * 2 + 8 + font.GetStringSize(text, HorizontalAlignment.Left, -1, 13).X + 10;
+        }
     }
 
     private void Hole(Vector2 c, float r, float fill, Color color)
     {
+        // Open holes are white so they stand out from the wood as clearly as covered ones.
+        DrawCircle(c, r, Colors.White with { A = color.A });
         if (fill >= 1)
             DrawCircle(c, r, color);
         else if (fill > 0)
