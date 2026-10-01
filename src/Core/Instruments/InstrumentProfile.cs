@@ -2,7 +2,7 @@ namespace Pipit.Core.Instruments;
 
 /// <summary>
 /// One physical recorder. Calibration fills in the offsets; until M4 moves instruments into
-/// user profiles, the app keeps a single active one in its settings.
+/// user profiles, the app keeps the list in its settings.
 /// </summary>
 public sealed class InstrumentProfile
 {
@@ -18,6 +18,8 @@ public sealed class InstrumentProfile
     /// <summary>Per sounding MIDI note; informational unless the user opts in.</summary>
     public Dictionary<int, double> PerNoteOffsetCents { get; set; } = new();
     public double MinutesPlayed { get; set; }
+    /// <summary>When the tuning was last calibrated, or null if never.</summary>
+    public DateTime? CalibratedAt { get; set; }
 
     [System.Text.Json.Serialization.JsonIgnore]
     public RecorderInfo Info => RecorderInfo.Of(Kind);

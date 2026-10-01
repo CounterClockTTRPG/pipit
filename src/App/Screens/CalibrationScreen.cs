@@ -25,6 +25,7 @@ public partial class CalibrationScreen : Screen
     private readonly LevelMeter _meter = new();
     private readonly Button _primary, _secondary;
     private readonly BeatIndicator _beats = new() { Visible = false };
+    private readonly InstrumentEditor _instrumentEditor = new(showAdvanced: false);
     private List<float>? _audio;
     private double _audioStart;
     private readonly ProgressBar _progress = new() { MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new Vector2(0, 14) };
@@ -47,7 +48,8 @@ public partial class CalibrationScreen : Screen
         _status = Ui.Text("", 20, PipitTheme.InkSoft);
         _primary = Ui.Button("", OnPrimary);
         _secondary = Ui.Button("", OnSecondary);
-        var text = Ui.VBox(16, _heading, _body, _progress, _beats, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),
+        _instrumentEditor.Changed += () => _diagram.Keyed = S.Instrument.Keyed;
+        var text = Ui.VBox(16, _heading, _body, _instrumentEditor, _progress, _beats, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),
             Ui.HBox(12, Ui.Label("Input", 16, PipitTheme.InkSoft), Ui.Expand(_meter)));
         AddChild(Ui.HBox(40, Ui.Expand(text, true, true), Ui.MinSize(_diagram, 200, 400)));
     }
@@ -78,6 +80,7 @@ public partial class CalibrationScreen : Screen
             _frames.Clear();
         _progress.Value = 0;
         _progress.Visible = step is Step.Silence;
+        _instrumentEditor.Visible = step == Step.Intro;
         _beats.Stop();
         _diagram.Visible = step is Step.Tuning or Step.Latency;
         _secondary.Visible = false;
@@ -89,7 +92,8 @@ public partial class CalibrationScreen : Screen
         switch (step)
         {
             case Step.Intro:
-                Set("Calibrate", "Pipit will learn three things: how quiet your room is, how long sound takes to travel through your computer, and how your recorder is tuned. It takes about two minutes. Use the microphone you will practise with.", "Start");
+                _instrumentEditor.Refresh();
+                Set("Which recorder are you calibrating?", "Pick it below, or add it and give it a name. Pipit will then learn three things: how quiet your room is, how long sound takes to travel through your computer (both belong to the microphone), and how this recorder is tuned. It takes about two minutes.", "Start");
                 break;
             case Step.Silence:
                 Set("1 · Quiet please", "Stay silent for three seconds while Pipit listens to the room.", "");
@@ -299,6 +303,7 @@ public partial class CalibrationScreen : Screen
         if (_tunings.Count > 0)
         {
             i.MeasuredOffsetCents = Stats.Median(_tunings.Select(t => t.CentsOff));
+            i.CalibratedAt = DateTime.Now;
             foreach (var t in _tunings)
             {
                 i.PerNoteOffsetCents[t.ExpectedMidi] = t.CentsOff;
@@ -309,7 +314,7 @@ public partial class CalibrationScreen : Screen
         }
         var summary = _tunings.Count == 0
             ? Ui.T("No notes were tuned; Pipit will assume your recorder is in tune.")
-            : string.Format(Ui.T("Overall your recorder plays {0:+0;-0;0} cents from A = {1:0} Hz."), i.MeasuredOffsetCents, i.ReferenceA) + "\n" + string.Join("   ", lines);
+            : string.Format(Ui.T("Overall \"{2}\" plays {0:+0;-0;0} cents from A = {1:0} Hz."), i.MeasuredOffsetCents, i.ReferenceA, i.Name) + "\n" + string.Join("   ", lines);
         Set("All done", summary, "Back");
         _diagram.Visible = false;
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Godot;
 using Pipit.App.Audio;
 using Pipit.Core.Analysis;
@@ -28,9 +29,10 @@ public partial class Services : Node
     public static string SettingsPath => Path.Combine(UserDir, "settings.json");
     public static string RecordingsDir => Path.Combine(UserDir, "recordings");
 
-    public InstrumentProfile Instrument => Settings.Instrument;
-    public RecorderInfo Recorder => Settings.Instrument.Info;
-    public FingeringChart Chart => ChartFor(Settings.Instrument.Fingering);
+    /// <summary>The recorder currently being played.</summary>
+    public InstrumentProfile Instrument => Settings.ActiveInstrument;
+    public RecorderInfo Recorder => Instrument.Info;
+    public FingeringChart Chart => ChartFor(Instrument.Fingering);
 
     /// <summary>Raised after the instrument, device or naming changes, so screens can redraw.</summary>
     public event Action? Changed;
@@ -39,7 +41,8 @@ public partial class Services : Node
 
     public override void _Ready()
     {
-        Settings = JsonStore.LoadOrDefault<AppSettings>(SettingsPath);
+        Settings = JsonStore.LoadOrDefault<AppSettings>(SettingsPath).Normalize();
+        JsonStore.Save(SettingsPath, Settings); // persists any migration straight away
         Audio = new AudioHub { Name = "AudioHub" };
         AddChild(Audio);
         Clicks = new ClickPlayer { Name = "Clicks" };
@@ -73,6 +76,32 @@ public partial class Services : Node
     public void ApplyWideRange() =>
         Audio.Configure(PitchTrackerOptions.ForRange(RecorderInfo.Of(RecorderKind.Tenor).BottomSoundingMidi,
             RecorderInfo.Of(RecorderKind.Soprano).TopSoundingMidi, Instrument.ReferenceA), DeviceGate);
+
+    public void SetActiveInstrument(string id)
+    {
+        if (Settings.ActiveInstrumentId == id || Settings.Instruments.All(i => i.Id != id))
+            return;
+        Settings.ActiveInstrumentId = id;
+        ApplyInstrument();
+        Save();
+    }
+
+    public InstrumentProfile AddInstrument(RecorderKind kind, FingeringSystem fingering)
+    {
+        var added = Settings.AddInstrument(kind, fingering);
+        ApplyInstrument();
+        Save();
+        return added;
+    }
+
+    public bool RemoveInstrument(string id)
+    {
+        if (!Settings.RemoveInstrument(id))
+            return false;
+        ApplyInstrument();
+        Save();
+        return true;
+    }
 
     public double? DeviceGate => Settings.GateRmsByDevice.TryGetValue(Audio.CurrentDevice, out var g) ? g : null;
     public double? DeviceLatencyMs => Settings.LatencyMsByDevice.TryGetValue(Audio.CurrentDevice, out var l) ? l : null;

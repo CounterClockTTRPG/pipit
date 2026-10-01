@@ -26,31 +26,13 @@ public partial class SettingsScreen : Screen
 
     public SettingsScreen()
     {
-        var i = S.Instrument;
-
-        // Instrument column.
-        var name = new LineEdit { Text = i.Name };
-        name.TextChanged += t => { S.Instrument.Name = t; S.Save(); };
-        var kinds = Enum.GetValues<RecorderKind>();
-        var kind = Ui.Options(kinds.Select(k => k.ToString()).ToArray(), Array.IndexOf(kinds, i.Kind), ix => { S.Instrument.Kind = kinds[ix]; Changed(); });
-        var systems = Enum.GetValues<FingeringSystem>();
-        var system = Ui.Options(systems.Select(s => s.ToString()).ToArray(), Array.IndexOf(systems, i.Fingering), ix => { S.Instrument.Fingering = systems[ix]; Changed(); });
-        var keyed = new CheckBox { Text = Ui.T("Holes 6 and 7 are keys (some tenors)"), ButtonPressed = i.Keyed };
-        keyed.Toggled += on => { S.Instrument.Keyed = on; S.Save(); };
-        var refA = new SpinBox { MinValue = 400, MaxValue = 466, Step = 1, Value = i.ReferenceA, Suffix = "Hz" };
-        refA.ValueChanged += v => { S.Instrument.ReferenceA = v; Changed(); };
+        var editor = new InstrumentEditor();
         var language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, S.Settings.Language)), ix => { S.Settings.Language = Languages[ix]; S.Save(); });
         var naming = Ui.Options(new[] { "Do Re Mi (fixed Do)", "C D E (letters)" }, (int)S.Settings.Naming, ix => { S.Settings.Naming = (NoteNaming)ix; S.Save(); });
 
         var instrument = Ui.VBox(10,
-            Ui.Label("Your recorder", 26, PipitTheme.Accent),
-            Ui.Label("Name"), name,
-            Ui.Label("Size"), kind,
-            Ui.Label("Fingering system"), system,
-            Ui.Text("Most recorders are baroque (also called English). German-fingered school recorders have a simpler Fa; look for a 'G' or 'German' marking."
-                , 15, PipitTheme.InkSoft),
-            keyed,
-            Ui.Text("Pitch of A (440 Hz is standard; 442 is common in Europe; 415 for baroque-pitch instruments)", 15, PipitTheme.InkSoft), refA,
+            Ui.Label("Your recorders", 26, PipitTheme.Accent),
+            editor,
             Ui.Label("Language"), language,
             Ui.Label("Note names"), naming);
 
@@ -100,12 +82,6 @@ public partial class SettingsScreen : Screen
                 "Turn the volume up and take headphones off; if it still fails, set \"Audio enhancements\" to Off for your microphone (Windows Settings → System → Sound → Input) and check again."), PipitTheme.Warn),
         };
         _checkStatus.Text += $"  ({result.OnsetDb:0} → {result.SustainDb:0} dB)";
-    }
-
-    private static void Changed()
-    {
-        S.ApplyInstrument();
-        S.Save();
     }
 
     public override void Enter()
