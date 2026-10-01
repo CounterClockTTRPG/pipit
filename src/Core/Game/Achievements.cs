@@ -12,6 +12,7 @@ public sealed record AchievementEvent
     public GradedRun? Run { get; init; }
     public double CasualAccuracy { get; init; }
     public double TempoFactor { get; init; } = 1;
+    public SurvivalState? Survival { get; init; }
 }
 
 /// <summary>
@@ -29,6 +30,8 @@ public static class Achievements
         new Achievement("perfect-ten", "Perfect ten", "Play 10 notes in a row with Perfect timing.", 40, "10"),
         new Achievement("clean-run", "Clean run", "Play a song in rhythm without a wrong or missed note.", 50, "✓"),
         new Achievement("casual-clean", "Found them all", "Play a song in casual mode, finding every note first time.", 30, "🔍"),
+        new Achievement("survivor", "Survivor", "Reach the end of a song in survival mode.", 50, "❤"),
+        new Achievement("combo-30", "On a roll", "Reach a combo of 30 notes in survival mode.", 40, "x4"),
         new Achievement("slow-and-steady", "Slow and steady", "Finish a song at 70 % speed or slower. Practising slowly is how musicians learn.", 20, "🐢"),
         new Achievement("chapter-1", "Si La Sol", "Earn at least one star on every song in chapter 1.", 60, "1"),
         new Achievement("chapter-2", "High notes", "Earn at least one star on every song in chapter 2.", 80, "2"),
@@ -62,6 +65,8 @@ public static class Achievements
         Check("casual-clean", e.Casual && e.CasualAccuracy >= 100);
         Check("slow-and-steady", e.SongId is not null && e.TempoFactor <= 0.7);
         Check("space-musician", e.SongId == "jingle-bells");
+        Check("survivor", e.Survival is { Alive: true });
+        Check("combo-30", e.Survival?.BestCombo >= 30);
         foreach (var (chapter, id) in new[] { (1, "chapter-1"), (2, "chapter-2") })
             Check(id, songsByChapter.TryGetValue(chapter, out var songs) && songs.Count > 0
                 && songs.All(s => progress.Songs.TryGetValue(PlayerProgress.SongKey(s, recorderKind), out var r) && r.BestStars >= 1));

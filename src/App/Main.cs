@@ -170,6 +170,15 @@ public partial class Main : Control
             Back();
         }
 
+        // The highway while listening.
+        var highway = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
+        Show(highway);
+        highway.DebugShowHighway();
+        highway.DebugListen();
+        await ToSignal(GetTree().CreateTimer(4.0), SceneTreeTimer.SignalName.Timeout);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "highway.png"));
+        Back();
+
         // The Studio conductor during a held note and during the rest after it.
         var studio = new StudioScreen();
         Show(studio);

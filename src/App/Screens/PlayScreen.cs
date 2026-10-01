@@ -22,7 +22,7 @@ namespace Pipit.App.Screens;
 /// </summary>
 public partial class PlayScreen : Screen
 {
-    private enum Mode { Rhythm, Casual }
+    private enum Mode { Rhythm, Casual, Survival }
     private enum State { Ready, Preview, Running, Results, Replay }
 
     private readonly Song _song;
@@ -45,6 +45,15 @@ public partial class PlayScreen : Screen
 
     private State _state = State.Ready;
     private Mode _mode = Mode.Rhythm;
+    private bool Rhythmic => _mode is Mode.Rhythm or Mode.Survival;
+
+    // Survival: life, score and combo shown above the music; the leaderboard rank after a run.
+    private readonly HighwayView _highway = new();
+    private readonly ProgressBar _life = new() { MinValue = 0, MaxValue = Survival.MaxLife, Value = Survival.MaxLife, ShowPercentage = false, CustomMinimumSize = new Vector2(260, 18) };
+    private readonly Label _survivalLabel = new();
+    private HBoxContainer _survivalBar = null!;
+    private SurvivalState? _survival;
+    private int? _rank;
     private Tolerances _tolerances = Tolerances.Normal;
     private double _tempoFactor = 1;
 
@@ -95,16 +104,25 @@ public partial class PlayScreen : Screen
         SetBeat(_barNotes.Min(n => n.StartBeat) - 0.5);
         Ui.Expand(_bars, true, true);
         Ui.Expand(_staff, true, true);
-        var score = S.Settings.SongView == "score";
-        _bars.Visible = !score;
-        _staff.Visible = score;
-        var views = Ui.Expand(Ui.VBox(4, _bars, _staff, _progress), true, true);
+        _highway.NoteLabel = S.NoteName;
+        _highway.SetNotes(_barNotes);
+        Ui.Expand(_highway, true, true);
+        var view = S.Settings.SongView switch { "score" => 1, "highway" => 2, _ => 0 };
+        var score = view == 1;
+        _bars.Visible = view == 0;
+        _staff.Visible = view == 1;
+        _highway.Visible = view == 2;
+        _life.AddThemeStyleboxOverride("fill", new StyleBoxFlat { BgColor = PipitTheme.Good, CornerRadiusBottomLeft = 6, CornerRadiusBottomRight = 6, CornerRadiusTopLeft = 6, CornerRadiusTopRight = 6 });
+        _survivalLabel.AddThemeFontSizeOverride("font_size", 20);
+        _survivalBar = Ui.HBox(12, Ui.Label("❤", 20, PipitTheme.Bad), _life, _survivalLabel);
+        _survivalBar.Visible = false;
+        var views = Ui.Expand(Ui.VBox(4, _survivalBar, _bars, _staff, _highway, _progress), true, true);
         _nextLabel = Ui.Label("", 18, PipitTheme.InkSoft, HorizontalAlignment.Center);
         var side = Ui.VBox(4, Ui.MinSize(_diagram, 200, 330), _nextLabel);
         _feedback = Ui.Text("", 20, PipitTheme.Ink, HorizontalAlignment.Center);
 
-        _modeOption = Ui.Options(new[] { "Rhythm", "Casual" }, 0, ix => { _mode = (Mode)ix; UpdateControls(); });
-        _modeOption.TooltipText = Ui.T("Rhythm: play along with the beat. Casual: the song waits for each note.");
+        _modeOption = Ui.Options(new[] { "Rhythm", "Casual", "Survival" }, 0, ix => { _mode = (Mode)ix; UpdateControls(); });
+        _modeOption.TooltipText = Ui.T("Rhythm: play along with the beat. Casual: the song waits for each note. Survival: keep going until your life runs out, for a high score.");
         _difficultyOption = Ui.Options(Tolerances.All.Select(t => t.Name).ToArray(), 1, ix => _tolerances = Tolerances.All[ix]);
         _speedLabel = Ui.Label("", 16, PipitTheme.Ink);
         _speed.ValueChanged += v => { _tempoFactor = v / 100; UpdateControls(); };
@@ -114,12 +132,13 @@ public partial class PlayScreen : Screen
         _listen = Ui.Button("♪ Listen", ToggleListen, 18);
         _start = Ui.Button("▶ Start", ToggleRun, 20);
         _start.CustomMinimumSize = new Vector2(140, 48);
-        var viewOption = Ui.Options(new[] { "Bars", "Score" }, score ? 1 : 0, ix =>
+        var viewOption = Ui.Options(new[] { "Bars", "Score", "Highway" }, view, ix =>
         {
             _bars.Visible = ix == 0;
             _staff.Visible = ix == 1;
+            _highway.Visible = ix == 2;
             _names.Visible = ix == 1;
-            S.Settings.SongView = ix == 1 ? "score" : "bars";
+            S.Settings.SongView = ix switch { 1 => "score", 2 => "highway", _ => "bars" };
             S.Save();
         });
         _names.Text = Ui.T("Names");
@@ -168,6 +187,7 @@ public partial class PlayScreen : Screen
         _speedLabel.Text = $"{_speed.Value:0}%";
         var busy = _state is State.Running or State.Preview or State.Replay;
         _start.Text = Ui.T(_state == State.Running ? "■ Stop" : _state == State.Results ? "▶ Again" : "▶ Start");
+        _survivalBar.Visible = _mode == Mode.Survival && _state is State.Running or State.Results;
         _start.Disabled = _state is State.Preview or State.Replay;
         _listen.Text = Ui.T(_state == State.Preview ? "■ Stop" : "♪ Listen");
         _listen.Disabled = _state is State.Running or State.Replay;
@@ -188,7 +208,7 @@ public partial class PlayScreen : Screen
 
     // ---- both views get every update ------------------------------------------------------
 
-    private IEnumerable<ISongView> Views => new ISongView[] { _bars, _staff };
+    private IEnumerable<ISongView> Views => new ISongView[] { _bars, _staff, _highway };
 
     private void SetBeat(double beat)
     {
@@ -270,7 +290,7 @@ public partial class PlayScreen : Screen
         _take = new List<float>();
         _takeStart = double.NaN;
         _feedback.Text = "";
-        if (_mode == Mode.Rhythm)
+        if (Rhythmic)
             StartRhythm();
         else
             StartCasual();
@@ -297,6 +317,11 @@ public partial class PlayScreen : Screen
         _performance = null;
         _endTime = BeatToTime(endBeat) + _latency + 0.7;
         _nextGrade = 0;
+        _survival = null;
+        _rank = null;
+        _life.Value = Survival.MaxLife;
+        _survivalLabel.Text = "";
+        _highway.Hud = "";
         SetState(State.Running);
     }
 
@@ -360,7 +385,7 @@ public partial class PlayScreen : Screen
         var now = S.Audio.Now;
         switch (_state)
         {
-            case State.Running when _mode == Mode.Rhythm:
+            case State.Running when Rhythmic:
                 SetBeat(TimeToBeat(now));
                 var firstNote = BeatToTime(_barNotes.Min(n => n.StartBeat));
                 SetOverlay(now < firstNote ? Math.Ceiling((firstNote - now) / _spb).ToString("0") : "");
@@ -368,7 +393,17 @@ public partial class PlayScreen : Screen
                 if (now >= _nextGrade)
                 {
                     _nextGrade = now + 0.1;
-                    ApplyMarks(Grader.Grade(_expected, LiveNotes(), _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _tempoFactor, until: now), live: true);
+                    var live = Grader.Grade(_expected, LiveNotes(), _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _tempoFactor, until: now);
+                    ApplyMarks(live, live: true);
+                    if (_mode == Mode.Survival)
+                    {
+                        UpdateSurvival(Survival.Evaluate(live.Notes));
+                        if (_survival is { Alive: false })
+                        {
+                            Finish(aborted: false);
+                            break;
+                        }
+                    }
                 }
                 if (now >= _endTime)
                     Finish(aborted: false);
@@ -389,6 +424,16 @@ public partial class PlayScreen : Screen
                 ShowFingeringAt(_beat);
                 break;
         }
+    }
+
+    private void UpdateSurvival(SurvivalState state)
+    {
+        _survival = state;
+        _life.Value = state.Life;
+        var fill = (StyleBoxFlat)_life.GetThemeStylebox("fill");
+        fill.BgColor = state.Life > 50 ? PipitTheme.Good : state.Life > 25 ? PipitTheme.Warn : PipitTheme.Bad;
+        _survivalLabel.Text = string.Format(Ui.T("{0:N0} points   combo {1}   ×{2}"), state.Score, state.Combo, state.Multiplier);
+        _highway.Hud = $"{state.Score:N0}   ×{state.Multiplier}";
     }
 
     private List<DetectedNote> LiveNotes()
@@ -441,13 +486,24 @@ public partial class PlayScreen : Screen
         var record = S.SongRecord(_song.Id);
         var minutes = _takeSamples.Length / (double)S.Audio.SampleRate / 60;
         List<XpLine> lines;
-        if (_mode == Mode.Rhythm)
+        if (Rhythmic)
         {
             if (_segmenter.Flush() is { } last)
                 _detected.Add(last);
             _performance = Grader.Grade(_expected, _detected, _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _tempoFactor);
             ApplyMarks(_performance, live: false);
-            lines = XpRules.RhythmRun(record, _performance.Hits, _performance.Stars, _performance.Accuracy, DateTime.Now);
+            if (_mode == Mode.Survival)
+            {
+                UpdateSurvival(Survival.Evaluate(_performance.Notes));
+                var st = _survival!;
+                var judged = _performance.Notes.OrderBy(n => n.Expected.Start).Take(st.Judged).ToList();
+                var accuracy = judged.Count == 0 ? 0 : judged.Average(n => n.Score);
+                _rank = Leaderboard.Add(S.Progress, PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString()),
+                    new ScoreEntry(Ui.T("You"), st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _tempoFactor, DateTime.Now));
+                lines = XpRules.SurvivalRun(record, judged.Count(n => n.Result == NoteResult.Hit), st.Score, st.Alive, DateTime.Now);
+            }
+            else
+                lines = XpRules.RhythmRun(record, _performance.Hits, _performance.Stars, _performance.Accuracy, DateTime.Now);
         }
         else
         {
@@ -458,7 +514,7 @@ public partial class PlayScreen : Screen
         S.Progress.PracticeMinutes += minutes;
         var award = S.AwardXp(lines, new AchievementEvent
         {
-            SongId = _song.Id, Casual = _mode == Mode.Casual, Run = _mode == Mode.Rhythm ? _performance : null,
+            SongId = _song.Id, Casual = _mode == Mode.Casual, Run = _mode == Mode.Rhythm ? _performance : null, Survival = _survival,
             CasualAccuracy = _casual?.Accuracy ?? 0, TempoFactor = _tempoFactor,
         });
         ShowResults(award);
@@ -471,7 +527,21 @@ public partial class PlayScreen : Screen
         foreach (var child in _resultsBox.GetChildren())
             child.QueueFree();
         var summary = Ui.VBox(4);
-        if (_mode == Mode.Rhythm && _performance is { } p)
+        if (_mode == Mode.Survival && _survival is { } st)
+        {
+            summary.AddChild(Ui.HBox(16, Ui.Label($"{st.Score:N0}", 44, PipitTheme.Accent), Ui.Label(Ui.T("points"), 20, PipitTheme.InkSoft)));
+            summary.AddChild(Ui.Label(st.Alive
+                ? Ui.T("You survived to the end!")
+                : string.Format(Ui.T("Out of life after {0:0}% of the song."), 100.0 * st.Judged / _expected.Count), 18, st.Alive ? PipitTheme.Good : PipitTheme.Bad));
+            summary.AddChild(Ui.Label(string.Format(Ui.T("Best combo {0}"), st.BestCombo) + (_rank is { } r ? "   " + string.Format(Ui.T("Rank {0} on this song's board"), r) : ""), 16));
+            var board = S.Progress.Leaderboards.GetValueOrDefault(PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString())) ?? new List<ScoreEntry>();
+            var rows = Ui.VBox(2);
+            foreach (var (entry, i) in board.Take(5).Select((e, i) => (e, i)))
+                rows.AddChild(Ui.Label($"{i + 1}.  {entry.Score,8:N0}   {entry.Reached:P0}   {Ui.T("combo")} {entry.BestCombo}   {entry.When:d MMM HH:mm}" + (entry.TempoFactor < 0.999 ? $"   ({entry.TempoFactor:P0} {Ui.T("speed")})" : ""),
+                    15, i + 1 == _rank ? PipitTheme.Accent : PipitTheme.Ink));
+            summary.AddChild(rows);
+        }
+        else if (Rhythmic && _performance is { } p)
         {
             var stars = new string('★', p.Stars) + new string('☆', 3 - p.Stars);
             summary.AddChild(Ui.HBox(16, Ui.Label($"{p.Accuracy:0}%", 44, PipitTheme.Accent), Ui.Label(stars, 40, PipitTheme.Warn)));
@@ -510,7 +580,7 @@ public partial class PlayScreen : Screen
         foreach (var a in award.Unlocked)
             summary.AddChild(Ui.Label($"{a.Icon}  {Ui.T("Achievement unlocked")}: {Ui.T(a.Title)}  (+{a.Xp} XP)", 18, PipitTheme.Accent));
 
-        var analysis = _mode == Mode.Rhythm && _performance is { } graded ? AnalysisPanel(graded) : null;
+        var analysis = Rhythmic && _performance is { } graded ? AnalysisPanel(graded) : null;
         var analyse = Ui.Button("Show analysis", () => { if (analysis is not null) analysis.Visible = !analysis.Visible; }, 16);
         analyse.Visible = analysis is not null;
 
@@ -533,7 +603,12 @@ public partial class PlayScreen : Screen
         if (nextStep is not null)
             buttons.AddChild(nextStep);
         var pip = new PipView { CustomMinimumSize = new Vector2(120, 120) };
-        var good = _mode == Mode.Rhythm ? _performance?.Stars > 0 : _casual?.Accuracy >= 80;
+        var good = _mode switch
+        {
+            Mode.Survival => _survival?.Alive == true || _rank == 1,
+            Mode.Rhythm => _performance?.Stars > 0,
+            _ => _casual?.Accuracy >= 80,
+        };
         pip.SetMood(good ? PipMood.Cheering : PipMood.Thinking, good ? 3 : double.PositiveInfinity, PipMood.Singing);
         _resultsBox.AddChild(Ui.HBox(30, pip, Ui.Expand(summary), xp, buttons));
         if (analysis is not null)
@@ -611,6 +686,13 @@ public partial class PlayScreen : Screen
 
     /// <summary>For `--shots`.</summary>
     public void DebugListen() => ToggleListen();
+
+    /// <summary>For `--shots`: show the highway.</summary>
+    public void DebugShowHighway()
+    {
+        _bars.Visible = _staff.Visible = false;
+        _highway.Visible = true;
+    }
 
     /// <summary>For `--shots`: show the score instead of the bars.</summary>
     public void DebugShowScore()

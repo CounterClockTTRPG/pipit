@@ -39,6 +39,8 @@ public sealed class PlayerProgress
     public int TrainerNotes { get; set; }
     /// <summary>Study-path lessons completed (their tasks all done).</summary>
     public HashSet<string> LessonsDone { get; set; } = new();
+    /// <summary>Survival leaderboards by song key ("songId|recorderKind"), best first.</summary>
+    public Dictionary<string, List<ScoreEntry>> Leaderboards { get; set; } = new();
     /// <summary>Unlocked achievements by id, with when.</summary>
     public Dictionary<string, DateTime> Achievements { get; set; } = new();
     /// <summary>Keyed by "songId|recorderKind".</summary>
@@ -151,6 +153,15 @@ public static class XpRules
     {
         var lines = new List<XpLine> { new("Notes found", notes), new("Found first time", firstTry) };
         record.BestCasualAccuracy = Math.Max(record.BestCasualAccuracy, accuracy);
+        return Played(record, lines, now);
+    }
+
+    /// <summary>XP for a survival run: notes played, plus a share of the score, plus a bonus for surviving.</summary>
+    public static List<XpLine> SurvivalRun(SongRecord record, int hits, long score, bool survived, DateTime now)
+    {
+        var lines = new List<XpLine> { new("Notes played", hits * 2), new("Survival score", (int)Math.Min(60, score / 500)) };
+        if (survived)
+            lines.Add(new XpLine("Survived to the end", 30));
         return Played(record, lines, now);
     }
 
