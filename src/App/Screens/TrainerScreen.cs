@@ -128,12 +128,26 @@ public partial class TrainerScreen : Screen
         {
             _streak = 0;
             var playedWritten = S.Recorder.SoundingToWritten(held.SoundingMidi);
-            var octave = Math.Abs(held.SoundingMidi - TargetSounding) == 12;
-            _feedback.Text = string.Format(Ui.T("That was {0}."), S.NoteName(playedWritten)) + " " +
-                Ui.T(octave ? "Right fingering, wrong octave: check the thumb and blow more gently or firmly." : "Check the fingering and try again.");
+            _feedback.Text = string.Format(Ui.T("That was {0}."), S.NoteName(playedWritten)) + " " + Hint(held.SoundingMidi - TargetSounding);
             _feedback.Modulate = PipitTheme.Bad;
         }
         UpdateScore();
+    }
+
+    /// <summary>What to change, given how far the played note was from the target.</summary>
+    private string Hint(int semitonesOff)
+    {
+        if (semitonesOff == -12)
+        {
+            // Aimed high, sounded low: the octave did not "break".
+            var pinched = S.FingeringFor(TargetWritten)?.Thumb == Core.Instruments.HoleState.Pinched;
+            return Ui.T(pinched
+                ? "Right fingering, but the low octave: pinch the thumb (open a small gap at the top of the thumb hole with your nail) and use slightly faster air."
+                : "Right fingering, but the low octave: seal every hole fully and use slightly faster air with a crisp \"du\".");
+        }
+        if (semitonesOff == 12)
+            return Ui.T("Right fingering, but it jumped an octave up: use gentler, slower air, and close the thumb hole completely.");
+        return Ui.T("Check the fingering and try again.");
     }
 
     private static string TuningRemark(double cents) => Math.Abs(cents) <= 15 ? Ui.T("Nicely in tune.")
