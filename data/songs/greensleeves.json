@@ -1,0 +1,30 @@
+{
+  "id": "greensleeves",
+  "title": {
+    "en": "Greensleeves",
+    "nl": "Greensleeves",
+    "fr": "Greensleeves"
+  },
+  "composer": "Traditional (England)",
+  "chapter": 0,
+  "tempo": 110,
+  "time": "6/8",
+  "key": "Am",
+  "pickup": "e",
+  "about": {
+    "en": "An English song from the 1500s. A story says King Henry VIII wrote it for Anne Boleyn, but the style of the music is from after his time, so that is very unlikely. Shakespeare mentions \"Greensleeves\" twice in his play \"The Merry Wives of Windsor\".",
+    "nl": "Een Engels lied uit de 16de eeuw. Volgens een verhaal schreef koning Hendrik VIII het voor Anne Boleyn, maar de stijl van de muziek is van na zijn tijd, dus dat is heel onwaarschijnlijk. Shakespeare noemt \"Greensleeves\" twee keer in zijn toneelstuk \"The Merry Wives of Windsor\"."
+  },
+  "tip": {
+    "en": "In 6/8 you count two big beats per bar, each split in three. Sol♯ is a new fingering (a half-covered hole 6): practise it in the fingering trainer.",
+    "nl": "In 6/8 tel je twee grote tellen per maat, elk in drie verdeeld. Sol♯ is een nieuwe greep (gaatje 6 half bedekt): oefen ze in de vingertrainer."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/e | C5/q D5/e E5/e. F5/s E5/e | D5/q B4/e G4/e. A4/s B4/e | C5/q A4/e A4/e. G#4/s A4/e | B4/q G#4/e E4/q A4/e | C5/q D5/e E5/e. F5/s E5/e | D5/q B4/e G4/e. A4/s B4/e | C5/e. B4/s A4/e G#4/e. F#4/s G#4/e | A4/q. A4/q. || G5/q. G5/e. F#5/s E5/e | D5/q B4/e G4/e. A4/s B4/e | C5/q A4/e A4/e. G#4/s A4/e | B4/q G#4/e E4/q. | G5/q. G5/e. F#5/s E5/e | D5/q B4/e G4/e. A4/s B4/e | C5/e. B4/s A4/e G#4/e. F#4/s G#4/e | A4/q. A4/q."
+    }
+  ]
+}

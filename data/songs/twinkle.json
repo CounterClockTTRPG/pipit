@@ -1,0 +1,29 @@
+{
+  "id": "twinkle",
+  "title": {
+    "en": "Twinkle, Twinkle, Little Star",
+    "nl": "Altijd is Kortjakje ziek",
+    "fr": "Ah ! vous dirai-je, maman"
+  },
+  "composer": "Traditional (France)",
+  "chapter": 4,
+  "tempo": 88,
+  "time": "4/4",
+  "key": "C",
+  "about": {
+    "en": "The tune is a French song from the 1700s, \"Ah ! vous dirai-je, maman\". Mozart wrote twelve variations on it. The English words \"Twinkle, twinkle, little star\" are a poem by Jane Taylor from 1806, and in Dutch the same tune is \"Altijd is Kortjakje ziek\".",
+    "nl": "De melodie is een Frans liedje uit de 18de eeuw, \"Ah ! vous dirai-je, maman\". Mozart schreef er twaalf variaties op. De Engelse tekst \"Twinkle, twinkle, little star\" is een gedicht van Jane Taylor uit 1806, en in het Nederlands is het \"Altijd is Kortjakje ziek\"."
+  },
+  "tip": {
+    "en": "The low notes: Do is every hole closed, so seal them all and blow very gently. Fa uses the forked fingering: lift the right index finger, keep the next fingers down.",
+    "nl": "De lage noten: voor Do zijn alle gaatjes dicht, dus sluit ze goed en blaas heel zacht. Fa gebruikt de gevorkte greep: til de rechterwijsvinger op, houd de volgende vingers neer."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C4/q C4 G4 G4 | A4 A4 G4/h | F4/q F4 E4 E4 | D4 D4 C4/h | G4/q G4 F4 F4 | E4 E4 D4/h | G4/q G4 F4 F4 | E4 E4 D4/h | C4/q C4 G4 G4 | A4 A4 G4/h | F4/q F4 E4 E4 | D4 D4 C4/h"
+    }
+  ]
+}

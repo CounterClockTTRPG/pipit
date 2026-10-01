@@ -1,0 +1,30 @@
+{
+  "id": "amazing-grace",
+  "title": {
+    "en": "Amazing Grace",
+    "nl": "Amazing Grace",
+    "fr": "Amazing Grace"
+  },
+  "composer": "Traditional (United States); words by John Newton",
+  "chapter": 0,
+  "tempo": 80,
+  "time": "3/4",
+  "key": "G",
+  "pickup": "q",
+  "about": {
+    "en": "John Newton wrote the words in 1772. As a young man he had worked on slave ships; he later became a priest and spoke out against the slave trade. The tune, called \"New Britain\", comes from American hymn books and was first printed with these words in 1835.",
+    "nl": "John Newton schreef de tekst in 1772. Als jonge man had hij op slavenschepen gewerkt; later werd hij priester en keerde hij zich tegen de slavenhandel. De melodie, \"New Britain\", komt uit Amerikaanse liedboeken en werd in 1835 voor het eerst met deze tekst gedrukt."
+  },
+  "tip": {
+    "en": "A slow song in three: let the long notes sing for their full length. It starts with a single upbeat on low Re before the first bar.",
+    "nl": "Een traag lied in drie: laat de lange noten zingen voor hun volle lengte. Het begint met één opmaat op lage Re vóór de eerste maat."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D4/q | G4/h B4/e G4 | B4/h A4/q | G4/h E4/q | D4/h D4/q | G4/h B4/e G4 | B4/h A4/q | D5/h. | D5/h B4/q | D5/h B4/e G4 | B4/h A4/q | G4/h E4/q | D4/h D4/q | G4/h B4/e G4 | B4/h A4/q | G4/h"
+    }
+  ]
+}
