@@ -627,9 +627,11 @@ Still to do, roughly in the order agreed:
 
 | Request | Where it goes |
 |---|---|
-| Score view: real notation as an alternative to the bars (View: Bars / Score) | M3 |
-| Study path: theory pages between blocks, a gentle start (one note at a time), rhythm exercises | M5 lessons + M8 path |
-| More songs: Frère Jacques, Twinkle, Amazing Grace, Greensleeves, Scarborough Fair (levels 2-3) | next song round |
+| ~~Score view: real notation as an alternative to the bars (View: Bars / Score)~~ | done (M3) |
+| ~~Study path: theory pages between blocks, a gentle start, rhythm exercises~~ | first version done: 4 chapters, 14 lessons (EN/NL); Pip is a placeholder 🐦 until the art (M5/M8) |
+| Survival mode with a per-song leaderboard | with the highway mode (M6) |
+| ~~More songs: Frère Jacques, Twinkle, Amazing Grace, Greensleeves~~; Scarborough Fair | done, except Scarborough Fair |
+| Dowland, *Flow my tears*; Van Eyck's *Pavaen Lachrymae* on it | needs a Public Domain / CC-BY MIDI or MusicXML (user to download from IMSLP/CPDL) |
 | Van Eyck, *Der Fluyten Lust-hof*: themes at intermediate, variations at advanced | next song round |
 | *Lamento di Tristano* (advanced) | next song round |
 | Alto repertoire: Polonaise BWV Anh. 119 (fits the alto exactly), Handel recorder sonatas HWV 360/365/369 | alto path |
