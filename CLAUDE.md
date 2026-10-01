@@ -61,6 +61,20 @@ calibration keeps its audio in `user://diagnostics/` for inspection.
 - Data files are read through Godot's `FileAccess` (`res://data/...`) because exported builds
   pack them; the export preset must include `data/*` as non-resource files (M9).
 
+## Songs and notation
+
+- Song files: `data/songs/*.json`, listed in `data/songs/index.json` (load order within a
+  chapter). Chapter 0 is repertoire, sorted by `Difficulty`. The music grammar is documented in
+  `SongParser`.
+- Anything longer than a folk tune comes from a Public Domain edition (Mutopia) via
+  `tools/midi2pipit.py` (top line, inner voices skipped; check for grace notes, which LilyPond
+  writes into MIDI). Record the edition in the song's `source`.
+- `StaffLayout` (Core) engraves in staff spaces and is unit-tested; `StaffView` draws it with
+  Bravura (SMuFL code points, metrics from `Bravura.json`). `--shots` renders several songs'
+  scores; look at them after any engraving change.
+- Spelling matters for the score: flat keys use flats (`--flats` in the converter,
+  `Services.PreferFlats` for names).
+
 ## Conventions
 
 - Notes are stored as **written** pitch; the instrument type maps to sounding pitch.

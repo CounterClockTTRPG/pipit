@@ -6,7 +6,11 @@ using Pipit.App.UI;
 
 namespace Pipit.App.Views;
 
-public sealed record BarNote(int Index, int WrittenMidi, double StartBeat, double Beats);
+public sealed record BarNote(int Index, int WrittenMidi, double StartBeat, double Beats)
+{
+    /// <summary>The written spelling, when known (so a flat key shows Mi♭, not Re♯).</summary>
+    public Pipit.Core.Music.Pitch? Pitch { get; init; }
+}
 
 public enum NoteMark { None, Current, Perfect, Good, Wrong, Missed }
 
@@ -15,7 +19,7 @@ public enum NoteMark { None, Current, Perfect, Good, Wrong, Missed }
 /// with its name, bar lines are numbered, and the player's pitch is traced over it. Notes are
 /// coloured as they are graded. The screen sets <see cref="CurrentBeat"/> every frame.
 /// </summary>
-public partial class BarsView : Control
+public partial class BarsView : Control, ISongView
 {
     private IReadOnlyList<BarNote> _notes = Array.Empty<BarNote>();
     private readonly Dictionary<int, NoteMark> _marks = new();
@@ -29,6 +33,7 @@ public partial class BarsView : Control
     public Func<int, string> NoteLabel { get; set; } = m => m.ToString();
     /// <summary>Big centred text (count-in, "Listen…"); empty for none.</summary>
     public string Overlay { get; set; } = "";
+    public int? WaitingFor { get; set; }
     /// <summary>Highlight the note under the playhead (listening, playing along).</summary>
     public bool HighlightCurrent { get; set; } = true;
 
@@ -80,7 +85,7 @@ public partial class BarsView : Control
         // Grid: natural notes get a line and a name.
         for (var m = _low; m <= _high; m++)
         {
-            if (Services.Spell(m).Alter != 0)
+            if (Services.Spell(m, Services.Instance.PreferFlats).Alter != 0)
                 continue;
             DrawLine(new Vector2(labelW, Y(m)), new Vector2(Size.X, Y(m)), PipitTheme.PaperDark, 1);
             DrawString(font, new Vector2(6, Y(m) + 6), NoteLabel(m), HorizontalAlignment.Left, labelW - 8, (int)Math.Clamp(rowH * 0.9f, 11, 18), PipitTheme.InkSoft);
@@ -127,7 +132,7 @@ public partial class BarsView : Control
                 CornerRadiusBottomLeft = 6, CornerRadiusBottomRight = 6, CornerRadiusTopLeft = 6, CornerRadiusTopRight = 6,
             };
             DrawStyleBox(box, rect);
-            var label = NoteLabel(n.WrittenMidi);
+            var label = n.Pitch is { } spelled ? Services.Instance.NoteName(spelled) : NoteLabel(n.WrittenMidi);
             var size = (int)Math.Clamp(rowH * 0.6f, 11, 18);
             if (font.GetStringSize(label, HorizontalAlignment.Left, -1, size).X < rect.Size.X - 6)
                 DrawString(font, new Vector2(rect.Position.X + 5, rect.Position.Y + rect.Size.Y / 2 + size * 0.36f), label,

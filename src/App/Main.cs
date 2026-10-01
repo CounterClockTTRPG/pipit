@@ -110,6 +110,25 @@ public partial class Main : Control
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "play-listen.png"));
         Back();
 
+        // The score view for songs covering different notation.
+        foreach (var id in new[] { "ode-to-joy", "jingle-bells", "minuet-in-g-minor", "bach-prelude-opening", "musette" })
+        {
+            var scoreScreen = new PlayScreen(Services.Instance.Songs.Get(id)!);
+            Show(scoreScreen);
+            scoreScreen.DebugShowScore();
+            for (var i = 0; i < 25; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, $"score-{id}.png"));
+            if (id == "minuet-in-g-minor")
+            {
+                // The cursor and highlighted note while listening, a few bars in.
+                scoreScreen.DebugListen();
+                await ToSignal(GetTree().CreateTimer(6.5), SceneTreeTimer.SignalName.Timeout);
+                GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "score-listen.png"));
+            }
+            Back();
+        }
+
         // The Studio conductor during a held note and during the rest after it.
         var studio = new StudioScreen();
         Show(studio);

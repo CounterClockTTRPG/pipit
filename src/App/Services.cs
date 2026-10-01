@@ -33,6 +33,9 @@ public partial class Services : Node
     public static string ProgressPath => Path.Combine(UserDir, "progress.json");
 
     public SongLibrary Songs { get; private set; } = null!;
+
+    /// <summary>Bravura, the SMuFL music font (SIL OFL), for the score view.</summary>
+    public Font? MusicFont { get; private set; }
     /// <summary>XP, levels and song records (one player until M4 adds profiles).</summary>
     public PlayerProgress Progress { get; private set; } = new();
 
@@ -65,6 +68,25 @@ public partial class Services : Node
         foreach (var error in Songs.Errors)
             GD.PushError("Song: " + error);
         Progress = JsonStore.LoadOrDefault<PlayerProgress>(ProgressPath);
+        MusicFont = LoadMusicFont();
+    }
+
+    /// <summary>
+    /// The imported font resource when the editor has imported it (and in exported builds);
+    /// otherwise the raw file, so a fresh checkout works without an editor import.
+    /// </summary>
+    private static Font? LoadMusicFont()
+    {
+        const string path = "res://assets/fonts/Bravura.otf";
+        if (ResourceLoader.Exists(path) && ResourceLoader.Load<Font>(path) is { } imported)
+            return imported;
+        var bytes = FileAccess.GetFileAsBytes(path);
+        if (bytes.Length == 0)
+        {
+            GD.PushError("Bravura.otf not found: the score view is unavailable");
+            return null;
+        }
+        return new FontFile { Data = bytes };
     }
 
     public void SetFullscreen(bool on)
@@ -161,16 +183,38 @@ public partial class Services : Node
     // ---- note names ------------------------------------------------------------------
 
     /// <summary>The display name of a written MIDI note, with an octave mark ("Sol", "Sol'", "Do''").</summary>
-    public string NoteName(int writtenMidi)
+    public string NoteName(int writtenMidi) => NoteName(Spell(writtenMidi, PreferFlats));
+
+    /// <summary>The display name of a written pitch, keeping its spelling (E♭ stays Mi♭).</summary>
+    public string NoteName(Pitch pitch)
     {
-        var pitch = Spell(writtenMidi);
+        var writtenMidi = pitch.Midi;
         var name = NoteNames.Name(pitch, Settings.Naming, Settings.Language);
         // Octave marks relative to the instrument's first octave, as recorder methods do.
         var octave = (writtenMidi - Recorder.BottomWrittenMidi) / 12;
         return name + new string('\'', Math.Max(0, octave));
     }
 
-    /// <summary>Spells a MIDI number with sharps, except B♭ which recorder music uses far more than A♯.</summary>
+    /// <summary>Set by the play screen while a song in a flat key is open, so names use flats.</summary>
+    public bool PreferFlats { get; set; }
+
+    /// <summary>
+    /// Spells a MIDI number: sharps, except B♭ which recorder music uses far more than A♯; with
+    /// <paramref name="flats"/> (flat keys) every black key is a flat.
+    /// </summary>
+    public static Pitch Spell(int midi, bool flats)
+    {
+        if (!flats)
+            return Spell(midi);
+        var pc = ((midi % 12) + 12) % 12;
+        var (step, alter) = pc switch
+        {
+            1 => (Step.D, -1), 3 => (Step.E, -1), 6 => (Step.G, -1), 8 => (Step.A, -1), 10 => (Step.B, -1),
+            _ => (Spell(midi).Step, 0),
+        };
+        return new Pitch(step, alter, midi / 12 - 1);
+    }
+
     public static Pitch Spell(int midi)
     {
         var pc = ((midi % 12) + 12) % 12;

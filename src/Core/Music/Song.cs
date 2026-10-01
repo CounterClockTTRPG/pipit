@@ -21,15 +21,24 @@ public readonly record struct TimeSignature(int Upper, int Lower)
     public override string ToString() => $"{Upper}/{Lower}";
 }
 
-/// <summary>One written symbol: a note or a rest, as it appears in a bar.</summary>
-public sealed record WrittenNote(Pitch? Pitch, double Beats, bool TieToNext, bool BreathAfter)
+/// <summary>
+/// One written symbol: a note or a rest, as it appears in a bar. <see cref="Id"/> is its position
+/// in the part's music (unique), linking it to the performed notes it produces.
+/// </summary>
+public sealed record WrittenNote(int Id, Pitch? Pitch, double Beats, bool TieToNext, bool BreathAfter)
 {
     public bool IsRest => Pitch is null;
 }
 
+/// <summary>A written bar with its repeat and ending marks, as notated (repeats not expanded).</summary>
 public sealed record Bar(int Number, IReadOnlyList<WrittenNote> Notes)
 {
     public double Beats => Notes.Sum(n => n.Beats);
+    public bool StartRepeat { get; init; }
+    public bool EndRepeat { get; init; }
+    public bool DoubleBarAfter { get; init; }
+    /// <summary>1 or 2 for bars under a first or second ending, else 0.</summary>
+    public int Ending { get; init; }
 }
 
 /// <summary>
@@ -38,6 +47,9 @@ public sealed record Bar(int Number, IReadOnlyList<WrittenNote> Notes)
 /// </summary>
 public sealed record PerformedNote(int Index, Pitch Pitch, double StartBeat, double Beats, int Bar)
 {
+    /// <summary>The written notes this sounds (more than one when tied).</summary>
+    public IReadOnlyList<int> WrittenIds { get; init; } = Array.Empty<int>();
+
     public double EndBeat => StartBeat + Beats;
 }
 

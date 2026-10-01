@@ -98,3 +98,34 @@ public class SongParserTests
         Assert.Equal(8, song.TotalBeats);
     }
 }
+
+public class WrittenBarTests
+{
+    private static (IReadOnlyList<Bar> Bars, IReadOnlyList<PerformedNote> Performance) Parse(string music) =>
+        SongParser.ParseMusic(music, new TimeSignature(4, 4), 0, "test");
+
+    [Fact]
+    public void Repeat_and_ending_marks_are_kept_on_the_written_bars()
+    {
+        var (bars, _) = Parse("|: G4/w | [1 A4/w :| [2 B4/w || C5/w");
+        Assert.Equal(4, bars.Count);
+        Assert.True(bars[0].StartRepeat);
+        Assert.Equal(1, bars[1].Ending);
+        Assert.True(bars[1].EndRepeat);
+        Assert.Equal(2, bars[2].Ending);
+        Assert.True(bars[2].DoubleBarAfter);
+        Assert.Equal(0, bars[3].Ending);
+    }
+
+    [Fact]
+    public void Performed_notes_point_back_to_written_notes()
+    {
+        var (bars, played) = Parse("|: G4/h A4~ | A4/w :|");
+        var g = bars[0].Notes[0].Id;
+        // Played twice: both performances of G come from the same written note.
+        Assert.Equal(new[] { g }, played[0].WrittenIds);
+        Assert.Equal(new[] { g }, played[2].WrittenIds);
+        // The tied A is one performed note from two written ones.
+        Assert.Equal(new[] { bars[0].Notes[1].Id, bars[1].Notes[0].Id }, played[1].WrittenIds);
+    }
+}

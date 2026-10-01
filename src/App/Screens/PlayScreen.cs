@@ -28,6 +28,10 @@ public partial class PlayScreen : Screen
     private readonly Song _song;
     private readonly List<BarNote> _barNotes;
     private readonly BarsView _bars = new();
+    private readonly StaffView _staff = new();
+    private readonly ProgressBar _progress = new() { MinValue = 0, MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new Vector2(0, 8) };
+    private readonly CheckBox _names = new() { ButtonPressed = true };
+    private double _beat;
     private readonly FingeringDiagram _diagram = new();
     private readonly Label _nextLabel, _feedback, _speedLabel, _best;
     private readonly PanelContainer _intro, _results;
@@ -69,7 +73,7 @@ public partial class PlayScreen : Screen
     public PlayScreen(Song song)
     {
         _song = song;
-        _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats)).ToList();
+        _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
 
         var header = Ui.HBox(16, Ui.Label(Title, 30, PipitTheme.Ink), Ui.Label(song.Composer, 18, PipitTheme.InkSoft), Ui.Spacer());
@@ -83,8 +87,15 @@ public partial class PlayScreen : Screen
         _bars.BarBeats = song.Time.BarBeats;
         _bars.NoteLabel = S.NoteName;
         _bars.SetNotes(_barNotes);
-        _bars.CurrentBeat = _barNotes.Min(n => n.StartBeat) - 0.5;
+        _staff.NoteLabel = p => S.NoteName(p);
+        _staff.SetSong(song, S.Instrument.Kind);
+        SetBeat(_barNotes.Min(n => n.StartBeat) - 0.5);
         Ui.Expand(_bars, true, true);
+        Ui.Expand(_staff, true, true);
+        var score = S.Settings.SongView == "score";
+        _bars.Visible = !score;
+        _staff.Visible = score;
+        var views = Ui.Expand(Ui.VBox(4, _bars, _staff, _progress), true, true);
         _nextLabel = Ui.Label("", 18, PipitTheme.InkSoft, HorizontalAlignment.Center);
         var side = Ui.VBox(4, Ui.MinSize(_diagram, 200, 330), _nextLabel);
         _feedback = Ui.Text("", 20, PipitTheme.Ink, HorizontalAlignment.Center);
@@ -100,12 +111,29 @@ public partial class PlayScreen : Screen
         _listen = Ui.Button("♪ Listen", ToggleListen, 18);
         _start = Ui.Button("▶ Start", ToggleRun, 20);
         _start.CustomMinimumSize = new Vector2(140, 48);
-        var controls = Ui.HBox(14, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help, Ui.Spacer(), _listen, _start);
+        var viewOption = Ui.Options(new[] { "Bars", "Score" }, score ? 1 : 0, ix =>
+        {
+            _bars.Visible = ix == 0;
+            _staff.Visible = ix == 1;
+            _names.Visible = ix == 1;
+            S.Settings.SongView = ix == 1 ? "score" : "bars";
+            S.Save();
+        });
+        _names.Text = Ui.T("Names");
+        _names.Visible = score;
+        _names.Toggled += on => _staff.ShowNames = on;
+        var controls = Ui.HBox(14, viewOption, _names, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help, Ui.Spacer(), _listen, _start);
 
-        _results = Ui.Card(_resultsBox);
+        // Results (and the optional analysis) scroll inside their own area, which shares the
+        // height with the music instead of pushing the controls off the screen.
+        var resultsScroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled, SizeFlagsVertical = SizeFlags.ExpandFill, SizeFlagsStretchRatio = 0.9f };
+        resultsScroll.AddChild(Ui.Expand(_resultsBox));
+        _results = Ui.Card(resultsScroll);
+        _results.SizeFlagsVertical = SizeFlags.ExpandFill;
+        _results.SizeFlagsStretchRatio = 0.9f;
         _results.Visible = false;
 
-        AddChild(Ui.VBox(10, header, _intro, Ui.Expand(Ui.HBox(16, _bars, side), true, true), _feedback, _results, controls));
+        AddChild(Ui.VBox(10, header, _intro, Ui.Expand(Ui.HBox(16, views, side), true, true), _feedback, _results, controls));
         AddChild(_player);
         _player.Finished += OnPlayerFinished;
         UpdateControls();
@@ -113,6 +141,7 @@ public partial class PlayScreen : Screen
 
     public override void Enter()
     {
+        S.PreferFlats = Core.Notation.KeySignature.Parse(_song.Key).Fifths < 0;
         S.ApplyInstrument();
         _diagram.Keyed = S.Instrument.Keyed;
         S.Audio.FrameReady += OnFrame;
@@ -124,6 +153,7 @@ public partial class PlayScreen : Screen
 
     public override void Exit()
     {
+        S.PreferFlats = false;
         S.Audio.FrameReady -= OnFrame;
         S.Audio.SamplesCaptured -= OnSamples;
         S.Clicks.Stop();
@@ -151,6 +181,52 @@ public partial class PlayScreen : Screen
         _intro.Visible = state == State.Ready;
         _results.Visible = state is State.Results or State.Replay;
         UpdateControls();
+    }
+
+    // ---- both views get every update ------------------------------------------------------
+
+    private IEnumerable<ISongView> Views => new ISongView[] { _bars, _staff };
+
+    private void SetBeat(double beat)
+    {
+        _beat = beat;
+        foreach (var v in Views)
+            v.CurrentBeat = beat;
+        var first = _barNotes.Min(n => n.StartBeat);
+        var last = _barNotes.Max(n => n.StartBeat + n.Beats);
+        _progress.Value = _state == State.Running && _mode == Mode.Casual && _casual is not null
+            ? _casual.Index / (double)_barNotes.Count
+            : Math.Clamp((beat - first) / (last - first), 0, 1);
+    }
+
+    private void SetMark(int index, NoteMark mark)
+    {
+        foreach (var v in Views)
+            v.SetMark(index, mark);
+    }
+
+    private void ClearMarks()
+    {
+        foreach (var v in Views)
+            v.ClearMarks();
+    }
+
+    private void SetOverlay(string text)
+    {
+        foreach (var v in Views)
+            v.Overlay = text;
+    }
+
+    private void AddTrace(double beat, double written)
+    {
+        foreach (var v in Views)
+            v.AddTrace(beat, written);
+    }
+
+    private void SetWaiting(int? index)
+    {
+        foreach (var v in Views)
+            v.WaitingFor = index;
     }
 
     // ---- shared helpers ------------------------------------------------------------------
@@ -187,7 +263,7 @@ public partial class PlayScreen : Screen
             return;
         }
         _player.Stop();
-        _bars.ClearMarks();
+        ClearMarks();
         _take = new List<float>();
         _takeStart = double.NaN;
         _feedback.Text = "";
@@ -226,7 +302,8 @@ public partial class PlayScreen : Screen
         _casual = new CasualMode(_song.Melody.Performance.Select(n => Sounding(n.Pitch.Midi)).ToList(), S.Instrument.MeasuredOffsetCents);
         _casualStart = S.Audio.Now;
         _casualBeat = (float)_barNotes[0].StartBeat;
-        _bars.SetMark(0, NoteMark.Current);
+        SetMark(0, NoteMark.Current);
+        SetWaiting(0);
         _feedback.Text = Ui.T("Take your time: play each note when you have found it.");
         SetState(State.Running);
     }
@@ -244,7 +321,7 @@ public partial class PlayScreen : Screen
         }
         // Draw what was played where it was meant to be: shift the trace back by the latency.
         var written = frame.Voiced ? frame.SmoothedMidi - S.Recorder.OctaveTransposition * 12 : double.NaN;
-        _bars.AddTrace(TimeToBeat(frame.Time - _latency), written);
+        AddTrace(TimeToBeat(frame.Time - _latency), written);
         if (_segmenter.Push(frame) is { } note)
             _detected.Add(note);
     }
@@ -252,16 +329,18 @@ public partial class PlayScreen : Screen
     private void CasualFrame(PitchFrame frame)
     {
         var casual = _casual!;
+        AddTrace(_beat, frame.Voiced ? frame.SmoothedMidi - S.Recorder.OctaveTransposition * 12 : double.NaN);
         var step = casual.Push(frame);
         if (step is not null)
         {
-            _bars.SetMark(step.Index, step.FirstTry ? NoteMark.Perfect : NoteMark.Good);
+            SetMark(step.Index, step.FirstTry ? NoteMark.Perfect : NoteMark.Good);
             if (casual.Finished)
             {
                 Finish(aborted: false);
                 return;
             }
-            _bars.SetMark(casual.Index, NoteMark.Current);
+            SetMark(casual.Index, NoteMark.Current);
+            SetWaiting(casual.Index);
             _feedback.Text = step.FirstTry ? Ui.T("Yes!") : Ui.T("Got it.");
             _feedback.Modulate = PipitTheme.Good;
         }
@@ -279,10 +358,10 @@ public partial class PlayScreen : Screen
         switch (_state)
         {
             case State.Running when _mode == Mode.Rhythm:
-                _bars.CurrentBeat = TimeToBeat(now);
+                SetBeat(TimeToBeat(now));
                 var firstNote = BeatToTime(_barNotes.Min(n => n.StartBeat));
-                _bars.Overlay = now < firstNote ? Math.Ceiling((firstNote - now) / _spb).ToString("0") : "";
-                ShowFingeringAt(_bars.CurrentBeat);
+                SetOverlay(now < firstNote ? Math.Ceiling((firstNote - now) / _spb).ToString("0") : "");
+                ShowFingeringAt(_beat);
                 if (now >= _nextGrade)
                 {
                     _nextGrade = now + 0.1;
@@ -295,16 +374,16 @@ public partial class PlayScreen : Screen
                 // Glide to the note being waited for.
                 var target = (float)_barNotes[Math.Min(_casual.Index, _barNotes.Count - 1)].StartBeat - 0.3f;
                 _casualBeat += (target - _casualBeat) * (float)Math.Min(1, delta * 6);
-                _bars.CurrentBeat = _casualBeat;
+                SetBeat(_casualBeat);
                 ShowFingeringAt(_barNotes[Math.Min(_casual.Index, _barNotes.Count - 1)].StartBeat);
                 break;
             case State.Preview:
-                _bars.CurrentBeat = _barNotes.Min(n => n.StartBeat) + (_player.GetPlaybackPosition() - _previewLead) / _spb;
-                ShowFingeringAt(_bars.CurrentBeat);
+                SetBeat(_barNotes.Min(n => n.StartBeat) + (_player.GetPlaybackPosition() - _previewLead) / _spb);
+                ShowFingeringAt(_beat);
                 break;
             case State.Replay:
-                _bars.CurrentBeat = TimeToBeat(_takeStart + _player.GetPlaybackPosition() - _latency);
-                ShowFingeringAt(_bars.CurrentBeat);
+                SetBeat(TimeToBeat(_takeStart + _player.GetPlaybackPosition() - _latency));
+                ShowFingeringAt(_beat);
                 break;
         }
     }
@@ -320,7 +399,7 @@ public partial class PlayScreen : Screen
     private void ApplyMarks(GradedRun performance, bool live)
     {
         foreach (var j in performance.Notes)
-            _bars.SetMark(j.Expected.Index, Mark(j));
+            SetMark(j.Expected.Index, Mark(j));
         if (live && performance.Notes.Count > 0)
         {
             var last = performance.Notes[^1];
@@ -346,7 +425,8 @@ public partial class PlayScreen : Screen
     private void Finish(bool aborted)
     {
         S.Clicks.Stop();
-        _bars.Overlay = "";
+        SetWaiting(null);
+        SetOverlay("");
         _takeSamples = _take.ToArray();
         if (aborted)
         {
@@ -510,6 +590,13 @@ public partial class PlayScreen : Screen
     /// <summary>For `--shots`.</summary>
     public void DebugListen() => ToggleListen();
 
+    /// <summary>For `--shots`: show the score instead of the bars.</summary>
+    public void DebugShowScore()
+    {
+        _bars.Visible = false;
+        _staff.Visible = true;
+    }
+
     private void ToggleListen()
     {
         if (_state == State.Preview)
@@ -525,7 +612,7 @@ public partial class PlayScreen : Screen
             Pitch.FrequencyOfMidi(Sounding(n.WrittenMidi), S.Instrument.ReferenceA))).ToList();
         _player.Stream = Playback.ToStream(RecorderVoice.Render(notes, S.Audio.SampleRate), S.Audio.SampleRate);
         _player.Play();
-        _bars.ClearMarks();
+        ClearMarks();
         SetState(State.Preview);
     }
 

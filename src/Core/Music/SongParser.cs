@@ -101,21 +101,39 @@ public static class SongParser
     {
         var tokens = Tokenise(music, context);
 
-        // Written bars, as notated (repeats not expanded), for the staff view and validation.
+        // Written bars, as notated (repeats not expanded), with their repeat and ending marks.
         var bars = new List<Bar>();
         var current = new List<WrittenNote>();
+        bool startRepeat = false, endRepeat = false, doubleBar = false;
+        var ending = 0;
         void CloseBar()
         {
             if (current.Count > 0)
-                bars.Add(new Bar(bars.Count + 1, current.ToList()));
+            {
+                bars.Add(new Bar(bars.Count + 1, current.ToList())
+                {
+                    StartRepeat = startRepeat, EndRepeat = endRepeat, DoubleBarAfter = doubleBar, Ending = ending,
+                });
+                startRepeat = false;
+                // A first ending lasts until its repeat sign, a second ending for one bar.
+                if (endRepeat || ending == 2)
+                    ending = 0;
+            }
             current.Clear();
+            endRepeat = doubleBar = false;
         }
         foreach (var t in tokens)
         {
-            if (t.Mark == Mark.Note)
-                current.Add(t.Note!);
-            else if (t.Mark is Mark.Bar or Mark.DoubleBar or Mark.RepeatStart or Mark.RepeatEnd)
-                CloseBar();
+            switch (t.Mark)
+            {
+                case Mark.Note: current.Add(t.Note!); break;
+                case Mark.Bar: CloseBar(); break;
+                case Mark.DoubleBar: doubleBar = true; CloseBar(); break;
+                case Mark.RepeatEnd: endRepeat = true; CloseBar(); break;
+                case Mark.RepeatStart: CloseBar(); startRepeat = true; break;
+                case Mark.Ending1: ending = 1; break;
+                case Mark.Ending2: ending = 2; break;
+            }
         }
         CloseBar();
         Validate(bars, time, pickup, context);
@@ -159,7 +177,7 @@ public static class SongParser
                 try { pitch = Pitch.Parse(text); }
                 catch (FormatException) { throw new SongFormatException($"{context}: cannot read '{raw}'"); }
             }
-            tokens.Add(new Token(Mark.Note, new WrittenNote(pitch, duration, tie, breath)));
+            tokens.Add(new Token(Mark.Note, new WrittenNote(tokens.Count, pitch, duration, tie, breath)));
         }
         return tokens;
     }
@@ -258,11 +276,11 @@ public static class SongParser
                 {
                     if (tied.Pitch.Midi != pitch.Midi)
                         throw new SongFormatException($"{context}: tie between different pitches {tied.Pitch} and {pitch}");
-                    notes[^1] = tied = tied with { Beats = tied.Beats + n.Beats };
+                    notes[^1] = tied = tied with { Beats = tied.Beats + n.Beats, WrittenIds = tied.WrittenIds.Append(n.Id).ToList() };
                 }
                 else
                 {
-                    notes.Add(new PerformedNote(notes.Count, pitch, beat, n.Beats, bar));
+                    notes.Add(new PerformedNote(notes.Count, pitch, beat, n.Beats, bar) { WrittenIds = new[] { n.Id } });
                     tied = notes[^1];
                 }
                 if (!n.TieToNext)
