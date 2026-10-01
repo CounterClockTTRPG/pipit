@@ -45,24 +45,24 @@ public partial class SettingsScreen : Screen
             Ui.Label("Name"), name,
             Ui.Label("Size"), kind,
             Ui.Label("Fingering system"), system,
-            Ui.Label("Most recorders are baroque (also called English). German-fingered school recorders have a simpler Fa; look for a 'G' or 'German' marking."
+            Ui.Text("Most recorders are baroque (also called English). German-fingered school recorders have a simpler Fa; look for a 'G' or 'German' marking."
                 , 15, PipitTheme.InkSoft),
             keyed,
-            Ui.Label("Pitch of A (440 Hz is standard; 442 is common in Europe; 415 for baroque-pitch instruments)", 15, PipitTheme.InkSoft), refA,
+            Ui.Text("Pitch of A (440 Hz is standard; 442 is common in Europe; 415 for baroque-pitch instruments)", 15, PipitTheme.InkSoft), refA,
             Ui.Label("Language"), language,
             Ui.Label("Note names"), naming);
 
         // Microphone column.
         _devices = Ui.MinSize(new ItemList(), 0, 200);
         _devices.ItemSelected += ix => S.SelectDevice(_devices.GetItemText((int)ix));
-        _testStatus = Ui.Label("", 16, PipitTheme.InkSoft);
+        _testStatus = Ui.Text("", 16, PipitTheme.InkSoft);
         _testButton = Ui.Button("Test: record 3 s and play back", StartTest, 18);
         var mic = Ui.VBox(10,
             Ui.Label("Microphone", 26, PipitTheme.Accent),
-            Ui.Label("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
+            Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
             _devices, _meter, _testButton, _testStatus,
             Ui.Label("Tips", 20, PipitTheme.Ink),
-            Ui.Label("• No signal at all? Check Windows Settings → Privacy & security → Microphone → \"Let desktop apps access your microphone\".\n" +
+            Ui.Text("• No signal at all? Check Windows Settings → Privacy & security → Microphone → \"Let desktop apps access your microphone\".\n" +
                      "• Windows \"audio enhancements\" (noise suppression, automatic gain) can swallow quiet notes and blur the start of notes. " +
                      "Turn them off under Settings → System → Sound → your microphone → Audio enhancements.\n" +
                      "• After changing microphone, run Calibrate again.", 15, PipitTheme.InkSoft));

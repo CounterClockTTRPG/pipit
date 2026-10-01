@@ -22,7 +22,7 @@ public partial class TunerScreen : Screen
     public TunerScreen()
     {
         _note = Ui.Label("–", 96, PipitTheme.Ink, HorizontalAlignment.Center);
-        _detail = Ui.Label(" ", 20, PipitTheme.InkSoft, HorizontalAlignment.Center);
+        _detail = Ui.Text(" ", 20, PipitTheme.InkSoft, HorizontalAlignment.Center);
         var left = Ui.VBox(8, _note, _detail, _gauge);
         var top = Ui.HBox(32, Ui.Expand(left), Ui.MinSize(_diagram, 160, 360));
         AddChild(Ui.VBox(16, top, Ui.Expand(_strip, true, true), Ui.HBox(12, Ui.Label("Input", 16, PipitTheme.InkSoft), Ui.Expand(_meter))));

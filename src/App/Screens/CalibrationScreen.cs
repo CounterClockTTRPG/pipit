@@ -40,8 +40,8 @@ public partial class CalibrationScreen : Screen
     public CalibrationScreen()
     {
         _heading = Ui.Label("", 36, PipitTheme.Accent);
-        _body = Ui.Label("", 22, PipitTheme.Ink);
-        _status = Ui.Label("", 20, PipitTheme.InkSoft);
+        _body = Ui.Text("", 22, PipitTheme.Ink);
+        _status = Ui.Text("", 20, PipitTheme.InkSoft);
         _primary = Ui.Button("", OnPrimary);
         _secondary = Ui.Button("", OnSecondary);
         var text = Ui.VBox(16, _heading, _body, _progress, _status, Ui.HBox(16, _primary, _secondary), Ui.Spacer(),

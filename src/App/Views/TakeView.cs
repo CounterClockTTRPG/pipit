@@ -70,8 +70,8 @@ public partial class TakeView : Control
         {
             var natural = Services.Spell(m).Alter == 0;
             DrawLine(new Vector2(labelW, Y(m)), new Vector2(Size.X, Y(m)), natural ? PipitTheme.PaperDark : PipitTheme.Paper, 1);
-            if (natural && rowH >= 8)
-                DrawString(font, new Vector2(4, Y(m) + 5), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, (int)Math.Min(rowH * 1.2f, 15), PipitTheme.InkSoft);
+            if (natural && rowH >= 5)
+                DrawString(font, new Vector2(4, Y(m) + 5), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, (int)Math.Min(rowH * 1.7f, 15), PipitTheme.InkSoft);
         }
 
         // Expected notes (guided takes), shifted by the latency the player was measured to have.

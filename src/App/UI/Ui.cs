@@ -8,14 +8,27 @@ public static class Ui
 {
     public static string T(string text) => TranslationServer.Translate(text);
 
-    public static Label Label(string text, int size = 20, Color? color = null, HorizontalAlignment align = HorizontalAlignment.Left)
+    /// <summary>
+    /// A label. Leave <paramref name="wrap"/> off for short text: a wrapping label has no minimum
+    /// width, so in a row or a centring container it collapses to one letter per line.
+    /// </summary>
+    public static Label Label(string text, int size = 20, Color? color = null, HorizontalAlignment align = HorizontalAlignment.Left, bool wrap = false)
     {
-        var label = new Label { Text = T(text), HorizontalAlignment = align, AutowrapMode = TextServer.AutowrapMode.WordSmart };
+        var label = new Label { Text = T(text), HorizontalAlignment = align };
+        if (wrap)
+        {
+            label.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+            label.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        }
         label.AddThemeFontSizeOverride("font_size", size);
         if (color is { } c)
             label.AddThemeColorOverride("font_color", c);
         return label;
     }
+
+    /// <summary>A wrapping paragraph that fills the available width.</summary>
+    public static Label Text(string text, int size = 18, Color? color = null, HorizontalAlignment align = HorizontalAlignment.Left) =>
+        Label(text, size, color, align, wrap: true);
 
     public static Button Button(string text, Action onPressed, int size = 22)
     {

@@ -44,7 +44,7 @@ public partial class TrainerScreen : Screen
     public TrainerScreen()
     {
         _target = Ui.Label("", 110, PipitTheme.Ink, HorizontalAlignment.Center);
-        _feedback = Ui.Label("", 26, PipitTheme.InkSoft, HorizontalAlignment.Center);
+        _feedback = Ui.Text("", 26, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _score = Ui.Label("", 18, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _showFingering = new CheckBox { Text = Ui.T("Show fingering"), ButtonPressed = true };
         _showFingering.Toggled += _ => ShowTarget();

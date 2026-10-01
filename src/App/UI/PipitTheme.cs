@@ -43,6 +43,12 @@ public static class PipitTheme
         theme.SetColor("font_hover_color", "Button", Ink);
         theme.SetColor("font_pressed_color", "Button", Paper);
         theme.SetColor("font_disabled_color", "Button", InkSoft);
+        // CheckBox inherits Button's boxes; it should look like a plain tick box instead.
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed", "focus", "disabled" })
+            theme.SetStylebox(state, "CheckBox", new StyleBoxEmpty());
+        theme.SetColor("font_pressed_color", "CheckBox", Ink);
+        theme.SetColor("font_hover_color", "CheckBox", Accent);
+        theme.SetColor("font_hover_pressed_color", "CheckBox", Accent);
         theme.SetStylebox("normal", "OptionButton", Box(PaperDark, WoodEdge));
         theme.SetStylebox("hover", "OptionButton", Box(new Color("f6dcb4"), Accent));
         theme.SetStylebox("panel", "ItemList", Box(Colors.White, PaperDark));

@@ -46,6 +46,29 @@ public partial class Main : Control
             StartSmoke();
         if (OS.GetCmdlineUserArgs().Contains("--micprobe"))
             MicProbe();
+        if (OS.GetCmdlineUserArgs().Contains("--shots"))
+            Screenshots();
+    }
+
+    /// <summary>`-- --shots`: saves a PNG of every screen to user://shots and quits (needs a window).</summary>
+    private async void Screenshots()
+    {
+        var dir = System.IO.Path.Combine(Services.UserDir, "shots");
+        System.IO.Directory.CreateDirectory(dir);
+        var screens = new (string, System.Func<Screen>?)[] { ("home", null), ("tuner", () => new TunerScreen()), ("trainer", () => new TrainerScreen()),
+            ("calibrate", () => new CalibrationScreen()), ("studio", () => new StudioScreen()), ("settings", () => new SettingsScreen()) };
+        foreach (var (name, make) in screens)
+        {
+            if (make is not null)
+                Show(make());
+            for (var i = 0; i < 20; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, name + ".png"));
+            if (make is not null)
+                Back();
+        }
+        GD.Print("SHOTS " + dir);
+        GetTree().Quit();
     }
 
     /// <summary>`-- --micprobe`: lists input devices, listens for 3 s, prints what arrived, quits.</summary>

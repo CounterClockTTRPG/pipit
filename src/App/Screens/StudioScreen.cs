@@ -55,13 +55,13 @@ public partial class StudioScreen : Screen
 
         var left = Ui.MinSize(Ui.VBox(10,
             _record,
-            Ui.Label("Guided takes record what Pipit asks for, so they can check recognition and become test recordings.", 14, PipitTheme.InkSoft),
+            Ui.Text("Guided takes record what Pipit asks for, so they can check recognition and become test recordings.", 14, PipitTheme.InkSoft),
             _sessions, _guided,
             Ui.Label("Takes", 20, PipitTheme.Accent), _takes,
             Ui.HBox(8, _play, _star, _delete), openFolder,
             Ui.HBox(8, Ui.Label("Input", 14, PipitTheme.InkSoft), Ui.Expand(_meter))), 340, 0);
 
-        _summary = Ui.Label("", 18, PipitTheme.Ink);
+        _summary = Ui.Text("", 18, PipitTheme.Ink);
         _now = Ui.Label("", 84, PipitTheme.Ink, HorizontalAlignment.Center);
         _next = Ui.Label("", 22, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _beat = Ui.Label("", 22, PipitTheme.Accent, HorizontalAlignment.Center);

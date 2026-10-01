@@ -56,8 +56,8 @@ public partial class PitchStrip : Control
             if (Target == m)
                 DrawRect(new Rect2(labelW, Y(m) - rowH / 2, Size.X - labelW, rowH), PipitTheme.Accent with { A = 0.25f });
             DrawLine(new Vector2(labelW, Y(m)), new Vector2(Size.X, Y(m)), natural ? PipitTheme.PaperDark : PipitTheme.Paper, 1);
-            if (natural && rowH >= 9)
-                DrawString(font, new Vector2(4, Y(m) + Math.Min(rowH, 16) * 0.35f), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, (int)Math.Min(rowH * 1.1f, 16), PipitTheme.InkSoft);
+            if (natural && rowH >= 5)
+                DrawString(font, new Vector2(4, Y(m) + Math.Min(rowH * 1.7f, 16) * 0.35f), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, (int)Math.Min(rowH * 1.7f, 16), PipitTheme.InkSoft);
         }
 
         if (_frames.Count == 0)
