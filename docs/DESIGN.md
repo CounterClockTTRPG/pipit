@@ -614,3 +614,28 @@ Each milestone ends with something you can run and try with your own recorder.
 | Lesson languages | EN and NL | Each lesson is written in both; the French UI falls back to English lessons |
 | Youngest player | 9 | The Young player style keeps text short and simple, without read-aloud |
 | Pip's look | Cartoonish | A friendly cartoon bird with features of the real pipit (streaky chest, slim beak) in warm, bright colours |
+
+---
+
+## 17. Requests from play-testing (2026-10-01)
+
+Done in M2: casual (wait) mode, speed dial (songs and Studio), XP and levels, achievements,
+optional run analysis, song introductions and tips, full Ode to Joy, difficulty ratings and a
+repertoire section, baroque pieces from Public Domain editions, full screen.
+
+Still to do, roughly in the order agreed:
+
+| Request | Where it goes |
+|---|---|
+| Score view: real notation as an alternative to the bars (View: Bars / Score) | M3 |
+| Study path: theory pages between blocks, a gentle start (one note at a time), rhythm exercises | M5 lessons + M8 path |
+| More songs: Frère Jacques, Twinkle, Amazing Grace, Greensleeves, Scarborough Fair (levels 2-3) | next song round |
+| Van Eyck, *Der Fluyten Lust-hof*: themes at intermediate, variations at advanced | next song round |
+| *Lamento di Tristano* (advanced) | next song round |
+| Alto repertoire: Polonaise BWV Anh. 119 (fits the alto exactly), Handel recorder sonatas HWV 360/365/369 | alto path |
+| A natural (sampled) recorder sound next to the simple one | with MeltySynth, M7 |
+| Accompaniment through headphones | M7 |
+
+Song sources: anything longer than a folk tune is converted from a Public Domain edition (the
+Mutopia Project) with `tools/midi2pipit.py`, never transcribed from memory; each song file
+records its `source`.
