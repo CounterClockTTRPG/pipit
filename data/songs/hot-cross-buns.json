@@ -1,13 +1,27 @@
 {
   "id": "hot-cross-buns",
-  "title": { "en": "Hot Cross Buns" },
+  "title": {
+    "en": "Hot Cross Buns"
+  },
   "composer": "Traditional (England)",
   "chapter": 1,
   "tempo": 80,
   "time": "4/4",
   "key": "G",
+  "about": {
+    "en": "This started life as a street cry: sellers in English towns sang it to sell hot cross buns, spiced buns with a cross on top that are traditionally eaten around Easter.",
+    "nl": "Dit begon als een straatroep: verkopers in Engelse steden zongen het om hot cross buns te verkopen, gekruide broodjes met een kruis erop die traditioneel rond Pasen gegeten worden."
+  },
+  "tip": {
+    "en": "Only three notes: Si, La and Sol. Keep your left thumb firmly on the back hole the whole time.",
+    "nl": "Maar drie noten: Si, La en Sol. Houd je linkerduim de hele tijd stevig op het gaatje achteraan."
+  },
   "parts": [
-    { "id": "melody", "name": "Melody", "instrument": "soprano",
-      "music": "B4/q A4 G4/h | B4/q A4 G4/h | G4/e G4 G4 G4 A4 A4 A4 A4 | B4/q A4 G4/h" }
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "B4/q A4 G4/h | B4/q A4 G4/h | G4/e G4 G4 G4 A4 A4 A4 A4 | B4/q A4 G4/h"
+    }
   ]
 }

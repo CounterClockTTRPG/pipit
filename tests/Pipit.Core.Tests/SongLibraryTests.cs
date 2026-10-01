@@ -43,6 +43,17 @@ public class SongLibraryTests
     }
 
     [Fact]
+    public void Every_song_has_an_introduction_and_a_tip_in_english_and_dutch()
+    {
+        foreach (var song in Library.Songs)
+            foreach (var language in new[] { "en", "nl" })
+            {
+                Assert.True(song.About.ContainsKey(language), $"{song.Id}: no about ({language})");
+                Assert.True(song.Tip.ContainsKey(language), $"{song.Id}: no tip ({language})");
+            }
+    }
+
+    [Fact]
     public void Songs_are_in_learning_order() =>
         Assert.Equal(Library.Songs.Select(s => s.Chapter).OrderBy(c => c), Library.Songs.Select(s => s.Chapter));
 

@@ -1,13 +1,29 @@
 {
   "id": "ode-to-joy",
-  "title": { "en": "Ode to Joy", "nl": "Ode aan de vreugde", "fr": "Hymne à la joie" },
+  "title": {
+    "en": "Ode to Joy",
+    "nl": "Ode aan de vreugde",
+    "fr": "Hymne à la joie"
+  },
   "composer": "Ludwig van Beethoven",
   "chapter": 2,
   "tempo": 88,
   "time": "4/4",
   "key": "G",
+  "about": {
+    "en": "The big tune from the last movement of Beethoven's Ninth Symphony, first performed in Vienna in 1824. Beethoven was almost completely deaf by then. Today it is used as the anthem of Europe.",
+    "nl": "De grote melodie uit het laatste deel van Beethovens Negende Symfonie, voor het eerst uitgevoerd in Wenen in 1824. Beethoven was toen al bijna helemaal doof. Vandaag is het het volkslied van Europa."
+  },
+  "tip": {
+    "en": "Watch the dotted rhythm at the end of each line: a long La, then a short one.",
+    "nl": "Let op het gepunteerde ritme op het einde van elke regel: een lange La, dan een korte."
+  },
   "parts": [
-    { "id": "melody", "name": "Melody", "instrument": "soprano",
-      "music": "B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | B4/q. A4/e A4/h | B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | A4/q. G4/e G4/h" }
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | B4/q. A4/e A4/h | B4/q B4 C5 D5 | D5 C5 B4 A4 | G4 G4 A4 B4 | A4/q. G4/e G4/h"
+    }
   ]
 }

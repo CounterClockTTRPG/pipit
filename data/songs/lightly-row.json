@@ -1,13 +1,28 @@
 {
   "id": "lightly-row",
-  "title": { "en": "Lightly Row", "de": "Hänschen klein" },
+  "title": {
+    "en": "Lightly Row",
+    "de": "Hänschen klein"
+  },
   "composer": "Traditional (Germany)",
   "chapter": 2,
   "tempo": 96,
   "time": "4/4",
   "key": "G",
+  "about": {
+    "en": "In German this is \"Hänschen klein\", a children's song from the 1800s about little Hans setting off into the wide world. English-speaking children know the same tune as \"Lightly Row\", about rowing a boat.",
+    "nl": "In het Duits is dit \"Hänschen klein\", een kinderliedje uit de 19de eeuw over kleine Hans die de wijde wereld in trekt. Engelstalige kinderen kennen dezelfde melodie als \"Lightly Row\", over roeien in een bootje."
+  },
+  "tip": {
+    "en": "It starts on high Re. Jumping from Re' down to Si needs your thumb back on its hole quickly.",
+    "nl": "Het begint op hoge Re. Bij de sprong van Re' naar Si moet je duim snel terug op zijn gaatje."
+  },
   "parts": [
-    { "id": "melody", "name": "Melody", "instrument": "soprano",
-      "music": "D5/q B4 B4/h | C5/q A4 A4/h | G4/q A4 B4 C5 | D5 D5 D5/h | D5/q B4 B4/h | C5/q A4 A4/h | G4/q B4 D5 D5 | G4/w" }
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/q B4 B4/h | C5/q A4 A4/h | G4/q A4 B4 C5 | D5 D5 D5/h | D5/q B4 B4/h | C5/q A4 A4/h | G4/q B4 D5 D5 | G4/w"
+    }
   ]
 }

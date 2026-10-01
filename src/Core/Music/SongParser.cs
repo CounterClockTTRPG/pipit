@@ -32,15 +32,20 @@ public static class SongParser
             root.TryGetProperty(name, out var v) ? v.GetString() ?? fallback ?? "" : fallback ?? throw new SongFormatException($"Missing \"{name}\"");
 
         var id = Str("id");
-        var titles = new Dictionary<string, string>();
-        if (root.TryGetProperty("title", out var title))
+        // Texts are either a plain string (English) or an object keyed by language.
+        Dictionary<string, string> Texts(string name)
         {
-            if (title.ValueKind == JsonValueKind.String)
-                titles["en"] = title.GetString()!;
+            var result = new Dictionary<string, string>();
+            if (!root.TryGetProperty(name, out var value))
+                return result;
+            if (value.ValueKind == JsonValueKind.String)
+                result["en"] = value.GetString()!;
             else
-                foreach (var p in title.EnumerateObject())
-                    titles[p.Name] = p.Value.GetString() ?? "";
+                foreach (var p in value.EnumerateObject())
+                    result[p.Name] = p.Value.GetString() ?? "";
+            return result;
         }
+        var titles = Texts("title");
         if (titles.Count == 0)
             titles["en"] = id;
 
@@ -73,6 +78,8 @@ public static class SongParser
             Key = Str("key", "C"),
             Pickup = pickup,
             Parts = parts,
+            About = Texts("about"),
+            Tip = Texts("tip"),
         };
     }
 

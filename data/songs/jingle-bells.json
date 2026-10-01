@@ -1,13 +1,27 @@
 {
   "id": "jingle-bells",
-  "title": { "en": "Jingle Bells" },
+  "title": {
+    "en": "Jingle Bells"
+  },
   "composer": "James Lord Pierpont",
   "chapter": 2,
   "tempo": 104,
   "time": "4/4",
   "key": "G",
+  "about": {
+    "en": "James Lord Pierpont published this in 1857 as \"One Horse Open Sleigh\", a song about winter sleigh rides rather than Christmas. In December 1965 two astronauts on Gemini 6 played it on a small harmonica and bells: the first song played in space.",
+    "nl": "James Lord Pierpont publiceerde dit in 1857 als \"One Horse Open Sleigh\", een lied over sleetochten in de winter, niet over Kerstmis. In december 1965 speelden twee astronauten van Gemini 6 het op een mondharmonica en belletjes: het eerste lied dat ooit in de ruimte gespeeld werd."
+  },
+  "tip": {
+    "en": "The chorus is played twice with a different ending. Short notes: tongue each one with a light \"du\".",
+    "nl": "Het refrein wordt twee keer gespeeld, met een ander einde. Korte noten: tong ze elk met een lichte \"du\"."
+  },
   "parts": [
-    { "id": "melody", "name": "Melody (chorus)", "instrument": "soprano",
-      "music": "|: B4/q B4 B4/h | B4/q B4 B4/h | B4/q D5 G4/q. A4/e | B4/w | C5/q C5 C5/q. C5/e | C5/q B4 B4 B4/e B4 | [1 B4/q A4 A4 B4 | A4/h D5 :| [2 D5/q D5 C5 A4 | G4/w" }
+    {
+      "id": "melody",
+      "name": "Melody (chorus)",
+      "instrument": "soprano",
+      "music": "|: B4/q B4 B4/h | B4/q B4 B4/h | B4/q D5 G4/q. A4/e | B4/w | C5/q C5 C5/q. C5/e | C5/q B4 B4 B4/e B4 | [1 B4/q A4 A4 B4 | A4/h D5 :| [2 D5/q D5 C5 A4 | G4/w"
+    }
   ]
 }

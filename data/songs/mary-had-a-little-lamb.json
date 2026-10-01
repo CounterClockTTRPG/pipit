@@ -1,13 +1,27 @@
 {
   "id": "mary-had-a-little-lamb",
-  "title": { "en": "Mary Had a Little Lamb" },
+  "title": {
+    "en": "Mary Had a Little Lamb"
+  },
   "composer": "Traditional (United States)",
   "chapter": 1,
   "tempo": 92,
   "time": "4/4",
   "key": "G",
+  "about": {
+    "en": "The words are a poem by Sarah Josepha Hale, published in 1830. In 1877 Thomas Edison recited it into his new phonograph: \"Mary had a little lamb\" were the first words he recorded.",
+    "nl": "De tekst is een gedicht van Sarah Josepha Hale uit 1830. In 1877 sprak Thomas Edison het in zijn nieuwe fonograaf in: \"Mary had a little lamb\" waren de eerste woorden die hij opnam."
+  },
+  "tip": {
+    "en": "A new note: high Re (Re'). Only the middle finger of your left hand covers a hole, and the thumb comes off.",
+    "nl": "Een nieuwe noot: hoge Re (Re'). Alleen de middelvinger van je linkerhand bedekt een gaatje, en de duim gaat eraf."
+  },
   "parts": [
-    { "id": "melody", "name": "Melody", "instrument": "soprano",
-      "music": "B4/q A4 G4 A4 | B4 B4 B4/h | A4/q A4 A4/h | B4/q D5 D5/h | B4/q A4 G4 A4 | B4 B4 B4 B4 | A4 A4 B4 A4 | G4/w" }
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "B4/q A4 G4 A4 | B4 B4 B4/h | A4/q A4 A4/h | B4/q D5 D5/h | B4/q A4 G4 A4 | B4 B4 B4 B4 | A4 A4 B4 A4 | G4/w"
+    }
   ]
 }

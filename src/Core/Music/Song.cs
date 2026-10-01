@@ -55,12 +55,22 @@ public sealed class Song
     /// <summary>Length of the pickup (anacrusis) in beats; 0 when the song starts on a full bar.</summary>
     public double Pickup { get; init; }
     public required IReadOnlyList<SongPart> Parts { get; init; }
+    /// <summary>A short introduction (history, a fun fact), per language.</summary>
+    public IReadOnlyDictionary<string, string> About { get; init; } = new Dictionary<string, string>();
+    /// <summary>A playing tip for this song, per language.</summary>
+    public IReadOnlyDictionary<string, string> Tip { get; init; } = new Dictionary<string, string>();
 
     /// <summary>The part the player plays (the first one, until parts can be chosen).</summary>
     public SongPart Melody => Parts[0];
 
     public string Title(string language) =>
         Titles.TryGetValue(language, out var t) ? t : Titles.TryGetValue("en", out var en) ? en : Titles.Values.First();
+
+    public string AboutText(string language) => Localised(About, language);
+    public string TipText(string language) => Localised(Tip, language);
+
+    private static string Localised(IReadOnlyDictionary<string, string> texts, string language) =>
+        texts.TryGetValue(language, out var t) ? t : texts.TryGetValue("en", out var en) ? en : "";
 
     public double SecondsPerBeat(double tempoFactor = 1) => 60.0 / (Tempo * tempoFactor);
 
