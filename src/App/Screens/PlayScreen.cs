@@ -595,7 +595,7 @@ public partial class PlayScreen : Screen
                 var judged = _performance.Notes.OrderBy(n => n.Expected.Start).Take(st.Judged).ToList();
                 var accuracy = judged.Count == 0 ? 0 : judged.Average(n => n.Score);
                 _rank = Leaderboard.Add(S.Progress, PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString()),
-                    new ScoreEntry(Ui.T("You"), st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _tempoFactor, DateTime.Now));
+                    new ScoreEntry(S.Player.Name, st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _tempoFactor, DateTime.Now));
                 lines = XpRules.SurvivalRun(record, judged.Count(n => n.Result == NoteResult.Hit), st.Score, st.Alive, DateTime.Now);
             }
             else
