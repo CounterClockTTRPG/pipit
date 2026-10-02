@@ -16,6 +16,7 @@ public partial class ClickPlayer : Node
     private AudioStreamGeneratorPlayback _playback = null!;
     private AudioHub _hub = null!;
     private readonly List<(double Time, bool Accent)> _pending = new();
+    private readonly List<(double Time, float[] Sound)> _pendingSounds = new();
     private float[] _click = Array.Empty<float>();
     private float[] _accent = Array.Empty<float>();
     private readonly List<(float[] Sound, int Position)> _sounding = new();
@@ -51,9 +52,16 @@ public partial class ClickPlayer : Node
         _pending.Sort((a, b) => a.Time.CompareTo(b.Time));
     }
 
+    /// <summary>Any sound (the band) starting at a capture time, mixed in with the clicks.</summary>
+    public void ScheduleSound(float[] sound, double time)
+    {
+        _pendingSounds.Add((time, sound));
+    }
+
     public void Stop()
     {
         _pending.Clear();
+        _pendingSounds.Clear();
         _sounding.Clear();
     }
 
@@ -84,6 +92,16 @@ public partial class ClickPlayer : Node
                 continue; // more than 50 ms late: drop rather than click off the beat
             // Position = index into the sound that lines up with buffer frame 0.
             _sounding.Add((accent ? _accent : _click, offset > 0 ? -offset : 0));
+        }
+
+        for (var i = _pendingSounds.Count - 1; i >= 0; i--)
+        {
+            var offset = (int)Math.Round((_pendingSounds[i].Time - firstFrameCapture) * _rate);
+            if (offset >= free)
+                continue;
+            // A late start skips the part already missed, so the band stays on the beat.
+            _sounding.Add((_pendingSounds[i].Sound, -offset)); // position in the sound at buffer frame 0
+            _pendingSounds.RemoveAt(i);
         }
 
         var buffer = new Vector2[free];

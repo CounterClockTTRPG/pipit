@@ -16,6 +16,11 @@ public sealed class AppSettings
     public string Language { get; set; } = "en";
     public NoteNaming Naming { get; set; } = NoteNaming.FixedDo;
     public bool Fullscreen { get; set; }
+    /// <summary>"simple" (procedural) or "natural" (SoundFont recorder) for previews.</summary>
+    public string Voice { get; set; } = "natural";
+    /// <summary>The player confirmed they use headphones, so the band can play during grading.</summary>
+    public bool HeadphonesConfirmed { get; set; }
+    public bool BandOn { get; set; } = true;
     /// <summary>How songs are shown: "bars" or "score".</summary>
     public string SongView { get; set; } = "bars";
     /// <summary>Godot input device name; "Default" follows the Windows default device.</summary>
