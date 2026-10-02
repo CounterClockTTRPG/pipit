@@ -638,7 +638,7 @@ Still to do, roughly in the order agreed:
 | Renaissance dances from David Bellugi's site | done, personal use only (`data/songs/personal/`) |
 | A natural (sampled) recorder sound next to the simple one | with MeltySynth, M7 |
 | Accompaniment through headphones | M7, in progress (see docs/HANDOVER.md) |
-| UI translation: EN/NL first, then FR | M9; text already goes through `Ui.T` |
+| ~~UI translation: EN/NL~~; FR | done for Dutch (342+ texts, tested); French to do |
 | Baroque vs German fingering | supported per recorder; comparison lesson still to write |
 | Android APK for tablets | after M9; see docs/HANDOVER.md for what it needs |
 

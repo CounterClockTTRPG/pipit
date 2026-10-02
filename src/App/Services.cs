@@ -104,6 +104,7 @@ public partial class Services : Node
         foreach (var error in Songs.Errors)
             GD.PushError("Song: " + error);
         Progress = IsGuest ? new PlayerProgress() : Store.LoadProgress(Player.Id);
+        ApplyLanguage();
         MusicFont = LoadMusicFont();
         Study = StudyPath.Parse(FileAccess.GetFileAsString("res://data/path.json"));
     }
@@ -214,12 +215,42 @@ public partial class Services : Node
 
     // ---- players --------------------------------------------------------------------------
 
+    /// <summary>
+    /// Switches the interface to the player's language: data/i18n/&lt;lang&gt;.json maps English
+    /// texts to translations and is loaded into Godot's TranslationServer (no import step).
+    /// </summary>
+    private readonly HashSet<string> _loadedLanguages = new();
+
+    public void ApplyLanguage()
+    {
+        var language = Settings.Language;
+        if (language != "en" && _loadedLanguages.Add(language))
+        {
+            var path = $"res://data/i18n/{language}.json";
+            if (FileAccess.FileExists(path))
+            {
+                var table = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(FileAccess.GetFileAsString(path)) ?? new();
+                var translation = new Translation { Locale = language };
+                foreach (var (english, translated) in table)
+                    if (translated != "")
+                        translation.AddMessage(english, translated);
+                TranslationServer.AddTranslation(translation);
+            }
+        }
+        TranslationServer.SetLocale(language);
+        // Dates and numbers too ("1 okt", "1,5 s"): Belgian Dutch, British English, French.
+        var culture = System.Globalization.CultureInfo.GetCultureInfo(language switch { "nl" => "nl-BE", "fr" => "fr-BE", _ => "en-GB" });
+        System.Globalization.CultureInfo.CurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+    }
+
     public void SelectPlayer(PlayerProfile player)
     {
         Player = player;
         Progress = Store.LoadProgress(player.Id);
         Machine.LastPlayerId = player.Id;
         Store.SaveMachine(Machine);
+        ApplyLanguage();
         ApplyInstrument();
         Changed?.Invoke();
     }

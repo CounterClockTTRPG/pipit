@@ -59,7 +59,7 @@ public partial class NewPlayerScreen : Screen
             Ui.Label("Name", 20), _name,
             Ui.Label("Choose your bird", 20), birds,
             Ui.Label("Language", 20), _language,
-            Ui.Text("Lessons are in English and Dutch; the rest of the app is still in English.", 14, PipitTheme.InkSoft),
+            Ui.Text("Pipit speaks English and Dutch; French is coming.", 14, PipitTheme.InkSoft),
             actions);
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         scroll.AddChild(Ui.Expand(form));

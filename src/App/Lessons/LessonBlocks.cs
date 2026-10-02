@@ -233,7 +233,7 @@ public partial class ExerciseBlock : PanelContainer, ITaskBlock
             {
                 NoteResult.Missed => NoteMark.Missed,
                 NoteResult.WrongNote => NoteMark.Wrong,
-                _ => j.Timing is Timing.Perfect or Timing.Great or Timing.Good ? NoteMark.Perfect : NoteMark.Good,
+                _ => j.Timing is Timing.Perfect or Timing.Great or Timing.Good ? NoteMark.Perfect : NoteMark.Good, // amber: early or late
             });
         if (_runner.Finished && _runner.Result is { } result)
             Finish(result);
@@ -245,9 +245,16 @@ public partial class ExerciseBlock : PanelContainer, ITaskBlock
         _view.Overlay = "";
         _start.Disabled = false;
         _start.Text = Ui.T("↻ Again");
-        var passed = result.Accuracy >= 60;
-        _status.Text = string.Format(Ui.T("{0} of {1} notes, {2:0}%."), result.Hits, result.Notes.Count, result.Accuracy) + " " +
-            Ui.T(passed ? "✓ Good, on to the next part." : "Try again: listen to the clicks and play one note on each.");
+        var verdict = ExerciseVerdict.Of(result);
+        var passed = verdict.Passed;
+        var tips = new List<string>();
+        if (verdict.TuningTip != 0)
+            tips.Add(Ui.T(verdict.TuningTip > 0 ? "A little high: blow a bit more gently." : "A little low: blow a bit more firmly."));
+        if (verdict.LengthTip)
+            tips.Add(Ui.T("Keep blowing until the next note: some notes were short."));
+        _status.Text = string.Format(Ui.T("{0} of {1} notes right and on time."), verdict.OnTime, verdict.Total) + " " +
+            Ui.T(passed ? "✓ Good, on to the next part." : "Try again: listen to the clicks and play one note on each.") +
+            (tips.Count > 0 ? "\n" + string.Join(" ", tips) : "");
         _status.Modulate = passed ? PipitTheme.Good : PipitTheme.Warn;
         if (passed && !Done)
         {

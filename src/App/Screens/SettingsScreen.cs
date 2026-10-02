@@ -27,7 +27,15 @@ public partial class SettingsScreen : Screen
     public SettingsScreen()
     {
         var editor = new InstrumentEditor();
-        var language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, S.Settings.Language)), ix => { S.Settings.Language = Languages[ix]; S.Save(); });
+        var language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, S.Settings.Language)), ix =>
+        {
+            S.Settings.Language = Languages[ix];
+            S.Save();
+            // Screens build their texts once, so rebuild them in the new language.
+            S.ApplyLanguage();
+            Main.Instance.ShowRoot(new HomeScreen());
+            Main.Instance.Show(new SettingsScreen());
+        });
         var naming = Ui.Options(new[] { "Do Re Mi (fixed Do)", "C D E (letters)" }, (int)S.Settings.Naming, ix => { S.Settings.Naming = (NoteNaming)ix; S.Save(); });
 
         var instrument = Ui.VBox(10,

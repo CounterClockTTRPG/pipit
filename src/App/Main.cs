@@ -51,7 +51,16 @@ public partial class Main : Control
         if (OS.GetCmdlineUserArgs().Contains("--micprobe"))
             MicProbe();
         if (OS.GetCmdlineUserArgs().Contains("--shots"))
+        {
+            // `--lang=nl`: shoot in Dutch (not saved) and list texts shown untranslated.
+            if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--lang=")) is { } lang)
+            {
+                Services.Instance.Settings.Language = lang["--lang=".Length..];
+                Services.Instance.ApplyLanguage();
+                ShowRoot(new HomeScreen());
+            }
             Screenshots();
+        }
         if (OS.GetCmdlineUserArgs().Contains("--miccheck"))
             MicCheckAndQuit();
         if (OS.GetCmdlineUserArgs().Contains("--loopback"))
@@ -233,7 +242,8 @@ public partial class Main : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "fingerings.png"));
         sheet.QueueFree();
-        GD.Print("SHOTS " + dir);
+        System.IO.File.WriteAllLines(System.IO.Path.Combine(dir, "untranslated.txt"), Ui.Missing);
+        GD.Print($"SHOTS {dir} ({Ui.Missing.Count} untranslated)");
         GetTree().Quit();
     }
 

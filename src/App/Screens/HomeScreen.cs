@@ -37,13 +37,15 @@ public partial class HomeScreen : Screen
         instrumentRow.AddChild(Ui.HBox(12, Ui.Label("Recorder:", 20), _picker, _instrument));
         _hint = Ui.Label("", 18, PipitTheme.Bad, HorizontalAlignment.Center);
 
-        var grid = new GridContainer { Columns = 4 };
+        // Tiles flow and wrap their text, so longer translations cannot widen the page.
+        var grid = new HFlowContainer { CustomMinimumSize = new Vector2(1180, 0) };
         grid.AddThemeConstantOverride("h_separation", 16);
         grid.AddThemeConstantOverride("v_separation", 16);
         void Tile(string text, string sub, System.Func<Screen> make)
         {
-            var b = Ui.Button(text + "\n" + Ui.T(sub), () => Main.Instance.Show(make()), 22);
-            b.CustomMinimumSize = new Vector2(275, 100);
+            var b = Ui.Button(Ui.T(text) + "\n" + Ui.T(sub), () => Main.Instance.Show(make()), 22);
+            b.CustomMinimumSize = new Vector2(280, 100);
+            b.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             grid.AddChild(b);
         }
         Tile("Study", "Learn step by step, with Pip", () => new StudyScreen());

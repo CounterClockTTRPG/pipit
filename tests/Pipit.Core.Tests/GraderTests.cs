@@ -88,3 +88,33 @@ public class GraderTests
         Assert.Single(p.Notes); // the note at 2.0 s still has 150 ms of window left
     }
 }
+
+public class ExerciseVerdictTests
+{
+    private static NoteJudgement J(int i, NoteResult r, Timing? t, bool inTune = true, bool held = true, double cents = 0) =>
+        new(new ExpectedNote(i, 79, i, i + 1), r, null, 0, t, inTune, held, cents);
+
+    [Fact]
+    public void The_users_screenshot_passes_with_tips()
+    {
+        // As reported: one late note (amber), one wrong (red), six on time but sharp and short.
+        var notes = new List<NoteJudgement> { J(0, NoteResult.Hit, Timing.Late, false, false, 45) };
+        notes.AddRange(Enumerable.Range(1, 3).Select(i => J(i, NoteResult.Hit, Timing.Good, false, false, 40)));
+        notes.Add(J(4, NoteResult.WrongNote, null));
+        notes.AddRange(Enumerable.Range(5, 3).Select(i => J(i, NoteResult.Hit, Timing.Great, false, false, 42)));
+        var run = new GradedRun(notes, 0, 1);
+        Assert.True(run.Accuracy < 60); // a graded song would fail this...
+        var verdict = ExerciseVerdict.Of(run);
+        Assert.True(verdict.Passed);    // ...but the exercise asked for the right notes on the beat
+        Assert.Equal(6, verdict.OnTime);
+        Assert.Equal(1, verdict.TuningTip);
+        Assert.True(verdict.LengthTip);
+    }
+
+    [Fact]
+    public void Too_few_on_time_fails()
+    {
+        var notes = Enumerable.Range(0, 8).Select(i => J(i, i < 5 ? NoteResult.Hit : NoteResult.Missed, Timing.Perfect)).ToList();
+        Assert.False(ExerciseVerdict.Of(new GradedRun(notes, 0, 1)).Passed); // 5 of 8
+    }
+}

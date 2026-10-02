@@ -59,13 +59,13 @@ public partial class LibraryScreen : Screen
                 var stars = new string('★', record.BestStars) + new string('☆', 3 - record.BestStars);
                 var playable = song.Melody.Performance.All(n => S.Recorder.InRange(n.Pitch.Midi));
                 var dots = new string('●', song.Difficulty) + new string('○', 5 - song.Difficulty);
-                var button = Ui.Button(song.Title(S.Settings.Language) + "\n" + (repertoire ? song.Composer + "  " + dots + "\n" : "") + stars + (record.Plays > 0 ? $"  {record.BestAccuracy:0}%" : ""),
+                var button = Ui.Button(song.Title(S.Settings.Language) + "\n" + (repertoire ? Ui.Composer(song.Composer) + "  " + dots + "\n" : "") + stars + (record.Plays > 0 ? $"  {record.BestAccuracy:0}%" : ""),
                     () => Main.Instance.Show(new PlayScreen(song)), 20);
                 button.CustomMinimumSize = new Vector2(360, repertoire ? 118 : 90);
                 button.AutowrapMode = TextServer.AutowrapMode.WordSmart;
                 button.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
                 button.Disabled = !playable;
-                button.TooltipText = playable ? song.Composer : Ui.T("Some notes are outside this recorder's range.");
+                button.TooltipText = playable ? Ui.Composer(song.Composer) : Ui.T("Some notes are outside this recorder's range.");
                 grid.AddChild(button);
             }
             _list.AddChild(grid);

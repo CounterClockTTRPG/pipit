@@ -99,7 +99,7 @@ public partial class PlayScreen : Screen
         _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
 
-        var header = Ui.HBox(16, Ui.Label(Title, 30, PipitTheme.Ink), Ui.Label(song.Composer, 18, PipitTheme.InkSoft), Ui.Spacer());
+        var header = Ui.HBox(16, Ui.Label(Title, 30, PipitTheme.Ink), Ui.Label(Ui.Composer(song.Composer), 18, PipitTheme.InkSoft), Ui.Spacer());
         _best = Ui.Label("", 18, PipitTheme.Accent);
         header.AddChild(_best);
 
@@ -156,7 +156,7 @@ public partial class PlayScreen : Screen
         _names.Visible = score;
         _names.Toggled += on => _staff.ShowNames = on;
         // Your part (rounds, duets, consort pieces) and the band playing the others.
-        var partOption = Ui.Options(_original.Parts.Select(p => p.Name).ToArray(), _partIndex, ix =>
+        var partOption = Ui.Options(_original.Parts.Select(p => Ui.PartName(p.Name)).ToArray(), _partIndex, ix =>
         {
             if (_state is State.Ready or State.Results)
             {
@@ -668,7 +668,7 @@ public partial class PlayScreen : Screen
 
         var xp = Ui.VBox(4, Ui.Label($"+{award.Total} XP", 26, PipitTheme.Good));
         foreach (var line in award.Lines.Where(l => l.Amount > 0 || l.Reason.Contains("half")))
-            xp.AddChild(Ui.Label($"{Ui.T(line.Reason)}  {(line.Amount > 0 ? "+" + line.Amount : "")}", 15, PipitTheme.InkSoft));
+            xp.AddChild(Ui.Label($"{Ui.Reason(line.Reason)}  {(line.Amount > 0 ? "+" + line.Amount : "")}", 15, PipitTheme.InkSoft));
         var level = S.Progress.Level;
         var bar = new ProgressBar { MinValue = 0, MaxValue = 1, Value = Levels.Fraction(S.Progress.Xp), ShowPercentage = false, CustomMinimumSize = new Vector2(220, 14) };
         xp.AddChild(Ui.HBox(8, Ui.Label(award.LevelledUp ? string.Format(Ui.T("Level up! Level {0}"), level) : string.Format(Ui.T("Level {0}"), level), 18, award.LevelledUp ? PipitTheme.Accent : PipitTheme.Ink), bar));

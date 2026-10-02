@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 namespace Pipit.App.UI;
@@ -6,12 +7,60 @@ namespace Pipit.App.UI;
 /// <summary>Small builders so screens read as layout, not boilerplate. Text goes through Tr() for later translation.</summary>
 public static class Ui
 {
-    public static string T(string text) => TranslationServer.Translate(text);
+    /// <summary>Texts asked for while a non-English locale was active but missing from its table.</summary>
+    public static readonly System.Collections.Generic.SortedSet<string> Missing = new();
+
+    public static string T(string text)
+    {
+        var translated = TranslationServer.Translate(text).ToString();
+        if (translated == text && TranslationServer.GetLocale() != "en" && text.Any(char.IsLetter))
+            Missing.Add(text);
+        return translated;
+    }
 
     /// <summary>
     /// A label. Leave <paramref name="wrap"/> off for short text: a wrapping label has no minimum
     /// width, so in a row or a centring container it collapses to one letter per line.
     /// </summary>
+    /// <summary>An XP reason from Core, which may be built from parts ("Achievement: Survivor", "2 stars").</summary>
+    public static string Reason(string reason)
+    {
+        if (reason.StartsWith("Achievement: "))
+            return string.Format(T("Achievement: {0}"), T(reason["Achievement: ".Length..]));
+        var stars = System.Text.RegularExpressions.Regex.Match(reason, @"^(\d+) stars?$");
+        if (stars.Success)
+            return string.Format(T(stars.Groups[1].Value == "1" ? "{0} star" : "{0} stars"), stars.Groups[1].Value);
+        var day = System.Text.RegularExpressions.Regex.Match(reason, @"^Day (\d+) in a row$");
+        if (day.Success)
+            return string.Format(T("Day {0} in a row"), day.Groups[1].Value);
+        return T(reason);
+    }
+
+    /// <summary>A part name from song data: "Entry 2" (rounds), "Melody", "Left hand"...</summary>
+    public static string PartName(string name)
+    {
+        var entry = System.Text.RegularExpressions.Regex.Match(name, @"^(Entry|Voice) (\d+)$");
+        return entry.Success ? string.Format(T(entry.Groups[1].Value + " {0}"), entry.Groups[2].Value) : T(name);
+    }
+
+    /// <summary>A composer line from song data: "Traditional (France)", "X, diminutions by Y", "...; words by Z".</summary>
+    public static string Composer(string text)
+    {
+        var words = text.Split("; words by ");
+        var composer = words[0];
+        var diminutions = composer.Split(", diminutions by ");
+        var main = diminutions[0];
+        var traditional = System.Text.RegularExpressions.Regex.Match(main, @"^Traditional \((.+)\)$");
+        var result = traditional.Success ? string.Format(T("Traditional ({0})"), T(traditional.Groups[1].Value))
+            : main.StartsWith("Anonymous") ? T("Anonymous") + main["Anonymous".Length..].Replace("14th century", T("14th century"))
+            : main;
+        if (diminutions.Length > 1)
+            result += string.Format(T(", diminutions by {0}"), diminutions[1]);
+        if (words.Length > 1)
+            result += string.Format(T("; words by {0}"), words[1]);
+        return result;
+    }
+
     public static Label Label(string text, int size = 20, Color? color = null, HorizontalAlignment align = HorizontalAlignment.Left, bool wrap = false)
     {
         var label = new Label { Text = T(text), HorizontalAlignment = align };
