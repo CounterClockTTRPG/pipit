@@ -9,6 +9,7 @@ fewest printed accidentals, and short final bars are padded with rests. Existing
 are kept when a song is regenerated.
 """
 import json, os, re, subprocess
+from fractions import Fraction
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONV = os.path.join(ROOT, 'tools', 'midi2pipit.py')
@@ -78,8 +79,74 @@ SONGS = [
 PICKUP = {'h': 8, 'q': 4, 'e': 2}
 FIFTHS = {'C': 0, 'Am': 0, 'G': 1, 'D': 2, 'F': -1, 'Dm': -1, 'Bb': -2, 'Gm': -2, 'Eb': -3}
 
-def convert(midi, track, time, flats, voice='top', pickup=None):
-    args = ['python3', CONV, midi, '--track', str(track), '--time', time, '--voice', voice] + (['--flats'] if flats else [])
+B = os.path.join(ROOT, 'tools', 'sources', 'personal-bellugi')
+BELLUGI = 'davidbellugi.com/midi.html: MIDI transcription by David Bellugi (bellugi@dada.it), used with acknowledgment as the files ask; PERSONAL USE ONLY (no licence stated)'
+BELLUGI_DIM = BELLUGI.replace('MIDI transcription', 'MIDI transcription (diminutions)')
+ENCINA_ABOUT = {
+    'en': "Juan del Encina (1468-1529) was a poet, playwright and composer at the court of the Duke of Alba in Spain. His songs were collected in the \"Cancionero de Palacio\", the songbook of the royal palace. Here David Bellugi sets one for a recorder consort.",
+    'nl': "Juan del Encina (1468-1529) was dichter, toneelschrijver en componist aan het hof van de hertog van Alba in Spanje. Zijn liederen staan in de \"Cancionero de Palacio\", het liedboek van het koninklijk paleis. David Bellugi zet er hier een voor een blokfluitconsort.",
+}
+DIM_TIP = {'en': "Diminutions split long notes into quick runs around the tune. Learn the plain tune first, then practise the runs slowly with the speed dial.",
+           'nl': "Diminuties verdelen lange noten in snelle loopjes rond de melodie. Leer eerst de gewone melodie, en oefen de loopjes dan traag met de snelheidsknop."}
+CONSORT_TIP = {'en': "Switch the band on: you play the top line of a whole recorder consort. Listen to the others and keep a steady beat.",
+               'nl': "Zet de band aan: jij speelt de bovenstem van een heel blokfluitconsort. Luister naar de anderen en houd een gelijk tempo."}
+def consort(tracks, first=1):
+    names = ['Altus', 'Tenor', 'Bassus', 'Voice 5', 'Voice 6']
+    return [(t, names[k] if k < len(names) else f'Voice {k + 2}', 'bassoon' if k == len(tracks) - 1 else 'recorder', 'top') for k, t in enumerate(tracks)]
+HANDEL_CONCERTO_ABOUT = {
+    'en': "Handel's Organ Concerto Op. 4 No. 6 was first a concerto for harp, played in London in 1736 between the acts of his ode \"Alexander's Feast\". This version for recorder, bassoon and strings is an arrangement by David Bellugi. With the band on, you are the soloist in front of a baroque orchestra.",
+    'nl': "Händels Orgelconcerto opus 4 nr. 6 was eerst een concerto voor harp, gespeeld in Londen in 1736 tussen de bedrijven van zijn ode \"Alexander's Feast\". Deze versie voor blokfluit, fagot en strijkers is een bewerking van David Bellugi. Met de band aan ben jij de solist voor een barokorkest.",
+}
+HANDEL_CONCERTO_TIP = {'en': "Written for alto recorder. Listen to the orchestra's opening bars before you come in.",
+                       'nl': "Geschreven voor altblokfluit. Luister naar de openingsmaten van het orkest voor je invalt."}
+PERSONAL = [
+    dict(id='procurans-odium', dir='personal', midi=f'{B}/procuran.mid', time='3/4', tempo=100,
+         title={'en': 'Procurans odium', 'nl': 'Procurans odium'}, composer='Anonymous (14th century), set by David Bellugi', source=BELLUGI,
+         about={'en': "A Latin song from the 14th century, more than 600 years old. Its words warn against people who stir up hatred. It moves in a gentle three, and the top voice uses only a handful of notes.",
+                'nl': "Een Latijns lied uit de 14de eeuw, meer dan 600 jaar oud. De tekst waarschuwt tegen mensen die haat zaaien. Het beweegt in een rustige drie, en de bovenstem gebruikt maar een handvol noten."},
+         tip=CONSORT_TIP, parts=[(1, 'Cantus', 'soprano')], accompaniment=consort([2, 3, 4, 5, 6])),
+    dict(id='tobacco-fumes-away', dir='personal', midi=f'{B}/tobacco.mid', time='2/2', tempo=120, keep_intro=True,
+         title={'en': 'Tobacco fumes away', 'nl': 'Tobacco fumes away'}, composer='Thomas Ravenscroft', source=BELLUGI,
+         about={'en': "Thomas Ravenscroft (about 1582-1635) collected and wrote cheerful English songs for friends to sing together. This one, from 1614, jokes that tobacco makes your worries vanish like smoke. (Today we know it does the opposite!)",
+                'nl': "Thomas Ravenscroft (rond 1582-1635) verzamelde en schreef vrolijke Engelse liederen om samen te zingen. Dit lied uit 1614 grapt dat tabak je zorgen doet verdwijnen als rook. (Vandaag weten we dat het omgekeerde waar is!)"},
+         tip={'en': "The band starts first: count its two bars, then come in.", 'nl': "De band begint eerst: tel zijn twee maten mee, en val dan in."},
+         parts=[(1, 'Cantus', 'soprano')], accompaniment=consort([2, 3, 4])),
+    dict(id='encina-pues-que-ya', dir='personal', key='Dm', midi=f'{B}/encina3.mid', time='3/4', tempo=96,
+         title={'en': 'Pues que ya nunca nos veis', 'nl': 'Pues que ya nunca nos veis'}, composer='Juan del Encina', source=BELLUGI,
+         about=ENCINA_ABOUT, tip=CONSORT_TIP, parts=[(2, 'Cantus', 'soprano')], accompaniment=consort([3, 4, 5])),
+    dict(id='encina-pues-que-ya-diminutions', dir='personal', key='Dm', midi=f'{B}/encina3.mid', time='3/4', tempo=96,
+         title={'en': 'Pues que ya nunca nos veis (with diminutions)', 'nl': 'Pues que ya nunca nos veis (met diminuties)'},
+         composer='Juan del Encina, diminutions by David Bellugi', source=BELLUGI_DIM,
+         about=ENCINA_ABOUT, tip=DIM_TIP, parts=[(1, 'Diminutions', 'soprano')], accompaniment=consort([2, 3, 4, 5])),
+    dict(id='encina-triste-espana', dir='personal', key='Gm', midi=f'{B}/encina2.mid', time='2/2', tempo=88,
+         title={'en': 'Triste España sin ventura', 'nl': 'Triste España sin ventura'}, composer='Juan del Encina', source=BELLUGI,
+         about=ENCINA_ABOUT, tip={'en': "\"Sad Spain, without fortune\": a lament, written in 1497 when the crown prince died. Play it slowly and sing through the long notes.",
+                                  'nl': "\"Droevig Spanje, zonder geluk\": een klaagzang, geschreven in 1497 toen de kroonprins stierf. Speel ze traag en laat de lange noten zingen."},
+         parts=[(2, 'Cantus', 'soprano')], accompaniment=consort([3, 4, 5])),
+    dict(id='encina-triste-espana-diminutions', dir='personal', key='Gm', midi=f'{B}/encina2.mid', time='2/2', tempo=88, transpose=12,
+         title={'en': 'Triste España sin ventura (with diminutions)', 'nl': 'Triste España sin ventura (met diminuties)'},
+         composer='Juan del Encina, diminutions by David Bellugi', source=BELLUGI_DIM + '; an octave up to fit the soprano',
+         about=ENCINA_ABOUT, tip=DIM_TIP, parts=[(1, 'Diminutions', 'soprano')], accompaniment=consort([2, 3, 4, 5])),
+    dict(id='lasso-mais-qui-pourroit', dir='personal', midi=f'{B}/lasso2.mid', time='2/2', tempo=112,
+         title={'en': 'Mais qui pourroit estre celuy', 'nl': 'Mais qui pourroit estre celuy'}, composer='Orlando di Lasso', source=BELLUGI,
+         about={'en': "Orlando di Lasso (about 1532-1594) was born in Mons, in what is now Belgium, and became one of the most famous composers in Europe, working in Italy and Munich. He wrote more than 2000 pieces; this is a French chanson for three voices.",
+                'nl': "Orlando di Lasso (rond 1532-1594) werd geboren in Bergen, in het huidige België, en werd een van de beroemdste componisten van Europa, in Italië en München. Hij schreef meer dan 2000 stukken; dit is een Franse chanson voor drie stemmen."},
+         tip=CONSORT_TIP, parts=[(1, 'Cantus', 'soprano')], accompaniment=[(2, 'Altus', 'recorder', 'top'), (3, 'Bassus', 'bassoon', 'top')]),
+] + [
+    dict(id=f'handel-recorder-concerto-{i + 1}', dir='personal', midi=f'{B}/handel_{i + 1}.mid', time=time, tempo=tempo, key='Bb', keep_intro=True,
+         title={'en': f'Concerto in B♭, after Op. 4 No. 6: {roman}. {name}', 'nl': f'Concerto in Bes, naar opus 4 nr. 6: {roman}. {name}'},
+         composer='George Frideric Handel, arranged by David Bellugi', source=BELLUGI,
+         about=HANDEL_CONCERTO_ABOUT, tip=HANDEL_CONCERTO_TIP, parts=[(1, 'Recorder', 'alto')], accompaniment=band)
+    for i, (roman, name, time, tempo, band) in enumerate([
+        ('I', 'Andante allegro', '4/4', 84, [(2, 'Bassoon', 'bassoon', 'top'), (3, 'Violin I', 'violin', 'top'), (4, 'Violin II', 'violin', 'top'), (5, 'Viola', 'viola', 'top'), (6, 'Cello', 'cello', 'top'), (8, 'Organ', 'organ', 'bottom')]),
+        ('II', 'Larghetto', '3/4', 60, [(2, 'Violin I', 'violin', 'top'), (3, 'Violin II', 'violin', 'top'), (4, 'Viola', 'viola', 'top'), (5, 'Cello', 'cello', 'top'), (7, 'Organ', 'organ', 'bottom')]),
+        ('III', 'Allegro moderato', '3/8', 96, [(2, 'Bassoon', 'bassoon', 'top'), (3, 'Violin I', 'violin', 'top'), (4, 'Violin II', 'violin', 'top'), (5, 'Viola', 'viola', 'top'), (6, 'Cello', 'cello', 'top'), (8, 'Organ', 'organ', 'bottom')]),
+    ])
+]
+SONGS += PERSONAL
+
+def convert(midi, track, time, flats, voice='top', pickup=None, transpose=0):
+    args = ['python3', CONV, midi, '--track', str(track), '--time', time, '--voice', voice, '--transpose', str(transpose)] + (['--flats'] if flats else [])
     if pickup:
         args += ['--pickup', str(PICKUP[pickup])]
     return [b.strip() for b in subprocess.run(args, capture_output=True, text=True, check=True).stdout.strip().split(' | ')]
@@ -103,6 +170,8 @@ def respell(bars, key):
 def beats(bar):
     total = 0
     for t in bar.split():
+        if '/' not in t:
+            continue
         d = t.split('/')[1].rstrip('~,')
         total += DUR[d[0]] * (1.5 if d.endswith('.') else 1)
     return total
@@ -126,10 +195,10 @@ for song in SONGS:
     if 'key' in song:
         key = song['key']
     else:
-        key = MAJOR[key_for(convert(song['midi'], song['parts'][0][0], song['time'], False))]
+        key = MAJOR[key_for(convert(song['midi'], song['parts'][0][0], song['time'], False, transpose=song.get('transpose', 0)))]
     flats = FIFTHS[key] < 0
-    parts = [convert(song['midi'], t, song['time'], flats, pickup=pickup) for t, _, _ in song['parts']]
-    skip = min(next((i for i, b in enumerate(p) if not is_rest(b)), 0) for p in parts)
+    parts = [convert(song['midi'], t, song['time'], flats, pickup=pickup, transpose=song.get('transpose', 0)) for t, _, _ in song['parts']]
+    skip = 0 if song.get('keep_intro') else min(next((i for i, b in enumerate(p) if not is_rest(b)), 0) for p in parts)
     length = max(len(p) for p in parts) - skip
     def finish(bars, part):
         bars = respell(bars[skip:skip + length], key)
@@ -143,7 +212,8 @@ for song in SONGS:
             bars[-1] += ' ' + REST[r]
             gap -= r
         return ' | '.join(bars)
-    path = os.path.join(ROOT, 'data', 'songs', song['id'] + '.json')
+    rel = os.path.join(song.get('dir', ''), song['id'] + '.json').replace(os.sep, '/')
+    path = os.path.join(ROOT, 'data', 'songs', rel)
     old = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
     out = {
         'id': song['id'], 'title': song['title'], 'composer': song['composer'], 'chapter': old.get('chapter', 0), 'tempo': song['tempo'],
@@ -158,7 +228,7 @@ for song in SONGS:
     song_end = beats(' '.join(tune_last))
     acc = []
     for t, name, sound, voice in song['accompaniment']:
-        bars = respell(convert(song['midi'], t, song['time'], flats, voice, pickup)[skip:skip + length], key)
+        bars = respell(convert(song['midi'], t, song['time'], flats, voice, pickup, song.get('transpose', 0))[skip:skip + length], key)
         # A band part ends with the song: its last note is held until the tune's last note ends.
         last = bars[-1].split()
         gap = song_end - beats(bars[-1])
@@ -173,7 +243,125 @@ for song in SONGS:
         out['accompaniment'] = acc
     json.dump(out, open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
     open(path, 'a').write('\n')
-    if song['id'] + '.json' not in index:
-        index.append(song['id'] + '.json')
+    if rel not in index:
+        index.append(rel)
     print(f"{song['id']:28} key {key:3} bars {length:3} parts {len(parts)} band {len(acc)}")
+json.dump(index, open(idx_path, 'w'), indent=2)
+
+# --- MusicXML sources (tools/musicxml2pipit.py): van Eyck and Dowland, personal use ------------
+import importlib.util
+_spec = importlib.util.spec_from_file_location('musicxml2pipit', os.path.join(ROOT, 'tools', 'musicxml2pipit.py'))
+mx = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(mx)
+MS = os.path.join(ROOT, 'tools', 'sources', 'personal-musescore')
+EYCK_SOURCE = 'MuseScore transcription of the first edition (musescore.com/score/1608116), MusicXML converted with tools/import-songs.py; PERSONAL USE ONLY (no licence stated)'
+EYCK_ABOUT = {
+    'en': "Jacob van Eyck (about 1590-1657) was a blind carillon player in Utrecht. On summer evenings he played the recorder in the churchyard of the Janskerk for people strolling by, and the town paid him extra for it. His book \"Der Fluyten Lust-hof\" (The Flute's Pleasure Garden) holds about 150 pieces: the popular songs, dances and psalms of his day, each followed by his own variations.",
+    'nl': "Jacob van Eyck (rond 1590-1657) was een blinde beiaardier in Utrecht. Op zomeravonden speelde hij blokfluit op het kerkhof van de Janskerk voor wandelaars, en de stad betaalde hem daar extra voor. Zijn boek \"Der Fluyten Lust-hof\" (De lusthof van de fluit) bevat zo'n 150 stukken: de populaire liedjes, dansen en psalmen van zijn tijd, elk gevolgd door zijn eigen variaties.",
+}
+EYCK_NOTES = {
+    'wilhelmus': ("The Wilhelmus is now the Dutch national anthem, and one of the oldest in the world: its tune was already well known around 1570.",
+                  "Het Wilhelmus is nu het Nederlandse volkslied, en een van de oudste ter wereld: de melodie was rond 1570 al bekend."),
+    'lachrymae': ("This is John Dowland's \"Flow, my tears\", the greatest hit of its time, which van Eyck decorated in his own way.",
+                  "Dit is \"Flow, my tears\" van John Dowland, de grootste hit van zijn tijd, die van Eyck op zijn eigen manier versierde."),
+    'comagain': ("The tune is John Dowland's song \"Come again, sweet love doth now invite\" (1597).",
+                 "De melodie is het lied \"Come again, sweet love doth now invite\" van John Dowland (1597)."),
+    'amarilli': ("The tune is Giulio Caccini's famous song \"Amarilli, mia bella\" (1602). In this version van Eyck wrote two recorder parts.",
+                 "De melodie is het beroemde lied \"Amarilli, mia bella\" van Giulio Caccini (1602). In deze versie schreef van Eyck twee blokfluitpartijen."),
+    'bethlehem': ("A Christmas song about the stable in Bethlehem.", "Een kerstlied over de stal in Bethlehem."),
+    'engels-duet': ("An English song for two recorders: van Eyck wrote both parts.", "Een Engels lied voor twee blokfluiten: van Eyck schreef beide partijen."),
+}
+THEME_TIP = {'en': "This is the tune itself. In the book van Eyck follows it with variations; try the full version when this one goes well.",
+             'nl': "Dit is de melodie zelf. In het boek laat van Eyck er variaties op volgen; probeer de volledige versie als deze goed lukt."}
+FULL_TIP = {'en': "First the tune, then van Eyck's variations, each one busier than the last. Practise them one at a time with the speed dial.",
+            'nl': "Eerst de melodie, dan de variaties van van Eyck, elk drukker dan de vorige. Oefen ze een voor een met de snelheidsknop."}
+DUET_TIP = {'en': "A duet: pick a part, and the band plays the other recorder.", 'nl': "Een duet: kies een partij, en de band speelt de andere blokfluit."}
+SHORT_TIP = {'en': "A short piece in van Eyck's style: keep the quick notes light and even.",
+             'nl': "Een kort stuk in de stijl van van Eyck: houd de snelle noten licht en gelijk."}
+
+def eyck(id, pieces_, en, nl, kind, tempo, note=None, key=None):
+    about = {lang: EYCK_ABOUT[lang] + (' ' + EYCK_NOTES[note][k] if note else '') for k, lang in enumerate(['en', 'nl'])}
+    suffix = {'theme': (' (tune)', ' (melodie)'), 'full': ('', ''), 'duet': ('', ''), 'short': ('', '')}[kind]
+    tip = {'theme': THEME_TIP, 'full': FULL_TIP, 'duet': DUET_TIP, 'short': SHORT_TIP}[kind]
+    return dict(id=id, dir='personal', xml=f'{MS}/der-fluyten-lust-hof-vol-1.mxl', pieces=pieces_, theme=kind == 'theme', tempo=tempo, key=key,
+                title={'en': en + suffix[0], 'nl': nl + suffix[1]}, composer='Jacob van Eyck', source=EYCK_SOURCE, about=about, tip=tip)
+
+XML_SONGS = [
+    eyck('van-eyck-preludium', [0], 'Prelude', 'Preludium of Voorspel', 'short', 72),
+    eyck('van-eyck-wilhelmus-tune', [41], 'Wilhelmus', 'Wilhelmus van Nassouwe', 'theme', 76, 'wilhelmus'),
+    eyck('van-eyck-wilhelmus', [41], 'Wilhelmus', 'Wilhelmus van Nassouwe', 'full', 72, 'wilhelmus'),
+    eyck('van-eyck-wat-zalmen-tune', [49], 'What shall we do this evening', 'Wat zalmen op den avond doen', 'theme', 76),
+    eyck('van-eyck-wat-zalmen', [49], 'What shall we do this evening', 'Wat zalmen op den avond doen', 'full', 72),
+    eyck('van-eyck-bethlehem-tune', [55], 'O holy, blessed Bethlehem', 'O heyligh zaligh Bethlehem', 'theme', 72, 'bethlehem'),
+    eyck('van-eyck-bethlehem', [55], 'O holy, blessed Bethlehem', 'O heyligh zaligh Bethlehem', 'full', 66, 'bethlehem'),
+    eyck('van-eyck-doen-daphne-tune', [2], 'When Daphne, the fairest maiden', "Doen Daphne d'over schoone maeght", 'theme', 96),
+    eyck('van-eyck-lachrymae-tune', [7], 'Lachrimae Pavan', 'Pavaen Lachrymae', 'theme', 66, 'lachrymae'),
+    eyck('van-eyck-comagain-tune', [31], 'Come again', 'Comagain', 'theme', 72, 'comagain'),
+    eyck('van-eyck-onan-tune', [16], 'Onan, or Tanneken', 'Onan of Tanneken', 'theme', 72),
+    eyck('van-eyck-engels-lied', [36], 'English song', 'Engels lied', 'full', 72),
+    eyck('van-eyck-malle-symen', [4], 'Silly Simon', 'Malle Symen', 'full', 72),
+    eyck('van-eyck-rosemont', [9], 'Rosemont', 'Rosemont', 'full', 72),
+    eyck('van-eyck-stil-stil', [13], 'Hush, hush a while', 'Stil, stil een reys', 'full', 72),
+    eyck('van-eyck-meysje', [43], 'Meysje wilje by', 'Meysje wilje by', 'full', 72),
+    eyck('van-eyck-courante-mars', [44], 'Courante Mars', 'Courante Mars', 'full', 80),
+    eyck('van-eyck-janneman', [54], 'Janneman and Alemoer', 'Janneman en Alemoer', 'full', 72),
+    eyck('van-eyck-prins-robberts-masco', [76], "Prince Rupert's Masque", 'Prins Robberts masco', 'full', 72),
+    eyck('van-eyck-engels-liedt-duet', [80, 81], 'English song, for two', 'Engels liedt, à 2', 'duet', 72, 'engels-duet'),
+    eyck('van-eyck-amarilli-duet', [84, 85], 'Amarilli mia bella, for two', 'Amarilli mia bella, à 2', 'duet', 66, 'amarilli'),
+    dict(id='dowland-flow-my-tears', dir='personal', xml=f'{MS}/dowland-flow-my-tears-lachrimae-pavan-satb.mxl', pieces=[0], tempo=60, key='Am',
+         staves=[(1, -12, 'Cantus', 'soprano')], band=[(2, 0, 'Altus', 'recorder'), (3, 0, 'Tenor', 'recorder'), (4, 0, 'Bassus', 'bassoon')],
+         # The scan has one rest too many in bar 20 of the top voice.
+         drop_last_rest=[(1, 19)],
+         title={'en': 'Flow, my tears (Lachrimae)', 'nl': 'Flow, my tears (Lachrimae)'}, composer='John Dowland',
+         source="MusicXML from an optical reading (Audiveris) of an SATB setting, from the user's own files; PERSONAL USE ONLY (no licence stated)",
+         about={'en': "John Dowland (1563-1626), lute player at the courts of England and Denmark, published this song in 1600. Its falling first notes, like tears, made it the best-known tune in Europe: composers everywhere, Jacob van Eyck among them, wrote their own versions of \"Lachrimae\".",
+                'nl': "John Dowland (1563-1626), luitspeler aan de hoven van Engeland en Denemarken, gaf dit lied uit in 1600. De dalende eerste noten, als tranen, maakten het de bekendste melodie van Europa: overal schreven componisten er hun eigen versie van \"Lachrimae\" van, ook Jacob van Eyck."},
+         tip={'en': "Slow and sad: let each note of the falling La, Sol, Fa, Mi sing. With the band on, the other three voices of the song play along.",
+              'nl': "Traag en droevig: laat elke noot van het dalende La, Sol, Fa, Mi zingen. Met de band aan spelen de drie andere stemmen van het lied mee."}),
+]
+
+for song in XML_SONGS:
+    pieces_ = mx.load_mxl(song['xml'])
+    def bars_of(index, staff=None, transpose=0):
+        piece = pieces_[index]
+        if song.get('theme'):
+            piece = mx.theme(piece)
+        for st, mi in song.get('drop_last_rest', []):
+            if staff == st:
+                m = piece['measures'][mi][0]
+                rest = [n for n in m.findall('note') if n.findtext('staff') == str(st) and n.find('rest') is not None][-1]
+                m.remove(rest)
+        return mx.rebar(piece, staff, transpose)
+    if 'staves' in song:
+        playable = [(bars_of(song['pieces'][0], st, tr), name, instr) for st, tr, name, instr in song['staves']]
+        band = [(bars_of(song['pieces'][0], st, tr), name, sound) for st, tr, name, sound in song['band']]
+    else:
+        names = ['Recorder 1', 'Recorder 2'] if len(song['pieces']) > 1 else ['Recorder']
+        playable = [(bars_of(i), names[k], 'soprano') for k, i in enumerate(song['pieces'])]
+        band = []
+    time, pickup, _ = playable[0][0]
+    music = [b for (_, _, b), _, _ in playable]
+    length = max(len(b) for b in music)
+    full = Fraction(int(time.split('/')[0]) * 4, int(time.split('/')[1]))
+    def pad(bars):
+        # A shorter part waits in whole-bar rests (the parts of a duet end together).
+        return bars + [' '.join('R/' + mx.DUR[x] for x in mx.split(full))] * (length - len(bars))
+    # The edition's own key signature (major name; the score only needs the signature).
+    key = song['key'] or MAJOR[pieces_[song['pieces'][0]]['measures'][0][3]]
+    rel = f"{song['dir']}/{song['id']}.json"
+    path = os.path.join(ROOT, 'data', 'songs', rel)
+    old = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    out = {
+        'id': song['id'], 'title': song['title'], 'composer': song['composer'], 'chapter': old.get('chapter', 0), 'tempo': song['tempo'],
+        'time': time, 'key': key, 'source': song['source'],
+        'about': old.get('about', song['about']), 'tip': old.get('tip', song['tip']),
+        **({'pickup': mx.DUR[pickup]} if pickup else {}),
+        'parts': [{'id': f'part{k + 1}', 'name': name, 'instrument': instr, 'music': ' | '.join(pad(b))} for k, ((_, _, b), name, instr) in enumerate(playable)],
+    }
+    if band:
+        out['accompaniment'] = [{'id': f'voice{k + 2}', 'name': name, 'sound': sound, 'music': ' | '.join(pad(b))} for k, ((_, _, b), name, sound) in enumerate(band)]
+    json.dump(out, open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+    open(path, 'a').write('\n')
+    if rel not in index:
+        index.append(rel)
+    print(f"{song['id']:34} {time} key {key:3} pickup {str(pickup):4} bars {length:4} parts {len(playable)} band {len(band)}")
 json.dump(index, open(idx_path, 'w'), indent=2)
