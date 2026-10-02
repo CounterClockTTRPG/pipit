@@ -170,6 +170,14 @@ public partial class Main : Control
             Back();
         }
 
+        // A round: part picker and band switch.
+        var round = new PlayScreen(Services.Instance.Songs.Get("frere-jacques")!, part: 1);
+        Show(round);
+        for (var i = 0; i < 20; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "play-round.png"));
+        Back();
+
         // The highway while listening.
         var highway = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
         Show(highway);

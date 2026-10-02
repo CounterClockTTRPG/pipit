@@ -62,6 +62,7 @@ def main():
     ap.add_argument('--transpose', type=int, default=0); ap.add_argument('--bars', default=None)
     ap.add_argument('--time', default='4/4')
     ap.add_argument('--flats', action='store_true', help='spell black keys as flats (flat keys)')
+    ap.add_argument('--voice', choices=['top', 'bottom'], default='top', help='which note of a chord to keep (bottom for bass lines)')
     ap.add_argument('--pickup', type=int, default=0, help='length of the pickup bar in sixteenths')
     a = ap.parse_args()
     if a.flats:
@@ -78,14 +79,16 @@ def main():
         elif p in open_: notes.append((open_.pop(p), t, p))
     # Keep one line: at equal starts keep the highest note; a note that starts while another
     # sounds cuts the earlier one short (the top voice of keyboard chords).
-    notes.sort(key=lambda n: (n[0], -n[2]))
+    # With --voice bottom the same rules apply upside down (the bass of left-hand chords).
+    sign = 1 if a.voice == 'top' else -1
+    notes.sort(key=lambda n: (n[0], -sign * n[2]))
     mono = []
     for s_, e_, p_ in notes:
         if mono and mono[-1][0] == s_:
             continue
         if mono and mono[-1][1] > s_:
-            if p_ < mono[-1][2]:
-                continue  # an inner voice moving under a held melody note
+            if sign * p_ < sign * mono[-1][2]:
+                continue  # an inner voice moving under (or over) a held note
             mono[-1] = (mono[-1][0], s_, mono[-1][2])
         mono.append((s_, e_, p_))
     notes = mono

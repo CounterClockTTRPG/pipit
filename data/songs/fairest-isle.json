@@ -26,5 +26,25 @@
       "instrument": "soprano",
       "music": "D5/q F5/h | Bb4/h F5/q | G5/e F5/e G5/e Ab5/e G5/q | F5/h D5/q | D5/e Eb5/e F5/q C5/q | D5/e C5/e Bb4/q A4/q | G4/e A4/e Bb4/q C5/q | A4/h. | D5/q F5/h | Bb4/h F5/q | G5/e F5/e G5/e Ab5/e G5/q | F5/h D5/q | D5/e Eb5/e F5/q C5/q | D5/e C5/e Bb4/q A4/q | G4/e A4/e Bb4/q C5/q | A4/h. | C5/q A4/h | D5/h Bb4/q | Eb5/q C5/h | D5/h D5/q | D5/e Eb5/e F5/e G5/e F5/q | B4/h C5/q | C5/e D5/e Eb5/q C5/q | C5/h. | F5/q D5/h | Bb4/h D5/q | Eb5/e D5/e C5/e D5/e C5/q | C5/q F4/q F4/q | Bb4/e A4/e G4/q Eb5/q | Eb5/e D5/e C5/q F5/q | F5/e Eb5/e D5/q C5/e Bb4/e | Bb4/h."
     }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Upper strings",
+      "sound": "strings",
+      "music": "Bb4/q A4/h | G4/h Bb4/q | Bb4/h Bb4/q | Bb4/e C5/e D5/h | C5/h F4/q | F4/q. E4/e F4/q | G4/q F4/q E4/q | F4/h. | Bb4/h A4/q~ | A4/q G4/q F4/q | Bb4/h Bb4/q | Bb4/e A4/e Bb4/e C5/e Bb4/q | F4/h F4/q | D4/q. Eb4/e F4/q | Bb3/q. F4/e E4/q | F4/h. | F4/q F4/h | F4/h G4/q | G4/q F4/h | F4/h F4/q | F4/h F4/q | D4/e Eb4/e F4/e G4/e Ab4/q | G4/h F4/q | Eb4/h. | F4/q F4/h | G4/h A4/q | G4/h G4/q | F4/h F4/q | F4/q Eb4/q G4/q | A4/h Bb4/e A4/e | G4/q F4/q Eb4/q | D4/h."
+    },
+    {
+      "id": "voice3",
+      "name": "Lower strings",
+      "sound": "strings",
+      "music": "F4/q F4/h | D4/h D4/e C4/e | Bb3/h Bb3/e C4/e | D4/q. Eb4/e F4/q | F4/h A3/q | Bb3/h C4/e D4/e | Eb4/q F4/q G4/q | C4/h. | D4/q C4/h | Bb3/h Bb3/q | Bb3/h Bb3/e C4/e | D4/q. Eb4/e F4/q | C4/h A3/q | Bb3/h C4/e D4/e | Eb4/q F4/q C4/q | C4/h. | A3/q C4/h | Bb3/h Bb3/q | Bb3/q A3/h | Bb3/h Bb3/q | C4/h B3/e C4/e | D4/h F4/q | Eb4/q. C4/e D4/q | C4/h. | C4/q Bb3/h | Eb4/q D4/q A3/e Bb3/e | C4/h Bb3/q | A3/h A3/q | Bb3/h C4/q | C4/h D4/q | Bb3/h A3/q | Bb3/h."
+    },
+    {
+      "id": "voice4",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "Bb3/q F3/h | G3/h D3/q | Eb3/h Eb3/q | Bb3/h Bb3/q | A3/h F3/q | Bb3/e A3/e G3/q F3/q | Eb3/q D3/q C3/q | F3/h. | Bb3/q F3/h | G3/h D3/q | Eb3/h Eb3/q | Bb3/h Bb3/q | A3/h F3/q | Bb3/e A3/e G3/q F3/q | Eb3/q D3/q C3/q | F3/h. | F3/q F3/h | D3/h G3/q | C3/q F3/h | Bb2/h Bb3/q | Ab3/h Ab3/q | G3/h F3/q | G3/h G2/q | C3/q C4/q Bb3/q | A3/q Bb3/h | G3/h F3/q | Eb3/h E3/q | F3/h F3/e Eb3/e | D3/q Eb3/q C3/q | F3/h D3/q | Eb3/q F3/q F2/q | Bb2/h."
+    }
   ]
 }

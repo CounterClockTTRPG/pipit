@@ -26,5 +26,13 @@
       "instrument": "soprano",
       "music": "D5/q G4/e A4/e B4/e C5/e | D5/q G4/q G4/q | E5/q C5/e D5/e E5/e F#5/e | G5/q G4/q G4/q | C5/q D5/e C5/e B4/e A4/e | B4/q C5/e B4/e A4/e G4/e | F#4/q G4/e A4/e B4/e G4/e | A4/h. | D5/q G4/e A4/e B4/e C5/e | D5/q G4/q G4/q | E5/q C5/e D5/e E5/e F#5/e | G5/q G4/q G4/q | C5/q D5/e C5/e B4/e A4/e | B4/q C5/e B4/e A4/e G4/e | A4/q B4/e A4/e G4/e F#4/e | G4/h. | B5/q G5/e A5/e B5/e G5/e | A5/q D5/e E5/e F#5/e D5/e | G5/q E5/e F#5/e G5/e D5/e | C#5/q B4/e C#5/e A4/q | A4/e B4/e C#5/e D5/e E5/e F#5/e | G5/q F#5/q E5/q | F#5/q A4/q C#5/q | D5/h. | D5/q G4/e F#4/e G4/q | E5/q G4/e F#4/e G4/q | D5/q C5/q B4/q | A4/e G4/e F#4/e G4/e A4/q | D4/e E4/e F#4/e G4/e A4/e B4/e | C5/q B4/q A4/q | B4/e D5/e G4/q F#4/q | G4/h."
     }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Left hand",
+      "sound": "harpsichord",
+      "music": "G3/h A3/q | B3/h. | C4/h. | B3/h. | A3/h. | G3/h. | D4/q B3/q G3/q | D4/q D3/e C4/e B3/e A3/e | B3/h A3/q | G3/q B3/q G3/q | C4/h. | B3/q C4/e B3/e A3/e G3/e | A3/h F#3/q | G3/h B3/q | C4/q D4/q D3/q | G3/h G2/q | G3/h. | F#3/h. | E3/q G3/q E3/q | A3/h A2/q | A3/h. | B3/q D4/q C#4/q | D4/q F#3/q A3/q | D4/q D3/q C4/q | B3/h B3/q | C4/h C4/q | B3/q A3/q G3/q | D4/h R/q | D3/h. | E3/q G3/q F#3/q | G3/q B2/q D3/q | G3/q D3/q G2/q"
+    }
   ]
 }
