@@ -37,10 +37,17 @@ public class EndToEndTests(ITestOutputHelper output)
         var song = Load(id);
         var soprano = RecorderFor(song);
         var spb = song.SecondsPerBeat();
-        var first = song.Melody.Performance.Min(n => n.StartBeat);
-        var t0 = 1.0 - first * spb; // beat 0 in seconds; the first note starts at 1 s
-        var expected = song.Melody.Performance.Select(n => new ExpectedNote(n.Index, soprano.WrittenToSounding(n.Pitch.Midi),
-            t0 + n.StartBeat * spb, t0 + n.EndBeat * spb)).ToList();
+        // Long pieces (variation sets) are checked in excerpts, so the suite stays quick: the
+        // start, the end and two places between, played one after the other.
+        var expected = new List<ExpectedNote>();
+        var t = 1.0; // the first note starts at 1 s
+        foreach (var excerpt in Excerpts(song.Melody.Performance))
+        {
+            var shift = t - excerpt[0].StartBeat * spb;
+            expected.AddRange(excerpt.Select(n => new ExpectedNote(n.Index, soprano.WrittenToSounding(n.Pitch.Midi),
+                shift + n.StartBeat * spb, shift + n.EndBeat * spb)));
+            t = expected[^1].End + 1.0;
+        }
         var audio = RecorderVoice.Render(expected.Select(e => new SynthNote(e.Start + Latency, e.End - e.Start, Pitch.FrequencyOfMidi(e.SoundingMidi))).ToList(), Rate);
 
         var frames = PitchTracker.Analyse(audio, Rate, PitchTrackerOptions.ForRange(soprano.BottomSoundingMidi, soprano.TopSoundingMidi));
@@ -53,6 +60,18 @@ public class EndToEndTests(ITestOutputHelper output)
         Assert.Equal(0, run.Extras);
         Assert.True(run.Accuracy >= 95, $"{id}: {run.Accuracy:0.0}%");
         Assert.Equal(3, run.Stars);
+    }
+
+    private const int ExcerptNotes = 60;
+
+    /// <summary>The whole performance when it is short, else four excerpts of <see cref="ExcerptNotes"/> notes.</summary>
+    private static List<List<PerformedNote>> Excerpts(IReadOnlyList<PerformedNote> notes)
+    {
+        if (notes.Count <= 4 * ExcerptNotes)
+            return new List<List<PerformedNote>> { notes.ToList() };
+        return Enumerable.Range(0, 4)
+            .Select(k => notes.Skip(k * (notes.Count - ExcerptNotes) / 3).Take(ExcerptNotes).ToList())
+            .ToList();
     }
 
     [Theory]

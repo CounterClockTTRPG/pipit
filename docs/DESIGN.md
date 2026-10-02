@@ -634,13 +634,17 @@ Still to do, roughly in the order agreed:
 | Dowland, *Flow my tears*; Van Eyck's *Pavaen Lachrymae* on it | needs a Public Domain / CC-BY MIDI or MusicXML (user to download from IMSLP/CPDL) |
 | Van Eyck, *Der Fluyten Lust-hof*: themes at intermediate, variations at advanced | next song round |
 | *Lamento di Tristano* (advanced) | next song round |
-| Alto repertoire: Polonaise BWV Anh. 119 (fits the alto exactly), Handel recorder sonatas HWV 360/365/369 | alto path (Gervaise's Bransles Gay II and VII are in, personal use) |
+| Alto repertoire: Polonaise BWV Anh. 119 (fits the alto exactly), Handel recorder sonatas HWV 360/365/369 | Handel sonatas and Telemann duet in (Mutopia), chapter 10; Polonaise still to do |
 | Renaissance dances from David Bellugi's site | done, personal use only (`data/songs/personal/`) |
 | A natural (sampled) recorder sound next to the simple one | with MeltySynth, M7 |
 | Accompaniment through headphones | M7, in progress (see docs/HANDOVER.md) |
 | ~~UI translation: EN/NL~~; FR | done for Dutch (342+ texts, tested); French to do |
 | Baroque vs German fingering | supported per recorder; comparison lesson still to write |
 | Android APK for tablets | after M9; see docs/HANDOVER.md for what it needs |
+| More lessons, spaced out along the path | done: 10 chapters, 25 lessons |
+| Van Eyck, *Der Fluyten Lust-hof* | 21 songs from a MuseScore transcription (MusicXML, `tools/musicxml2pipit.py`), personal use; pieces with triplets or 32nd notes wait for those in the song format |
+| Dowland *Flow my tears*, SATB | done from an OMR MusicXML, band plays alto/tenor/bass, personal use |
+| Band switch and speed dial work during a song | done: the band fades in/out (rendered on the fly if it was off), a speed change applies from the current beat (`TempoMap`); results count the slowest speed used |
 
 Song sources: anything longer than a folk tune is converted from a Public Domain edition (the
 Mutopia Project) with `tools/midi2pipit.py`, never transcribed from memory; each song file

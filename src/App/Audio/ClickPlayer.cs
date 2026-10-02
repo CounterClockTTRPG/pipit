@@ -6,6 +6,22 @@ using Godot;
 namespace Pipit.App.Audio;
 
 /// <summary>
+/// A scheduled sound (the band). It keeps playing in time while muted, so it can be switched
+/// back on mid-song; changes of <see cref="Muted"/> fade over a few milliseconds.
+/// </summary>
+public sealed class SoundVoice(float[] sound)
+{
+    public float[] Sound { get; } = sound;
+    public bool Muted { get; set; }
+    /// <summary>Fades out and is dropped (a band rendered for another tempo).</summary>
+    public bool Stopped { get; private set; }
+    internal float Gain = 1;
+
+    public void Stop() => Stopped = true;
+    internal float Target => Muted || Stopped ? 0 : 1;
+}
+
+/// <summary>
 /// Metronome clicks placed sample-accurately in a generator stream. Clicks are scheduled in
 /// capture-clock time (see <see cref="AudioHub"/>) and rendered when the generator buffer is
 /// refilled, at the sample that will leave the speaker at that moment.
@@ -16,10 +32,10 @@ public partial class ClickPlayer : Node
     private AudioStreamGeneratorPlayback _playback = null!;
     private AudioHub _hub = null!;
     private readonly List<(double Time, bool Accent)> _pending = new();
-    private readonly List<(double Time, float[] Sound)> _pendingSounds = new();
+    private readonly List<(double Time, SoundVoice Voice)> _pendingSounds = new();
     private float[] _click = Array.Empty<float>();
     private float[] _accent = Array.Empty<float>();
-    private readonly List<(float[] Sound, int Position)> _sounding = new();
+    private readonly List<(SoundVoice Voice, int Position)> _sounding = new();
     private int _rate;
     private int _capacity;
 
@@ -52,11 +68,17 @@ public partial class ClickPlayer : Node
         _pending.Sort((a, b) => a.Time.CompareTo(b.Time));
     }
 
-    /// <summary>Any sound (the band) starting at a capture time, mixed in with the clicks.</summary>
-    public void ScheduleSound(float[] sound, double time)
+    /// <summary>Any sound (the band) starting at a capture time, mixed in with the clicks. A time
+    /// already past starts the sound part-way, in step with the clock.</summary>
+    public SoundVoice ScheduleSound(float[] sound, double time, bool muted = false)
     {
-        _pendingSounds.Add((time, sound));
+        var voice = new SoundVoice(sound) { Muted = muted, Gain = muted ? 0 : 1 };
+        _pendingSounds.Add((time, voice));
+        return voice;
     }
+
+    /// <summary>Drops the clicks not yet played (the tempo changed); sounds keep playing.</summary>
+    public void ClearClicks() => _pending.Clear();
 
     public void Stop()
     {
@@ -91,7 +113,7 @@ public partial class ClickPlayer : Node
             if (offset < -_rate / 20)
                 continue; // more than 50 ms late: drop rather than click off the beat
             // Position = index into the sound that lines up with buffer frame 0.
-            _sounding.Add((accent ? _accent : _click, offset > 0 ? -offset : 0));
+            _sounding.Add((new SoundVoice(accent ? _accent : _click), offset > 0 ? -offset : 0));
         }
 
         for (var i = _pendingSounds.Count - 1; i >= 0; i--)
@@ -100,21 +122,29 @@ public partial class ClickPlayer : Node
             if (offset >= free)
                 continue;
             // A late start skips the part already missed, so the band stays on the beat.
-            _sounding.Add((_pendingSounds[i].Sound, -offset)); // position in the sound at buffer frame 0
+            _sounding.Add((_pendingSounds[i].Voice, -offset)); // position in the sound at buffer frame 0
             _pendingSounds.RemoveAt(i);
         }
 
         var buffer = new Vector2[free];
+        var fade = 1f / (0.03f * _rate); // 30 ms from silent to full
         for (var s = _sounding.Count - 1; s >= 0; s--)
         {
-            var (sound, pos) = _sounding[s];
+            var (voice, pos) = _sounding[s];
+            var sound = voice.Sound;
+            var target = voice.Target;
             for (var i = Math.Max(0, -pos); i < free && pos + i < sound.Length; i++)
-                buffer[i] += new Vector2(sound[pos + i], sound[pos + i]);
+            {
+                if (voice.Gain != target)
+                    voice.Gain = voice.Gain < target ? Math.Min(target, voice.Gain + fade) : Math.Max(target, voice.Gain - fade);
+                var v = sound[pos + i] * voice.Gain;
+                buffer[i] += new Vector2(v, v);
+            }
             pos += free;
-            if (pos >= sound.Length)
+            if (pos >= sound.Length || voice.Stopped && voice.Gain <= 0)
                 _sounding.RemoveAt(s);
             else
-                _sounding[s] = (sound, pos);
+                _sounding[s] = (voice, pos);
         }
         _playback.PushBuffer(buffer);
     }

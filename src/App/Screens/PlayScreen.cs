@@ -59,7 +59,14 @@ public partial class PlayScreen : Screen
     private double _tempoFactor = 1;
 
     // Rhythm run.
-    private double _t0, _spb, _endTime, _latency, _nextGrade;
+    private double _spb, _endTime, _latency, _nextGrade;
+    // Beat <-> clock time; the speed dial can change it while the song plays.
+    private TempoMap _map = new(0, 0.5);
+    // The slowest speed used during the run: results, stars and the leaderboard count that one.
+    private double _runTempo = 1;
+    private double _endBeat, _firstBeat;
+    // A speed change is applied once the dial has rested for a moment (dragging steps through values).
+    private double _tempoChangeAt = double.NaN;
     private List<ExpectedNote> _expected = new();
     private NoteSegmenter _segmenter = new();
     private readonly List<DetectedNote> _detected = new();
@@ -89,6 +96,9 @@ public partial class PlayScreen : Screen
     private float[]? _bandSound;
     private (int Part, double Tempo)? _bandFor;
     private double _bandFrom;
+    // The band of the current run (null without one) and a counter that drops stale renders.
+    private SoundVoice? _bandVoice;
+    private int _bandGeneration;
 
     public PlayScreen(Song song, bool fromPath = false, int part = 0)
     {
@@ -145,7 +155,13 @@ public partial class PlayScreen : Screen
         _modeOption.TooltipText = Ui.T("Rhythm: play along with the beat. Casual: the song waits for each note. Survival: keep going until your life runs out, for a high score.");
         _difficultyOption = Ui.Options(Tolerances.All.Select(t => t.Name).ToArray(), 1, ix => _tolerances = Tolerances.All[ix]);
         _speedLabel = Ui.Label("", 16, PipitTheme.Ink);
-        _speed.ValueChanged += v => { _tempoFactor = v / 100; UpdateControls(); };
+        _speed.ValueChanged += v =>
+        {
+            _tempoFactor = v / 100;
+            UpdateControls();
+            if (_state == State.Running && Rhythmic)
+                _tempoChangeAt = S.Audio.Now + 0.3;
+        };
         _metronome.Text = Ui.T("Metronome");
         _help.Text = Ui.T("Fingering");
         _help.Toggled += on => side.Visible = on;
@@ -236,7 +252,8 @@ public partial class PlayScreen : Screen
         _listen.Text = Ui.T(_state == State.Preview ? "■ Stop" : "♪ Listen");
         _listen.Disabled = _state is State.Running or State.Replay;
         _modeOption.Disabled = busy;
-        _speed.Editable = !busy;
+        // The speed can change while a rhythm run plays (not while listening or replaying).
+        _speed.Editable = _state is not (State.Preview or State.Replay) && !(_state == State.Running && _mode == Mode.Casual);
         _difficultyOption.Disabled = busy || _mode == Mode.Casual;
         _metronome.Disabled = busy || _mode == Mode.Casual;
         _speed.Visible = _speedLabel.Visible = true;
@@ -298,8 +315,8 @@ public partial class PlayScreen : Screen
 
     // ---- shared helpers ------------------------------------------------------------------
 
-    private double TimeToBeat(double time) => (time - _t0) / _spb;
-    private double BeatToTime(double beat) => _t0 + beat * _spb;
+    private double TimeToBeat(double time) => _map.TimeToBeat(time);
+    private double BeatToTime(double beat) => _map.BeatToTime(beat);
     private int Sounding(int written) => S.Recorder.WrittenToSounding(written);
 
     /// <summary>The fingering of the note sounding at (or next after) a beat, plus the following note's name.</summary>
@@ -386,7 +403,7 @@ public partial class PlayScreen : Screen
                 DialogText = Ui.T("The band plays the other parts while you play. Please use headphones: through the speakers the microphone would hear the band and take its notes for yours."),
                 OkButtonText = Ui.T("I'm using headphones"),
             };
-            dialog.Confirmed += () => { S.Machine.HeadphonesConfirmed = true; S.Settings.BandOn = true; S.Save(); dialog.QueueFree(); };
+            dialog.Confirmed += () => { S.Machine.HeadphonesConfirmed = true; S.Settings.BandOn = true; S.Save(); dialog.QueueFree(); BandChangedDuringRun(true); };
             dialog.Canceled += () => { _band.SetPressedNoSignal(false); dialog.QueueFree(); };
             AddChild(dialog);
             dialog.PopupCentered();
@@ -396,36 +413,47 @@ public partial class PlayScreen : Screen
         S.Save();
         if (on)
             _ = Synth.Renderer();
+        BandChangedDuringRun(on);
+    }
+
+    /// <summary>The band switched on or off while a rhythm run plays: it fades out, or comes in.</summary>
+    private void BandChangedDuringRun(bool on)
+    {
+        if (_state != State.Running || !Rhythmic)
+            return;
+        if (_bandVoice is { } voice)
+            voice.Muted = !on;
+        else if (on && BandActive)
+            JoinBand();
     }
 
     private void StartRhythm(float[]? band)
     {
         _spb = _song.SecondsPerBeat(_tempoFactor);
+        _runTempo = _tempoFactor;
+        _tempoChangeAt = double.NaN;
         _latency = (S.DeviceLatencyMs ?? 0) / 1000;
-        var firstBeat = _barNotes.Min(n => n.StartBeat);
+        _firstBeat = _barNotes.Min(n => n.StartBeat);
         // With the band, the count-in comes before whoever starts first (in a round, the
         // player may come in later), and the run lasts until the last part ends.
-        var earliest = band is null ? firstBeat : Math.Min(firstBeat, _bandFrom);
+        var earliest = band is null ? _firstBeat : Math.Min(_firstBeat, _bandFrom);
         var barBeats = (int)Math.Round(_song.Time.BarBeats);
-        var firstClick = Math.Floor(earliest) - barBeats; // one bar of count-in
-        _t0 = S.Audio.Now + 1.0 - firstClick * _spb;
-        var endBeat = _barNotes.Max(n => n.StartBeat + n.Beats);
+        var firstClick = (int)Math.Floor(earliest) - barBeats; // one bar of count-in
+        _map = new TempoMap(S.Audio.Now + 1.0 - firstClick * _spb, _spb);
+        _endBeat = _barNotes.Max(n => n.StartBeat + n.Beats);
+        _bandVoice = null;
+        _bandGeneration++;
         if (band is not null)
         {
-            S.Clicks.ScheduleSound(band, BeatToTime(_bandFrom));
-            endBeat = Math.Max(endBeat, _song.EndBeat);
+            _bandVoice = S.Clicks.ScheduleSound(band, BeatToTime(_bandFrom));
+            _endBeat = Math.Max(_endBeat, _song.EndBeat);
         }
-        var lastClick = _metronome.ButtonPressed ? Math.Ceiling(endBeat) - 1 : Math.Floor(firstBeat) - 1;
-        var clicks = new List<(double, bool)>();
-        for (var b = firstClick; b <= lastClick; b++)
-            clicks.Add((BeatToTime(b), ((int)b % barBeats + barBeats) % barBeats == 0));
-        S.Clicks.Schedule(clicks);
+        ScheduleClicks(firstClick);
+        RetimeNotes();
 
-        _expected = _song.Melody.Performance.Select(n => new ExpectedNote(n.Index, Sounding(n.Pitch.Midi), BeatToTime(n.StartBeat), BeatToTime(n.EndBeat))).ToList();
         _segmenter = new NoteSegmenter();
         _detected.Clear();
         _performance = null;
-        _endTime = BeatToTime(endBeat) + _latency + 0.7;
         _nextGrade = 0;
         _survival = null;
         _rank = null;
@@ -433,6 +461,71 @@ public partial class PlayScreen : Screen
         _survivalLabel.Text = "";
         _highway.Hud = "";
         SetState(State.Running);
+    }
+
+    /// <summary>Count-in and metronome clicks from <paramref name="fromBeat"/> on, at the current tempo map.</summary>
+    private void ScheduleClicks(int fromBeat)
+    {
+        var barBeats = (int)Math.Round(_song.Time.BarBeats);
+        var lastClick = _metronome.ButtonPressed ? Math.Ceiling(_endBeat) - 1 : Math.Floor(_firstBeat) - 1;
+        var clicks = new List<(double, bool)>();
+        for (var b = fromBeat; b <= lastClick; b++)
+            clicks.Add((BeatToTime(b), (b % barBeats + barBeats) % barBeats == 0));
+        S.Clicks.Schedule(clicks);
+    }
+
+    /// <summary>The notes' expected times and the end of the run, from the tempo map.</summary>
+    private void RetimeNotes()
+    {
+        _expected = _song.Melody.Performance.Select(n => new ExpectedNote(n.Index, Sounding(n.Pitch.Midi), BeatToTime(n.StartBeat), BeatToTime(n.EndBeat))).ToList();
+        _endTime = BeatToTime(_endBeat) + _latency + 0.7;
+    }
+
+    /// <summary>
+    /// The speed dial moved during a run: from the beat being played now, everything follows the
+    /// new tempo. Notes already played keep their times; the clicks still to come and the
+    /// expected notes move, and the band is rendered again from the next beat.
+    /// </summary>
+    private void ApplyTempoChange()
+    {
+        _tempoChangeAt = double.NaN;
+        var spb = _song.SecondsPerBeat(_tempoFactor);
+        if (Math.Abs(spb - _map.SecondsPerBeat) < 1e-9)
+            return;
+        var beat = TimeToBeat(S.Audio.Now);
+        _map.Change(beat, spb);
+        _spb = spb;
+        _runTempo = Math.Min(_runTempo, _tempoFactor);
+        S.Clicks.ClearClicks();
+        ScheduleClicks((int)Math.Floor(beat) + 1);
+        RetimeNotes();
+        if (_bandVoice is { } old)
+        {
+            old.Stop();
+            _bandVoice = null;
+            JoinBand(muted: old.Muted);
+        }
+    }
+
+    /// <summary>
+    /// Renders the band from the next beat on at the current tempo and starts it in step with the
+    /// run. Rendering takes a moment; the band comes in as soon as it is ready, at the right place.
+    /// </summary>
+    private async void JoinBand(bool muted = false)
+    {
+        var generation = ++_bandGeneration;
+        var bandStart = BandParts.SelectMany(p => p.Performance).Select(n => n.StartBeat).DefaultIfEmpty(0).Min();
+        var from = Math.Max(bandStart, Math.Floor(TimeToBeat(S.Audio.Now)) + 1);
+        var parts = BandParts.Select(p => p with { Performance = p.Performance.Where(n => n.StartBeat >= from).ToList() }).ToList();
+        var sound = await Synth.RenderAsync(_song, parts, _map.SecondsPerBeat, from, 0, natural: true);
+        if (!IsInsideTree() || _state != State.Running || generation != _bandGeneration)
+            return;
+        _bandVoice = S.Clicks.ScheduleSound(sound, BeatToTime(from), muted);
+        if (_song.EndBeat > _endBeat)
+        {
+            _endBeat = _song.EndBeat;
+            RetimeNotes();
+        }
     }
 
     private void StartCasual()
@@ -496,14 +589,16 @@ public partial class PlayScreen : Screen
         switch (_state)
         {
             case State.Running when Rhythmic:
+                if (now >= _tempoChangeAt)
+                    ApplyTempoChange();
                 SetBeat(TimeToBeat(now));
-                var firstNote = BeatToTime(_barNotes.Min(n => n.StartBeat));
+                var firstNote = BeatToTime(_firstBeat);
                 SetOverlay(now < firstNote ? Math.Ceiling((firstNote - now) / _spb).ToString("0") : "");
                 ShowFingeringAt(_beat);
                 if (now >= _nextGrade)
                 {
                     _nextGrade = now + 0.1;
-                    var live = Grader.Grade(_expected, LiveNotes(), _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _tempoFactor, until: now);
+                    var live = Grader.Grade(_expected, LiveNotes(), _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _runTempo, until: now);
                     ApplyMarks(live, live: true);
                     if (_mode == Mode.Survival)
                     {
@@ -583,6 +678,9 @@ public partial class PlayScreen : Screen
     private void Finish(bool aborted)
     {
         S.Clicks.Stop();
+        _bandVoice = null;
+        _bandGeneration++;
+        _tempoChangeAt = double.NaN;
         SetWaiting(null);
         SetOverlay("");
         _takeSamples = _take.ToArray();
@@ -600,7 +698,7 @@ public partial class PlayScreen : Screen
         {
             if (_segmenter.Flush() is { } last)
                 _detected.Add(last);
-            _performance = Grader.Grade(_expected, _detected, _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _tempoFactor);
+            _performance = Grader.Grade(_expected, _detected, _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _runTempo);
             ApplyMarks(_performance, live: false);
             if (_mode == Mode.Survival)
             {
@@ -609,7 +707,7 @@ public partial class PlayScreen : Screen
                 var judged = _performance.Notes.OrderBy(n => n.Expected.Start).Take(st.Judged).ToList();
                 var accuracy = judged.Count == 0 ? 0 : judged.Average(n => n.Score);
                 _rank = Leaderboard.Add(S.Progress, PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString()),
-                    new ScoreEntry(S.Player.Name, st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _tempoFactor, DateTime.Now));
+                    new ScoreEntry(S.Player.Name, st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _runTempo, DateTime.Now));
                 lines = XpRules.SurvivalRun(record, judged.Count(n => n.Result == NoteResult.Hit), st.Score, st.Alive, DateTime.Now);
             }
             else
@@ -625,7 +723,7 @@ public partial class PlayScreen : Screen
         var award = S.AwardXp(lines, new AchievementEvent
         {
             SongId = _song.Id, Casual = _mode == Mode.Casual, Run = _mode == Mode.Rhythm ? _performance : null, Survival = _survival,
-            CasualAccuracy = _casual?.Accuracy ?? 0, TempoFactor = _tempoFactor,
+            CasualAccuracy = _casual?.Accuracy ?? 0, TempoFactor = Rhythmic ? _runTempo : _tempoFactor,
         });
         ShowResults(award);
         SetState(State.Results);
@@ -655,7 +753,7 @@ public partial class PlayScreen : Screen
         {
             var stars = new string('★', p.Stars) + new string('☆', 3 - p.Stars);
             summary.AddChild(Ui.HBox(16, Ui.Label($"{p.Accuracy:0}%", 44, PipitTheme.Accent), Ui.Label(stars, 40, PipitTheme.Warn)));
-            if (_tempoFactor < 0.999)
+            if (_runTempo < 0.999)
                 summary.AddChild(Ui.Label(Ui.T("Stars count at 100% speed; this was practice."), 15, PipitTheme.InkSoft));
             int Count(Func<NoteJudgement, bool> f) => p.Notes.Count(f);
             summary.AddChild(Ui.Label(string.Format(Ui.T("Perfect {0} · Great {1} · Good {2} · Early/late {3} · Wrong {4} · Missed {5}"),
@@ -781,7 +879,7 @@ public partial class PlayScreen : Screen
         new TakeInfo
         {
             Name = name, SampleRate = S.Audio.SampleRate, DurationSeconds = _takeSamples.Length / (double)S.Audio.SampleRate,
-            InputDevice = S.Audio.CurrentDevice, Session = "song:" + _song.Id, Tempo = _song.Tempo * _tempoFactor,
+            InputDevice = S.Audio.CurrentDevice, Session = "song:" + _song.Id, Tempo = _song.Tempo * (Rhythmic ? _runTempo : _tempoFactor),
             LatencyMs = S.DeviceLatencyMs, Instrument = S.Instrument.Kind, Fingering = S.Instrument.Fingering,
             ReferenceA = S.Instrument.ReferenceA, GateRms = S.DeviceGate, TuningOffsetCents = S.Instrument.MeasuredOffsetCents,
         }.Save(Path.Combine(Services.RunsDir, name + ".json"));
