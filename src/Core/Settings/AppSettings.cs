@@ -5,8 +5,9 @@ using Pipit.Core.Music;
 namespace Pipit.Core.Settings;
 
 /// <summary>
-/// Per-machine settings. Holds the list of recorders until M4 moves them into user profiles.
-/// Microphone calibration (gate, latency) is per input device; tuning is per recorder.
+/// A player's settings: language, note names, recorders, how songs are shown and heard.
+/// Stored in the player's profile; the computer's settings (microphone, calibration, full
+/// screen) are in <see cref="Profiles.MachineSettings"/>. Tuning is per recorder.
 /// </summary>
 public sealed class AppSettings
 {
@@ -15,18 +16,11 @@ public sealed class AppSettings
     public int SchemaVersion { get; set; } = CurrentSchema;
     public string Language { get; set; } = "en";
     public NoteNaming Naming { get; set; } = NoteNaming.FixedDo;
-    public bool Fullscreen { get; set; }
     /// <summary>"simple" (procedural) or "natural" (SoundFont recorder) for previews.</summary>
     public string Voice { get; set; } = "natural";
-    /// <summary>The player confirmed they use headphones, so the band can play during grading.</summary>
-    public bool HeadphonesConfirmed { get; set; }
     public bool BandOn { get; set; } = true;
     /// <summary>How songs are shown: "bars" or "score".</summary>
     public string SongView { get; set; } = "bars";
-    /// <summary>Godot input device name; "Default" follows the Windows default device.</summary>
-    public string InputDevice { get; set; } = "Default";
-    public Dictionary<string, double> LatencyMsByDevice { get; set; } = new();
-    public Dictionary<string, double> GateRmsByDevice { get; set; } = new();
     public List<InstrumentProfile> Instruments { get; set; } = new();
     public string ActiveInstrumentId { get; set; } = "";
 

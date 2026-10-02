@@ -27,12 +27,24 @@ scripts/import-fixtures.sh     # guided Studio takes -> tests/fixtures/audio (re
 | Survival mode, per-song top-10 leaderboard | done |
 | Repertoire: folk, baroque (Mutopia, PD), Renaissance dances (Bellugi, **personal use only**, `data/songs/personal/`) | 32 songs |
 
-## In progress: M7 natural sound and accompaniment
+## Players (M4), done 2026-10-02
+
+The app starts on "Who's playing?": players have a name, an avatar bird (Pip's rig in six
+plumages) and their own settings (`AppSettings`: language, names, recorders, voice, view, band)
+and progress (`PlayerProgress`, in `user://profiles/<id>/`). The computer's settings
+(microphone, calibration, full screen, headphones) are `MachineSettings` in `machine.json`.
+New players get Pip's tour of the app (`IntroScreen`, EN/NL). The single-player files were
+migrated to "Player 1" (`ProfileStore.MigrateLegacy`, tested; originals kept as *.migrated).
+`--smoke`/`--shots` start at Home as the last player.
+
+## M7 natural sound and accompaniment (done, apart from speaker mode)
 
 Committed (Core, tested): `SoundFontRenderer` (MeltySynth), accompaniment parts and rounds in
 the song format (`accompaniment`, `round`, `Song.WithPartFirst`, `Song.EndBeat`).
 
-Uncommitted at handover, compiling but not yet wired in (committed as WIP with this note):
+Wired in since the first handover: part picker, Band switch (headphones confirmed once per
+computer), ensemble Listen, Voice setting, bass lines and the Frère Jacques round, the
+repertoire's accompaniment from the source MIDIs (`tools/add-accompaniment.py`). Earlier notes:
 - `src/App/Audio/Synth.cs`: loads the SoundFont in the background, renders a song's parts
   (player's part at the player's pitch, others at their own) or falls back to the simple voice.
 - `ClickPlayer.ScheduleSound(sound, captureTime)`: mixes any sound (the band) into the click
@@ -62,7 +74,7 @@ Next steps, in order:
 |---|---|
 | **I18N, EN/NL first (then FR)** | All UI text already goes through `Ui.T(...)` (Godot `Tr`) with English as the key, and lessons/songs already have EN/NL. Remaining: a CSV translation table (`data/i18n/strings.csv`, keys = English text), loading it into `TranslationServer`, and setting the locale from `Settings.Language`. Strings built with `string.Format` keep their `{0}` placeholders in translations. A test should list `Ui.T("...")` literals in `src/App` and fail when one has no NL entry. |
 | **Baroque vs German fingering** | Supported: per-recorder setting, German chart = baroque with Fa/Fa♯ overrides (both octaves), used everywhere (diagrams, lessons, trainer). Still to do: the lesson "Baroque vs German" with a live comparison of both Fa fingerings (in DESIGN §11.3); show alternative fingerings in the trainer; verify the German table against a Mollenhauer chart. |
-| **Player profiles (M4)** | Progress, leaderboards and settings per player; the leaderboard already stores a player name ("You"). |
+| Player profiles (M4) | done; the leaderboard still writes "You" as the name: use the player's name, and a shared board across players on this computer would be a nice next step. |
 | **Android APK for tablets** | Godot 4 C# exports to Android (.NET 8). Needs: Android SDK/JDK + export templates, `RECORD_AUDIO` permission and a runtime prompt, touch-sized controls (most buttons are already 48 px+), checking YIN/segmenter CPU on a tablet (narrow the search range, maybe hop 512), the SoundFont size (31 MB; consider a trimmed bank), `user://` paths (already used everywhere), no F11/keyboard assumptions, and Windows-only bits (`OS.ShellOpen` on folders, "Segoe UI" font: bundle an OFL font instead). |
 | More music | Needs Public Domain / CC-BY sources: Dowland *Flow my tears* (the downloaded file was *Burst forth my tears*, Kunstderfuge, not used), Van Eyck *Pavaen Lachrymae* / *Engels Nachtegaeltje*, *Lamento di Tristano*, Scarborough Fair. Gettys' consort MIDIs suit the band later (personal use). |
 | Windows export (M9) | Export preset must include `data/*`, `assets/fonts/*`, `assets/soundfont/*.sf2` as non-resource files. |

@@ -169,7 +169,7 @@ public partial class PlayScreen : Screen
         _band.Text = Ui.T("Band");
         _band.Visible = _song.HasOtherParts;
         _band.TooltipText = Ui.T("The app plays the other parts. Use headphones, or the microphone hears the band.");
-        _band.ButtonPressed = _song.HasOtherParts && S.Settings.BandOn && S.Settings.HeadphonesConfirmed && Synth.SoundFontInstalled;
+        _band.ButtonPressed = _song.HasOtherParts && S.Settings.BandOn && S.Machine.HeadphonesConfirmed && Synth.SoundFontInstalled;
         _band.Toggled += OnBandToggled;
         if (_band.ButtonPressed)
             _ = Synth.Renderer(); // start loading the SoundFont now
@@ -365,14 +365,14 @@ public partial class PlayScreen : Screen
             _feedback.Text = Ui.T("The band needs the SoundFont: run scripts/fetch-soundfont.sh, then restart Pipit.");
             return;
         }
-        if (on && !S.Settings.HeadphonesConfirmed)
+        if (on && !S.Machine.HeadphonesConfirmed)
         {
             var dialog = new ConfirmationDialog
             {
                 DialogText = Ui.T("The band plays the other parts while you play. Please use headphones: through the speakers the microphone would hear the band and take its notes for yours."),
                 OkButtonText = Ui.T("I'm using headphones"),
             };
-            dialog.Confirmed += () => { S.Settings.HeadphonesConfirmed = true; S.Settings.BandOn = true; S.Save(); dialog.QueueFree(); };
+            dialog.Confirmed += () => { S.Machine.HeadphonesConfirmed = true; S.Settings.BandOn = true; S.Save(); dialog.QueueFree(); };
             dialog.Canceled += () => { _band.SetPressedNoSignal(false); dialog.QueueFree(); };
             AddChild(dialog);
             dialog.PopupCentered();

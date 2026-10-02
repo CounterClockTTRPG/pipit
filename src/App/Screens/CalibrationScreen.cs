@@ -224,7 +224,7 @@ public partial class CalibrationScreen : Screen
     private void FinishSilence()
     {
         var gate = Calibration.GateFromSilence(_frames);
-        S.Settings.GateRmsByDevice[S.Audio.CurrentDevice] = gate;
+        S.Machine.GateRmsByDevice[S.Audio.CurrentDevice] = gate;
         S.Audio.SetGate(gate);
         S.Save();
         var db = 20 * Math.Log10(gate);
@@ -253,7 +253,7 @@ public partial class CalibrationScreen : Screen
             _secondary.Visible = false;
             return;
         }
-        S.Settings.LatencyMsByDevice[S.Audio.CurrentDevice] = _latency.LatencyMs;
+        S.Machine.LatencyMsByDevice[S.Audio.CurrentDevice] = _latency.LatencyMs;
         S.Save();
         var steady = _latency.SpreadMs < 40;
         Set("2 · Play on the clicks",

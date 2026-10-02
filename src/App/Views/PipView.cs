@@ -16,15 +16,43 @@ public enum PipMood { Idle, Listening, Singing, Cheering, Thinking, Dozing }
 /// </summary>
 public partial class PipView : Control
 {
-    // Plumage, from the app palette (see docs/pip.md).
-    private static readonly Color Back = new("8a6a3f");
-    private static readonly Color BackLight = new("a8865a");
+    // Pip's plumage, from the app palette (see docs/pip.md); players' avatar birds swap it.
+    private Color Back = new("8a6a3f");
+    private Color BackLight = new("a8865a");
     private static readonly Color Ink = new("4a3423");
-    private static readonly Color Belly = new("f3dcae");
+    private Color Belly = new("f3dcae");
     private static readonly Color Cream = new("fcf4e5");
-    private static readonly Color Beak = new("d9822b");
+    private Color Beak = new("d9822b");
     private static readonly Color Legs = new("e4a07a");
     private static readonly Color Blush = new("e8a27a");
+
+    /// <summary>Plumages for the avatar birds: back, wing, breast, beak.</summary>
+    private static readonly Dictionary<string, (string Back, string Wing, string Breast, string Beak)> Plumages = new()
+    {
+        ["pipit"] = ("8a6a3f", "a8865a", "f3dcae", "d9822b"),
+        ["robin"] = ("7a6248", "9a7d5c", "e8743b", "4a3423"),
+        ["bluetit"] = ("5a8fc4", "88b5dc", "f2d54c", "4a3423"),
+        ["goldfinch"] = ("b98a52", "f2c94c", "f5ead8", "e8b48c"),
+        ["bluebird"] = ("4f7fbf", "7aa3d6", "e89a5b", "4a3423"),
+        ["greenfinch"] = ("7c9a3e", "a6c25a", "dfe78f", "e0a58a"),
+    };
+
+    /// <summary>Draws this bird in an avatar's plumage (Pip is "pipit").</summary>
+    public string Avatar
+    {
+        set
+        {
+            var (back, wing, breast, beak) = Plumages.TryGetValue(value, out var p) ? p : Plumages["pipit"];
+            (Back, BackLight, Belly, Beak) = (new Color(back), new Color(wing), new Color(breast), new Color(beak));
+            QueueRedraw();
+        }
+    }
+
+    /// <summary>The avatar names for players, in English (shown under the birds).</summary>
+    public static string AvatarName(string avatar) => avatar switch
+    {
+        "robin" => "Robin", "bluetit" => "Blue tit", "goldfinch" => "Goldfinch", "bluebird" => "Bluebird", "greenfinch" => "Greenfinch", _ => "Pipit",
+    };
 
     private PipMood _mood = PipMood.Idle;
     private double _time;

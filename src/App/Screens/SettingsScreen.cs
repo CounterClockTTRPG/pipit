@@ -68,8 +68,8 @@ public partial class SettingsScreen : Screen
     {
         var voices = new[] { "natural", "simple" };
         var voice = Ui.Options(new[] { "Natural recorder", "Simple (electronic)" }, Math.Max(0, Array.IndexOf(voices, S.Settings.Voice)), ix => { S.Settings.Voice = voices[ix]; S.Save(); });
-        var headphones = new CheckBox { Text = Ui.T("I use headphones (needed for the band)"), ButtonPressed = S.Settings.HeadphonesConfirmed };
-        headphones.Toggled += on => { S.Settings.HeadphonesConfirmed = on; S.Save(); };
+        var headphones = new CheckBox { Text = Ui.T("I use headphones (needed for the band)"), ButtonPressed = S.Machine.HeadphonesConfirmed };
+        headphones.Toggled += on => { S.Machine.HeadphonesConfirmed = on; S.Save(); };
         var box = Ui.VBox(6, voice, headphones);
         if (!Audio.Synth.SoundFontInstalled)
             box.AddChild(Ui.Text("The natural voice and the band need the SoundFont: run scripts/fetch-soundfont.sh and restart Pipit. Until then the simple voice is used.", 14, PipitTheme.Warn));
@@ -78,7 +78,7 @@ public partial class SettingsScreen : Screen
 
     private static CheckBox FullscreenToggle()
     {
-        var box = new CheckBox { Text = Ui.T("Full screen (F11)"), ButtonPressed = S.Settings.Fullscreen };
+        var box = new CheckBox { Text = Ui.T("Full screen (F11)"), ButtonPressed = S.Machine.Fullscreen };
         box.Toggled += S.SetFullscreen;
         return box;
     }

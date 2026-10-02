@@ -74,7 +74,7 @@ public class RecordingTests
         try
         {
             File.WriteAllText(path, "{ not json");
-            var settings = JsonStore.LoadOrDefault<AppSettings>(path);
+            var settings = JsonStore.LoadOrDefault<Pipit.Core.Profiles.MachineSettings>(path);
             Assert.Equal("Default", settings.InputDevice);
             Assert.True(File.Exists(path + ".corrupt"));
         }

@@ -8,6 +8,8 @@ public partial class HomeScreen : Screen
 {
     private readonly Label _instrument;
     private readonly PipView _pip = new() { CustomMinimumSize = new Vector2(170, 170) };
+    private readonly PipView _playerBird = new() { CustomMinimumSize = new Vector2(64, 64) };
+    private readonly Label _playerName = Ui.Label("", 22, PipitTheme.Ink);
     private double _idle;
     private readonly OptionButton _picker = new();
     private readonly Label _level;
@@ -29,7 +31,8 @@ public partial class HomeScreen : Screen
         _level = Ui.Label("", 22, PipitTheme.Accent);
         _xpText = Ui.Label("", 16, PipitTheme.InkSoft);
         var levelRow = new CenterContainer();
-        levelRow.AddChild(Ui.HBox(12, _level, _xpBar, _xpText));
+        var switchPlayer = Ui.Button("Switch player", () => Main.Instance.ShowRoot(new ProfileScreen()), 16);
+        levelRow.AddChild(Ui.HBox(12, _playerBird, _playerName, _level, _xpBar, _xpText, switchPlayer));
         var instrumentRow = new CenterContainer();
         instrumentRow.AddChild(Ui.HBox(12, Ui.Label("Recorder:", 20), _picker, _instrument));
         _hint = Ui.Label("", 18, PipitTheme.Bad, HorizontalAlignment.Center);
@@ -77,6 +80,8 @@ public partial class HomeScreen : Screen
     public override void Enter()
     {
         _pip.SetMood(PipMood.Singing, 2.0);
+        _playerBird.Avatar = S.Player.Avatar;
+        _playerName.Text = S.Player.Name;
         var i = S.Instrument;
         _picker.Clear();
         foreach (var each in S.Settings.Instruments)

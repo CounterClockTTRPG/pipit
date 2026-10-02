@@ -31,7 +31,6 @@ public class SettingsTests
         Assert.Equal(19.5, only.MeasuredOffsetCents);
         Assert.Equal("abc", s.ActiveInstrumentId);
         Assert.Null(s.LegacyInstrument);
-        Assert.Equal(76, s.LatencyMsByDevice["Default"]);
     }
 
     [Fact]

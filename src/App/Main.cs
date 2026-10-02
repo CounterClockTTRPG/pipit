@@ -40,7 +40,11 @@ public partial class Main : Control
         _content = Ui.Expand(new Control(), true, true);
         layout.AddChild(_content);
 
-        Show(new HomeScreen());
+        // Normally the app starts by asking who is playing; the test and screenshot runs go
+        // straight to Home as the last player.
+        var args = OS.GetCmdlineUserArgs();
+        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback");
+        Show(diagnostic ? new HomeScreen() : new ProfileScreen());
 
         if (OS.GetCmdlineUserArgs().Contains("--smoke"))
             StartSmoke();
@@ -175,6 +179,16 @@ public partial class Main : Control
             Back();
         }
 
+        // Players: who is playing, a new player, and the first page of Pip's tour.
+        foreach (var (make, file) in new (System.Func<Screen>, string)[] { (() => new ProfileScreen(), "players"), (() => new NewPlayerScreen(null), "new-player"), (() => new IntroScreen(), "intro") })
+        {
+            Show(make());
+            for (var i = 0; i < 25; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, file + ".png"));
+            Back();
+        }
+
         // A round: part picker and band switch.
         var round = new PlayScreen(Services.Instance.Songs.Get("frere-jacques")!, part: 1);
         Show(round);
@@ -259,6 +273,21 @@ public partial class Main : Control
         Attach(screen);
     }
 
+    /// <summary>Replaces every open screen with <paramref name="screen"/> (after choosing a player).</summary>
+    public void ShowRoot(Screen screen)
+    {
+        while (_stack.Count > 0)
+        {
+            var leaving = _stack.Pop();
+            leaving.Exit();
+            leaving.QueueFree();
+        }
+        foreach (var child in _content.GetChildren())
+            _content.RemoveChild(child);
+        _stack.Push(screen);
+        Attach(screen);
+    }
+
     public void Back()
     {
         if (_stack.Count <= 1)
@@ -283,14 +312,14 @@ public partial class Main : Control
         if (e.IsActionPressed("ui_cancel"))
             Back();
         else if (e is InputEventKey { Pressed: true, Echo: false, Keycode: Key.F11 })
-            Services.Instance.SetFullscreen(!Services.Instance.Settings.Fullscreen);
+            Services.Instance.SetFullscreen(!Services.Instance.Machine.Fullscreen);
     }
 
     // ---- smoke test: `-- --smoke` visits every screen and quits (scripts/test.sh) ----------
 
     private void StartSmoke()
     {
-        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen(), () => new StudyScreen(), () => new LessonScreen(Services.Instance.LoadLesson("meet-the-recorder")!), () => new LessonScreen(Services.Instance.LoadLesson("si-and-la")!) })
+        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen(), () => new ProfileScreen(), () => new NewPlayerScreen(null), () => new IntroScreen(), () => new StudyScreen(), () => new LessonScreen(Services.Instance.LoadLesson("meet-the-recorder")!), () => new LessonScreen(Services.Instance.LoadLesson("si-and-la")!) })
             _smokeScreens.Enqueue(make);
         _smokeFrame = 0;
     }

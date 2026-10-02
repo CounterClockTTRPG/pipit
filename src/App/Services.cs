@@ -9,6 +9,7 @@ using Pipit.Core.Game;
 using Pipit.Core.Instruments;
 using Pipit.Core.Lessons;
 using Pipit.Core.Music;
+using Pipit.Core.Profiles;
 using Pipit.Core.Settings;
 using FileAccess = Godot.FileAccess;
 
@@ -22,16 +23,22 @@ public partial class Services : Node
 {
     public static Services Instance { get; private set; } = null!;
 
-    public AppSettings Settings { get; private set; } = new();
+    /// <summary>Players live in user://profiles; the computer's settings in user://machine.json.</summary>
+    public ProfileStore Store { get; private set; } = null!;
+    public MachineSettings Machine { get; private set; } = new();
+    public PlayerProfile Player { get; private set; } = new() { Name = "Guest" };
+    public List<PlayerProfile> Players { get; private set; } = new();
+    /// <summary>The current player's settings.</summary>
+    public AppSettings Settings => Player.Settings;
+    /// <summary>True until a real player is chosen (smoke tests, a computer with no players yet).</summary>
+    public bool IsGuest => Players.All(p => p.Id != Player.Id);
     public AudioHub Audio { get; private set; } = null!;
     public ClickPlayer Clicks { get; private set; } = null!;
     private readonly Dictionary<FingeringSystem, FingeringChart> _charts = new();
 
     public static string UserDir => ProjectSettings.GlobalizePath("user://");
-    public static string SettingsPath => Path.Combine(UserDir, "settings.json");
     public static string RecordingsDir => Path.Combine(UserDir, "recordings");
     public static string RunsDir => Path.Combine(RecordingsDir, "runs");
-    public static string ProgressPath => Path.Combine(UserDir, "progress.json");
 
     public SongLibrary Songs { get; private set; } = null!;
 
@@ -61,7 +68,7 @@ public partial class Services : Node
 
     /// <summary>Bravura, the SMuFL music font (SIL OFL), for the score view.</summary>
     public Font? MusicFont { get; private set; }
-    /// <summary>XP, levels and song records (one player until M4 adds profiles).</summary>
+    /// <summary>The current player's XP, levels, song records and leaderboards.</summary>
     public PlayerProgress Progress { get; private set; } = new();
 
     /// <summary>Raised after XP is awarded, with the award (for toasts and the home screen).</summary>
@@ -79,20 +86,24 @@ public partial class Services : Node
 
     public override void _Ready()
     {
-        Settings = JsonStore.LoadOrDefault<AppSettings>(SettingsPath).Normalize();
-        JsonStore.Save(SettingsPath, Settings); // persists any migration straight away
+        Store = new ProfileStore(UserDir);
+        Store.MigrateLegacy("Player 1"); // the single-player files from before profiles
+        Machine = Store.LoadMachine();
+        Players = Store.LoadProfiles();
+        // Start as the last player so every screen works; the profile screen lets them change.
+        Player = Players.FirstOrDefault(p => p.Id == Machine.LastPlayerId) ?? Players.FirstOrDefault() ?? new PlayerProfile { Name = "Guest" };
         ApplyFullscreen();
         Audio = new AudioHub { Name = "AudioHub" };
         AddChild(Audio);
         Clicks = new ClickPlayer { Name = "Clicks" };
         Clicks.Init(Audio);
         AddChild(Clicks);
-        Audio.SelectDevice(Settings.InputDevice);
+        Audio.SelectDevice(Machine.InputDevice);
         ApplyInstrument();
         Songs = SongLibrary.Load(name => FileAccess.GetFileAsString("res://data/songs/" + name));
         foreach (var error in Songs.Errors)
             GD.PushError("Song: " + error);
-        Progress = JsonStore.LoadOrDefault<PlayerProgress>(ProgressPath);
+        Progress = IsGuest ? new PlayerProgress() : Store.LoadProgress(Player.Id);
         MusicFont = LoadMusicFont();
         Study = StudyPath.Parse(FileAccess.GetFileAsString("res://data/path.json"));
     }
@@ -117,7 +128,7 @@ public partial class Services : Node
 
     public void SetFullscreen(bool on)
     {
-        Settings.Fullscreen = on;
+        Machine.Fullscreen = on;
         ApplyFullscreen();
         Save();
     }
@@ -126,7 +137,7 @@ public partial class Services : Node
     {
         if (DisplayServer.GetName() == "headless")
             return;
-        DisplayServer.WindowSetMode(Settings.Fullscreen ? DisplayServer.WindowMode.Fullscreen : DisplayServer.WindowMode.Windowed);
+        DisplayServer.WindowSetMode(Machine.Fullscreen ? DisplayServer.WindowMode.Fullscreen : DisplayServer.WindowMode.Windowed);
     }
 
     public FingeringChart ChartFor(FingeringSystem system)
@@ -138,7 +149,9 @@ public partial class Services : Node
 
     public void Save()
     {
-        JsonStore.Save(SettingsPath, Settings);
+        Store.SaveMachine(Machine);
+        if (!IsGuest)
+            Store.Save(Player);
         Changed?.Invoke();
     }
 
@@ -186,22 +199,58 @@ public partial class Services : Node
         var chapters = Songs.Songs.GroupBy(s => s.Chapter)
             .ToDictionary(g => g.Key, g => (IReadOnlyList<string>)g.Select(s => s.Id).ToList());
         var award = Progress.Award(lines, DateTime.Now, e ?? new AchievementEvent(), chapters, Instrument.Kind.ToString());
-        JsonStore.Save(ProgressPath, Progress);
+        SaveProgress();
         XpAwarded?.Invoke(award);
         return award;
     }
 
     public SongRecord SongRecord(string songId) => Progress.Song(songId, Instrument.Kind.ToString());
 
-    public void SaveProgress() => JsonStore.Save(ProgressPath, Progress);
+    public void SaveProgress()
+    {
+        if (!IsGuest)
+            Store.SaveProgress(Player.Id, Progress);
+    }
 
-    public double? DeviceGate => Settings.GateRmsByDevice.TryGetValue(Audio.CurrentDevice, out var g) ? g : null;
-    public double? DeviceLatencyMs => Settings.LatencyMsByDevice.TryGetValue(Audio.CurrentDevice, out var l) ? l : null;
+    // ---- players --------------------------------------------------------------------------
+
+    public void SelectPlayer(PlayerProfile player)
+    {
+        Player = player;
+        Progress = Store.LoadProgress(player.Id);
+        Machine.LastPlayerId = player.Id;
+        Store.SaveMachine(Machine);
+        ApplyInstrument();
+        Changed?.Invoke();
+    }
+
+    public PlayerProfile CreatePlayer(string name, string avatar, string language)
+    {
+        var player = Store.Create(name, avatar, language);
+        Players = Store.LoadProfiles();
+        SelectPlayer(Players.First(p => p.Id == player.Id));
+        return Player;
+    }
+
+    public void DeletePlayer(string id)
+    {
+        Store.Delete(id);
+        Players = Store.LoadProfiles();
+        if (Player.Id == id)
+        {
+            Player = Players.FirstOrDefault() ?? new PlayerProfile { Name = "Guest" };
+            Progress = IsGuest ? new PlayerProgress() : Store.LoadProgress(Player.Id);
+            ApplyInstrument();
+        }
+    }
+
+    public double? DeviceGate => Machine.GateRmsByDevice.TryGetValue(Audio.CurrentDevice, out var g) ? g : null;
+    public double? DeviceLatencyMs => Machine.LatencyMsByDevice.TryGetValue(Audio.CurrentDevice, out var l) ? l : null;
 
     public void SelectDevice(string name)
     {
         Audio.SelectDevice(name);
-        Settings.InputDevice = Audio.CurrentDevice;
+        Machine.InputDevice = Audio.CurrentDevice;
         ApplyInstrument();
         Save();
     }
