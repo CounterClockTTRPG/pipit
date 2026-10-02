@@ -173,7 +173,13 @@ public partial class PlayScreen : Screen
         _band.Toggled += OnBandToggled;
         if (_band.ButtonPressed)
             _ = Synth.Renderer(); // start loading the SoundFont now
-        var controls = Ui.HBox(14, viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help, Ui.Spacer(), _listen, _start);
+        // The options wrap onto a second line in a narrow window instead of widening the screen.
+        var options = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        options.AddThemeConstantOverride("h_separation", 14);
+        options.AddThemeConstantOverride("v_separation", 8);
+        foreach (var c in new Control[] { viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help })
+            options.AddChild(c);
+        var controls = Ui.HBox(14, options, _listen, _start);
 
         // Results (and the optional analysis) scroll inside their own area, which shares the
         // height with the music instead of pushing the controls off the screen.

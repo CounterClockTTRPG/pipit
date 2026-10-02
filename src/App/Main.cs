@@ -140,6 +140,11 @@ public partial class Main : Control
         for (var i = 0; i < 20; i++)
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library.png"));
+        var library = (LibraryScreen)_stack.Peek();
+        GD.Print("LIBRARY " + library.DebugScrollToEnd());
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-end.png"));
         Back();
         var play = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
         Show(play);
