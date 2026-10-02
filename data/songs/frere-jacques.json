@@ -15,15 +15,19 @@
     "nl": "Een Franse canon uit de 18de eeuw over een monnik die zich verslaapt en de ochtendklokken mist. Het wordt over de hele wereld gezongen; in het Nederlands is het \"Vader Jacob\". Gustav Mahler maakte er een trage, droevige mars in mineur van in zijn Eerste Symfonie."
   },
   "tip": {
-    "en": "High Mi (Mi') needs the pinched thumb for the first time. The quick notes in the middle are eighth notes: two per beat.",
-    "nl": "Hoge Mi (Mi') heeft voor het eerst de geknepen duim nodig. De snelle noten in het midden zijn achtste noten: twee per tel."
+    "en": "High Mi (Mi') needs the pinched thumb for the first time. The quick notes in the middle are eighth notes: two per beat. With the band on, pick an entry: the band sings the other three, as a round.",
+    "nl": "Hoge Mi (Mi') heeft voor het eerst de geknepen duim nodig. De snelle noten in het midden zijn achtste noten: twee per tel. Met de band aan kies je een stem: de band speelt de andere drie, als canon."
   },
   "parts": [
     {
       "id": "melody",
-      "name": "Melody",
+      "name": "Entry 1",
       "instrument": "soprano",
       "music": "G4/q A4 B4 G4 | G4 A4 B4 G4 | B4 C5 D5/h | B4/q C5 D5/h | D5/e E5 D5 C5 B4/q G4 | D5/e E5 D5 C5 B4/q G4 | G4 D4 G4/h | G4/q D4 G4/h"
     }
-  ]
+  ],
+  "round": {
+    "entries": 4,
+    "everyBars": 2
+  }
 }

@@ -105,13 +105,11 @@ public static partial class LessonBlocks
     private static Control Listen(DirectiveBlock d, LessonContext context)
     {
         var song = SnippetSong(d);
-        return Ui.HBox(10, Ui.Button("♪ " + (d.Text ?? Ui.T("Listen")), () =>
+        return Ui.HBox(10, Ui.Button("♪ " + (d.Text ?? Ui.T("Listen")), async () =>
         {
-            var spb = song.SecondsPerBeat();
-            var first = song.Melody.Performance.Min(n => n.StartBeat);
-            var notes = song.Melody.Performance.Select(n => new SynthNote(0.3 + (n.StartBeat - first) * spb, n.Beats * spb,
-                Pitch.FrequencyOfMidi(S.Recorder.WrittenToSounding(n.Pitch.Midi), S.Instrument.ReferenceA))).ToList();
-            context.Play(RecorderVoice.Render(notes, S.Audio.SampleRate));
+            var audio = await Audio.Synth.RenderAsync(song, new[] { song.Melody }, song.SecondsPerBeat(),
+                song.Melody.Performance.Min(n => n.StartBeat), 0.3, natural: S.Settings.Voice == "natural");
+            context.Play(audio);
         }, 18), Ui.Spacer());
     }
 

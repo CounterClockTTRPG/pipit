@@ -99,3 +99,32 @@ public class SoundFontRendererTests(ITestOutputHelper output)
         Assert.True(mixed.Max(Math.Abs) > 0.01);
     }
 }
+
+public class AccompanimentContentTests
+{
+    private static SongLibrary Library => SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name)));
+
+    [Fact]
+    public void Accompaniment_fits_its_song()
+    {
+        foreach (var song in Library.Songs.Where(s => s.Accompaniment.Count > 0))
+        {
+            var melodyEnd = song.Melody.Performance.Max(n => n.EndBeat);
+            var melodyStart = song.Melody.Performance.Min(n => n.StartBeat);
+            foreach (var part in song.Accompaniment)
+            {
+                // It starts with the song (not before its pickup) and ends with it.
+                Assert.True(part.Performance.Min(n => n.StartBeat) >= melodyStart - 1e-9, $"{song.Id}/{part.Id} starts early");
+                Assert.Equal(melodyEnd, part.Performance.Max(n => n.EndBeat), 6);
+            }
+        }
+    }
+
+    [Fact]
+    public void Frere_jacques_is_a_four_part_round()
+    {
+        var song = Library.Get("frere-jacques")!;
+        Assert.Equal(4, song.Parts.Count);
+        Assert.Equal(song.Melody.Performance.Max(n => n.EndBeat) + 3 * 8, song.EndBeat);
+    }
+}

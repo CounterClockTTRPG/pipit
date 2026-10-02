@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Godot;
+using Pipit.App.Audio;
 using Pipit.App.UI;
 using Pipit.App.Views;
 using Pipit.Core.Analysis;
@@ -81,10 +82,20 @@ public partial class PlayScreen : Screen
 
     private readonly bool _fromPath;
 
-    public PlayScreen(Song song, bool fromPath = false)
+    private readonly Song _original;
+    private readonly int _partIndex;
+    private readonly CheckBox _band = new();
+    private float[]? _bandSound;
+    private (int Part, double Tempo)? _bandFor;
+    private double _bandFrom;
+
+    public PlayScreen(Song song, bool fromPath = false, int part = 0)
     {
         _fromPath = fromPath;
-        _song = song;
+        _original = song;
+        _partIndex = part;
+        _song = part > 0 ? song.WithPartFirst(part) : song;
+        song = _song;
         _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
 
@@ -144,7 +155,25 @@ public partial class PlayScreen : Screen
         _names.Text = Ui.T("Names");
         _names.Visible = score;
         _names.Toggled += on => _staff.ShowNames = on;
-        var controls = Ui.HBox(14, viewOption, _names, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help, Ui.Spacer(), _listen, _start);
+        // Your part (rounds, duets, consort pieces) and the band playing the others.
+        var partOption = Ui.Options(_original.Parts.Select(p => p.Name).ToArray(), _partIndex, ix =>
+        {
+            if (_state is State.Ready or State.Results)
+            {
+                Main.Instance.Back();
+                Main.Instance.Show(new PlayScreen(_original, _fromPath, ix));
+            }
+        });
+        partOption.Visible = _original.Parts.Count > 1;
+        partOption.TooltipText = Ui.T("Which part you play; the band plays the others.");
+        _band.Text = Ui.T("Band");
+        _band.Visible = _song.HasOtherParts;
+        _band.TooltipText = Ui.T("The app plays the other parts. Use headphones, or the microphone hears the band.");
+        _band.ButtonPressed = _song.HasOtherParts && S.Settings.BandOn && S.Settings.HeadphonesConfirmed && Synth.SoundFontInstalled;
+        _band.Toggled += OnBandToggled;
+        if (_band.ButtonPressed)
+            _ = Synth.Renderer(); // start loading the SoundFont now
+        var controls = Ui.HBox(14, viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help, Ui.Spacer(), _listen, _start);
 
         // Results (and the optional analysis) scroll inside their own area, which shares the
         // height with the music instead of pushing the controls off the screen.
@@ -290,21 +319,82 @@ public partial class PlayScreen : Screen
         _take = new List<float>();
         _takeStart = double.NaN;
         _feedback.Text = "";
-        if (Rhythmic)
-            StartRhythm();
+        if (Rhythmic && BandActive)
+            StartWithBand();
+        else if (Rhythmic)
+            StartRhythm(null);
         else
             StartCasual();
     }
 
-    private void StartRhythm()
+    private bool BandActive => _band.ButtonPressed && _band.Visible && Synth.SoundFontInstalled;
+
+    /// <summary>Everything the band plays: the other parts and the accompaniment.</summary>
+    private List<SongPart> BandParts => _song.Parts.Skip(1).Concat(_song.Accompaniment).ToList();
+
+    private async void StartWithBand()
+    {
+        var tempo = _tempoFactor;
+        if (_bandSound is null || _bandFor != (_partIndex, tempo))
+        {
+            _start.Disabled = true;
+            _feedback.Text = Ui.T("Getting the band ready…");
+            var parts = BandParts;
+            _bandFrom = parts.SelectMany(p => p.Performance).Select(n => n.StartBeat).DefaultIfEmpty(0).Min();
+            _bandSound = await Synth.RenderAsync(_song, parts, _song.SecondsPerBeat(tempo), _bandFrom, 0, natural: true);
+            _bandFor = (_partIndex, tempo);
+            _start.Disabled = false;
+            _feedback.Text = "";
+            if (!IsInsideTree() || _state != State.Ready && _state != State.Results)
+                return;
+        }
+        StartRhythm(_bandSound);
+    }
+
+    private void OnBandToggled(bool on)
+    {
+        if (on && !Synth.SoundFontInstalled)
+        {
+            _band.SetPressedNoSignal(false);
+            _feedback.Text = Ui.T("The band needs the SoundFont: run scripts/fetch-soundfont.sh, then restart Pipit.");
+            return;
+        }
+        if (on && !S.Settings.HeadphonesConfirmed)
+        {
+            var dialog = new ConfirmationDialog
+            {
+                DialogText = Ui.T("The band plays the other parts while you play. Please use headphones: through the speakers the microphone would hear the band and take its notes for yours."),
+                OkButtonText = Ui.T("I'm using headphones"),
+            };
+            dialog.Confirmed += () => { S.Settings.HeadphonesConfirmed = true; S.Settings.BandOn = true; S.Save(); dialog.QueueFree(); };
+            dialog.Canceled += () => { _band.SetPressedNoSignal(false); dialog.QueueFree(); };
+            AddChild(dialog);
+            dialog.PopupCentered();
+            return;
+        }
+        S.Settings.BandOn = on;
+        S.Save();
+        if (on)
+            _ = Synth.Renderer();
+    }
+
+    private void StartRhythm(float[]? band)
     {
         _spb = _song.SecondsPerBeat(_tempoFactor);
         _latency = (S.DeviceLatencyMs ?? 0) / 1000;
         var firstBeat = _barNotes.Min(n => n.StartBeat);
+        // With the band, the count-in comes before whoever starts first (in a round, the
+        // player may come in later), and the run lasts until the last part ends.
+        var earliest = band is null ? firstBeat : Math.Min(firstBeat, _bandFrom);
         var barBeats = (int)Math.Round(_song.Time.BarBeats);
-        var firstClick = Math.Floor(firstBeat) - barBeats; // one bar of count-in before the first note
+        var firstClick = Math.Floor(earliest) - barBeats; // one bar of count-in
         _t0 = S.Audio.Now + 1.0 - firstClick * _spb;
         var endBeat = _barNotes.Max(n => n.StartBeat + n.Beats);
+        if (band is not null)
+        {
+            S.Clicks.ScheduleSound(band, BeatToTime(_bandFrom));
+            endBeat = Math.Max(endBeat, _song.EndBeat);
+        }
         var lastClick = _metronome.ButtonPressed ? Math.Ceiling(endBeat) - 1 : Math.Floor(firstBeat) - 1;
         var clicks = new List<(double, bool)>();
         for (var b = firstClick; b <= lastClick; b++)
@@ -416,7 +506,7 @@ public partial class PlayScreen : Screen
                 ShowFingeringAt(_barNotes[Math.Min(_casual.Index, _barNotes.Count - 1)].StartBeat);
                 break;
             case State.Preview:
-                SetBeat(_barNotes.Min(n => n.StartBeat) + (_player.GetPlaybackPosition() - _previewLead) / _spb);
+                SetBeat(_previewFrom + (_player.GetPlaybackPosition() - _previewLead) / _spb);
                 ShowFingeringAt(_beat);
                 break;
             case State.Replay:
@@ -701,7 +791,9 @@ public partial class PlayScreen : Screen
         _staff.Visible = true;
     }
 
-    private void ToggleListen()
+    private double _previewFrom;
+
+    private async void ToggleListen()
     {
         if (_state == State.Preview)
         {
@@ -711,10 +803,14 @@ public partial class PlayScreen : Screen
         }
         _spb = _song.SecondsPerBeat(_tempoFactor);
         _previewLead = 0.4;
-        var first = _barNotes.Min(n => n.StartBeat);
-        var notes = _barNotes.Select(n => new SynthNote(_previewLead + (n.StartBeat - first) * _spb, n.Beats * _spb,
-            Pitch.FrequencyOfMidi(Sounding(n.WrittenMidi), S.Instrument.ReferenceA))).ToList();
-        _player.Stream = Playback.ToStream(RecorderVoice.Render(notes, S.Audio.SampleRate), S.Audio.SampleRate);
+        var parts = BandActive ? new[] { _song.Melody }.Concat(BandParts).ToList() : new List<SongPart> { _song.Melody };
+        _previewFrom = parts.SelectMany(p => p.Performance).Select(n => n.StartBeat).Min();
+        _listen.Disabled = true;
+        var audio = await Synth.RenderAsync(_song, parts, _spb, _previewFrom, _previewLead, natural: S.Settings.Voice == "natural");
+        _listen.Disabled = false;
+        if (!IsInsideTree() || _state is not (State.Ready or State.Results))
+            return;
+        _player.Stream = Playback.ToStream(audio, S.Audio.SampleRate);
         _player.Play();
         ClearMarks();
         SetState(State.Preview);

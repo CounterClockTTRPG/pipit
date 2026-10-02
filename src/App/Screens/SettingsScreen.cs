@@ -35,6 +35,7 @@ public partial class SettingsScreen : Screen
             editor,
             Ui.Label("Language"), language,
             Ui.Label("Note names"), naming,
+            Ui.Label("Sound"), SoundOptions(),
             FullscreenToggle());
 
         // Microphone column.
@@ -60,6 +61,19 @@ public partial class SettingsScreen : Screen
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         scroll.AddChild(Ui.Expand(columns));
         AddChild(scroll);
+    }
+
+    /// <summary>Voice for "Listen" and lessons, and the headphones confirmation the band needs.</summary>
+    private static Control SoundOptions()
+    {
+        var voices = new[] { "natural", "simple" };
+        var voice = Ui.Options(new[] { "Natural recorder", "Simple (electronic)" }, Math.Max(0, Array.IndexOf(voices, S.Settings.Voice)), ix => { S.Settings.Voice = voices[ix]; S.Save(); });
+        var headphones = new CheckBox { Text = Ui.T("I use headphones (needed for the band)"), ButtonPressed = S.Settings.HeadphonesConfirmed };
+        headphones.Toggled += on => { S.Settings.HeadphonesConfirmed = on; S.Save(); };
+        var box = Ui.VBox(6, voice, headphones);
+        if (!Audio.Synth.SoundFontInstalled)
+            box.AddChild(Ui.Text("The natural voice and the band need the SoundFont: run scripts/fetch-soundfont.sh and restart Pipit. Until then the simple voice is used.", 14, PipitTheme.Warn));
+        return box;
     }
 
     private static CheckBox FullscreenToggle()

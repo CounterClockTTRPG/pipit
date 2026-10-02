@@ -25,5 +25,13 @@
       "instrument": "soprano",
       "music": "|: G4/q G4 G4 A4 | B4/h A4 | G4/q B4 A4 A4 | G4/w :|"
     }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "|: G2/h D3/h | G2/h D3/h | G2/h D3/h | G2/w :|"
+    }
   ]
 }
