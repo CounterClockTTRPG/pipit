@@ -7,7 +7,7 @@ requests from play-testing) first. This file says where things stand and what co
 
 ```bash
 scripts/run.sh                 # build and start (--editor for the Godot editor)
-scripts/test.sh                # build, xUnit (~5 min, end-to-end songs dominate), headless boot + smoke
+scripts/test.sh                # build, xUnit (~4 min), headless boot + smoke
 scripts/fetch-soundfont.sh     # GeneralUser GS SoundFont (31 MB, not in git) for the natural voice / band
 scripts/import-fixtures.sh     # guided Studio takes -> tests/fixtures/audio (rejected.txt excludes bad ones)
 "$GODOT" --path "$PROJECT_UNC" -- --shots   # screenshots of every screen into user://shots (opens a window)
@@ -81,7 +81,7 @@ Next steps, in order:
 
 ## Known issues / notes
 
-- The full test suite takes several minutes (end-to-end songs dominate; long pieces are checked in four excerpts). Day to day: `dotnet test ... --filter 'FullyQualifiedName!~EndToEnd'` (~40 s).
+- The full test suite takes about 4 minutes: the end-to-end songs run in six parallel classes (`EndToEndShard0-5`), and songs over 80 s are checked in four 20 s excerpts. Without them (`--filter 'FullyQualifiedName!~EndToEnd'`) it takes ~40 s.
 - Song format still lacks triplets and 32nd notes: 17 van Eyck pieces (e.g. *Engels Nachtegaeltje*) wait for them.
 - The user's laptop mic needs Windows "Audio enhancements" off (Settings → Check for Windows voice processing).
 - User: recorder beginner, Yamaha baroque soprano; prefers hand-coloured fingering holes; analyse

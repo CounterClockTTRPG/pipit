@@ -13,35 +13,39 @@ namespace Pipit.Core.Tests;
 /// The whole rhythm pipeline without a player: each library song is synthesised as a perfect
 /// player would sound it (80 ms late through the "microphone"), then tracked, segmented and
 /// graded exactly as the play screen does. Anything below near-perfect is a pipeline bug.
+/// The songs are spread over <see cref="Shards"/> test classes (below), which xUnit runs in
+/// parallel.
 /// </summary>
-public class EndToEndTests(ITestOutputHelper output)
+public abstract class EndToEndTests(ITestOutputHelper output)
 {
+    public const int Shards = 6;
+
     private const int Rate = 48000;
     private const double Latency = 0.08;
 
-    public static IEnumerable<object[]> SongIds() =>
-        SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs.Select(s => new object[] { s.Id });
+    public static IEnumerable<object[]> SongIds(int shard) =>
+        SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs
+            .Where((_, i) => i % Shards == shard).Select(s => new object[] { s.Id });
 
     /// <summary>Casual mode is slow to simulate (pauses between notes); shorter songs cover it.</summary>
-    public static IEnumerable<object[]> ShorterSongIds() =>
-        SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs.Where(s => s.Melody.Performance.Count <= 120).Select(s => new object[] { s.Id });
+    public static IEnumerable<object[]> ShorterSongIds(int shard) =>
+        SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Songs.Where(s => s.Melody.Performance.Count <= 120)
+            .Where((_, i) => i % Shards == shard).Select(s => new object[] { s.Id });
 
     private static RecorderInfo RecorderFor(Song song) => RecorderInfo.Of(Enum.Parse<RecorderKind>(song.Melody.Instrument, ignoreCase: true));
 
     private static Song Load(string id) => SongLibrary.Load(name => File.ReadAllText(Repo.Data("songs", name))).Get(id)!;
 
-    [Theory]
-    [MemberData(nameof(SongIds))]
-    public void A_perfect_performance_scores_near_perfect(string id)
+    protected void PerfectPerformance(string id)
     {
         var song = Load(id);
         var soprano = RecorderFor(song);
         var spb = song.SecondsPerBeat();
-        // Long pieces (variation sets) are checked in excerpts, so the suite stays quick: the
-        // start, the end and two places between, played one after the other.
+        // Long pieces are checked in excerpts, so the suite stays quick: the start, the end and
+        // two places between, played one after the other.
         var expected = new List<ExpectedNote>();
         var t = 1.0; // the first note starts at 1 s
-        foreach (var excerpt in Excerpts(song.Melody.Performance))
+        foreach (var excerpt in Excerpts(song.Melody.Performance, spb))
         {
             var shift = t - excerpt[0].StartBeat * spb;
             expected.AddRange(excerpt.Select(n => new ExpectedNote(n.Index, soprano.WrittenToSounding(n.Pitch.Midi),
@@ -62,21 +66,25 @@ public class EndToEndTests(ITestOutputHelper output)
         Assert.Equal(3, run.Stars);
     }
 
-    private const int ExcerptNotes = 60;
+    private const double ExcerptSeconds = 20;
 
-    /// <summary>The whole performance when it is short, else four excerpts of <see cref="ExcerptNotes"/> notes.</summary>
-    private static List<List<PerformedNote>> Excerpts(IReadOnlyList<PerformedNote> notes)
+    /// <summary>The whole performance when it lasts up to four excerpts, else four excerpts of
+    /// <see cref="ExcerptSeconds"/>: the start, the end and two places between.</summary>
+    private static List<List<PerformedNote>> Excerpts(IReadOnlyList<PerformedNote> notes, double secondsPerBeat)
     {
-        if (notes.Count <= 4 * ExcerptNotes)
+        var first = notes[0].StartBeat;
+        double At(PerformedNote n) => (n.StartBeat - first) * secondsPerBeat;
+        var total = At(notes[^1]);
+        if (total <= 4 * ExcerptSeconds)
             return new List<List<PerformedNote>> { notes.ToList() };
         return Enumerable.Range(0, 4)
-            .Select(k => notes.Skip(k * (notes.Count - ExcerptNotes) / 3).Take(ExcerptNotes).ToList())
+            .Select(k => k * (total - ExcerptSeconds) / 3)
+            .Select(from => notes.Where(n => At(n) >= from && At(n) < from + ExcerptSeconds).ToList())
+            .Where(excerpt => excerpt.Count > 0)
             .ToList();
     }
 
-    [Theory]
-    [MemberData(nameof(ShorterSongIds))]
-    public void Casual_mode_follows_a_player_who_takes_their_time(string id)
+    protected static void CasualPlayer(string id)
     {
         // Each note played after a random pause of up to two seconds.
         var song = Load(id);
@@ -96,4 +104,70 @@ public class EndToEndTests(ITestOutputHelper output)
         Assert.True(mode.Finished, $"{id}: stopped at note {mode.Index}");
         Assert.Equal(100, mode.Accuracy);
     }
+}
+
+public class EndToEndShard0(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 0, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 0, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
+}
+
+public class EndToEndShard1(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 1, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 1, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
+}
+
+public class EndToEndShard2(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 2, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 2, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
+}
+
+public class EndToEndShard3(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 3, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 3, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
+}
+
+public class EndToEndShard4(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 4, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 4, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
+}
+
+public class EndToEndShard5(ITestOutputHelper output) : EndToEndTests(output)
+{
+    [Theory]
+    [MemberData(nameof(SongIds), 5, MemberType = typeof(EndToEndTests))]
+    public void A_perfect_performance_scores_near_perfect(string id) => PerfectPerformance(id);
+
+    [Theory]
+    [MemberData(nameof(ShorterSongIds), 5, MemberType = typeof(EndToEndTests))]
+    public void Casual_mode_follows_a_player_who_takes_their_time(string id) => CasualPlayer(id);
 }
