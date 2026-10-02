@@ -83,6 +83,7 @@ public partial class PlayScreen : Screen
     private readonly bool _fromPath;
 
     private readonly Song _original;
+    private readonly int _transposed;
     private readonly int _partIndex;
     private readonly CheckBox _band = new();
     private float[]? _bandSound;
@@ -95,12 +96,20 @@ public partial class PlayScreen : Screen
         _original = song;
         _partIndex = part;
         _song = part > 0 ? song.WithPartFirst(part) : song;
+        // Moved to fit the player's recorder when needed (an alto piece on a soprano...).
+        if (Transposition.FitFor(_song, S.Recorder) is { } fit)
+        {
+            _song = fit.Song;
+            _transposed = fit.Semitones;
+        }
         song = _song;
         _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
 
         var header = Ui.HBox(16, Ui.Label(Title, 30, PipitTheme.Ink), Ui.Label(Ui.Composer(song.Composer), 18, PipitTheme.InkSoft), Ui.Spacer());
         _best = Ui.Label("", 18, PipitTheme.Accent);
+        if (_transposed != 0)
+            header.AddChild(Ui.Label(TransposedText(_transposed), 16, PipitTheme.InkSoft));
         header.AddChild(_best);
 
         _intro = Ui.Card(Ui.VBox(6,
@@ -332,6 +341,11 @@ public partial class PlayScreen : Screen
         else
             StartCasual();
     }
+
+    /// <summary>"An octave lower", "3 semitones higher"... to fit this recorder.</summary>
+    public static string TransposedText(int semitones) => Math.Abs(semitones) == 12
+        ? Ui.T(semitones > 0 ? "An octave higher, to fit your recorder" : "An octave lower, to fit your recorder")
+        : string.Format(Ui.T(semitones > 0 ? "{0} semitones higher, to fit your recorder" : "{0} semitones lower, to fit your recorder"), Math.Abs(semitones));
 
     private bool BandActive => _band.ButtonPressed && _band.Visible && Synth.SoundFontInstalled;
 
