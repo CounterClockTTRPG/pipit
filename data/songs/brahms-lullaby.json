@@ -1,0 +1,39 @@
+{
+  "id": "brahms-lullaby",
+  "title": {
+    "en": "Brahms' Lullaby",
+    "nl": "Wiegelied van Brahms",
+    "fr": "Berceuse de Brahms"
+  },
+  "composer": "Johannes Brahms",
+  "chapter": 4,
+  "tempo": 88,
+  "time": "3/4",
+  "key": "C",
+  "source": "Mutopia Project arrangement (Public Domain); converted with tools/import-songs.py",
+  "about": {
+    "en": "Brahms wrote this \"Wiegenlied\" (cradle song) in 1868 as a present for a friend, Bertha Faber, when her second son was born. It became one of the best-known lullabies in the world.",
+    "nl": "Brahms schreef dit \"Wiegenlied\" in 1868 als cadeau voor een vriendin, Bertha Faber, toen haar tweede zoon geboren werd. Het werd een van de bekendste slaapliedjes ter wereld."
+  },
+  "tip": {
+    "en": "Soft and calm, in three, starting with an upbeat. Near the end there is a quick little turn of two sixteenth notes: just let your fingers roll over them.",
+    "nl": "Zacht en rustig, in drie, en het begint met een opmaat. Vlak voor het einde staat een snel draaitje van twee zestiende noten: laat je vingers er gewoon overheen rollen."
+  },
+  "pickup": "q",
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "E4/e E4/e | G4/q. E4/e E4/q | G4/h E4/e G4/e | C5/q B4/q. A4/e | A4/q G4/q D4/e E4/e | F4/q D4/q D4/e E4/e | F4/q R/q D4/e F4/e | B4/e A4/e G4/q B4/q | C5/q R/q C4/e C4/e | C5/h A4/e F4/e | G4/h E4/e C4/e | F4/q G4/q A4/q | E4/e G4/q. C4/e C4/e | C5/h A4/e F4/e | G4/h E4/e C4/e | F4/e G4/s F4/s E4/q D4/q | C4/h R/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Piano",
+      "sound": "piano",
+      "music": "R/q | G4/q B4/h | G4/q B4/h | G4/q B4/h | A4/q D4/h | A4/q D4/h | A4/q F4/h | F4/h. | G4/h Bb4/q | C4/h. | G4/h. | A4/q D4/h | G4/h Bb4/q | C4/h. | G4/h. | A4/q B4/q F4/q | G4/h"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "telemann-twv40-107-3",
+  "title": {
+    "en": "Duet TWV 40:107: III. Andante",
+    "nl": "Duet TWV 40:107: III. Andante"
+  },
+  "composer": "Georg Philipp Telemann",
+  "chapter": 10,
+  "tempo": 108,
+  "time": "6/4",
+  "key": "Bb",
+  "source": "Mutopia Project edition after Der getreue Music-Meister (1728), Public Domain; converted with tools/import-songs.py",
+  "about": {
+    "en": "Telemann published \"Der getreue Music-Meister\" in Hamburg in 1728-29, a music magazine that came out every two weeks with new pieces for amateurs. This duet for two recorders appeared in it: both parts are equally interesting, so you can play either while the band plays the other.",
+    "nl": "Telemann gaf in 1728-29 in Hamburg \"Der getreue Music-Meister\" uit, een muziektijdschrift dat om de twee weken verscheen met nieuwe stukken voor liefhebbers. Dit duet voor twee blokfluiten stond erin: beide partijen zijn even interessant, dus je kan er een spelen terwijl de band de andere speelt."
+  },
+  "tip": {
+    "en": "Pick a part: the band plays the other recorder.",
+    "nl": "Kies een partij: de band speelt de andere blokfluit."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder 1",
+      "instrument": "alto",
+      "music": "Bb4/e C5/e D5/q R/q D5/e C5/e Bb4/e C5/e C5/e. Bb4/s | C5/s Bb4/s R/s C5/s D5/q R/q G5/q G5/q G5/q | G5/q F#5/q G5/e A5/e Bb5/q Bb5/e A5/e Bb5/e C6/e | A5/q D6/q R/q G5/q G5/e F5/e G5/e Ab5/e | F5/q Bb5/q R/q Eb5/q Eb5/e D5/e Eb5/e F5/e | D5/q G5/q R/q F5/q G5/e F5/e Eb5/e D5/e | Eb5/q. D5/e C5/q. Eb5/e D5/e C5/e Bb4/e A4/e | Bb4/e C5/e C5/q. Bb4/s C5/s D5/h. | Bb4/e C5/e D5/q R/q F5/e Eb5/e D5/e Eb5/e Eb5/e. D5/s | Eb5/s D5/s R/s Eb5/s F5/q R/q Bb4/q Bb4/q Bb4/q | Bb4/q A4/q Bb4/e C5/e D5/q D5/e C5/e D5/e Eb5/e | C5/q F5/q R/q F5/q Eb5/e D5/e Eb5/e F5/e | D5/q G5/q R/q G5/q F5/e E5/e F5/e G5/e | E5/q A5/q R/q A5/q G5/e F#5/e G5/e A5/e | F#5/q. G5/e A5/q. Bb5/e A5/e Bb5/e C6/e A5/e | Bb5/e C6/e A5/q. G5/e G5/h."
+    },
+    {
+      "id": "part2",
+      "name": "Recorder 2",
+      "instrument": "alto",
+      "music": "G4/e A4/e Bb4/q R/q Bb4/e A4/e G4/e A4/e A4/e. G4/s | A4/s G4/s R/s A4/s Bb4/q R/h Bb4/e A4/e Bb4/e C5/e | A4/q D5/q R/q G5/q G5/q G5/q | G5/q F#5/q G5/e A5/e Bb5/q Eb5/q Eb5/q | Eb5/q D5/q Eb5/e F5/e G5/q C5/q C5/q | C5/q Bb4/e A4/e Bb4/e G4/e A4/q B4/q G4/q | C5/q C6/e Bb5/e A5/e G5/e F#5/h R/q | G5/e A5/e A5/q. G5/e F#5/h. | D5/e Eb5/e F5/q R/q D5/e C5/e Bb4/e C5/e C5/e. Bb4/s | C5/s Bb4/s R/s C5/s D5/q R/h D5/e C5/e D5/e Eb5/e | C5/q F5/q R/q Bb4/q Bb4/q Bb4/q | Bb4/q A4/q Bb4/e C5/e D5/q C5/q R/q | C5/q Bb4/e A4/e Bb4/e C5/e A4/q D5/q R/q | D5/q C5/e Bb4/e C5/e D5/e Bb4/q Eb5/q R/q | D5/q A5/e Bb5/e C6/q F#5/q. G5/e A5/e F#5/e | G5/e A5/e F#5/q. G5/e G5/h."
+    }
+  ]
+}

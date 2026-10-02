@@ -1,36 +1,233 @@
 [
-  { "chapter": 1, "title": { "en": "First notes: Si, La, Sol", "nl": "Eerste noten: Si, La, Sol" },
+  {
+    "chapter": 1,
+    "title": {
+      "en": "First notes: Si, La, Sol",
+      "nl": "Eerste noten: Si, La, Sol"
+    },
     "steps": [
-      { "lesson": "meet-the-recorder" },
-      { "lesson": "si-and-la" },
-      { "lesson": "the-staff" },
-      { "lesson": "note-lengths" },
-      { "lesson": "sol" },
-      { "lesson": "eighth-notes" },
-      { "song": "hot-cross-buns" },
-      { "lesson": "repeat-signs" },
-      { "song": "au-clair-de-la-lune" },
-      { "lesson": "high-re" },
-      { "song": "mary-had-a-little-lamb" }
-    ] },
-  { "chapter": 2, "title": { "en": "Higher: Do' and Re'", "nl": "Hoger: Do' en Re'" },
+      {
+        "lesson": "meet-the-recorder"
+      },
+      {
+        "lesson": "si-and-la"
+      },
+      {
+        "lesson": "the-staff"
+      },
+      {
+        "lesson": "note-lengths"
+      },
+      {
+        "lesson": "sol"
+      },
+      {
+        "lesson": "eighth-notes"
+      },
+      {
+        "song": "hot-cross-buns"
+      },
+      {
+        "lesson": "repeat-signs"
+      },
+      {
+        "song": "au-clair-de-la-lune"
+      },
+      {
+        "lesson": "high-re"
+      },
+      {
+        "song": "mary-had-a-little-lamb"
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "title": {
+      "en": "Higher: Do' and Re'",
+      "nl": "Hoger: Do' en Re'"
+    },
     "steps": [
-      { "lesson": "high-do" },
-      { "lesson": "rests" },
-      { "lesson": "dotted-notes" },
-      { "song": "ode-to-joy" },
-      { "song": "lightly-row" },
-      { "lesson": "endings" },
-      { "song": "jingle-bells" }
-    ] },
-  { "chapter": 3, "title": { "en": "Low Re", "nl": "Lage Re" },
+      {
+        "lesson": "high-do"
+      },
+      {
+        "lesson": "rests"
+      },
+      {
+        "lesson": "dotted-notes"
+      },
+      {
+        "song": "ode-to-joy"
+      },
+      {
+        "song": "lightly-row"
+      },
+      {
+        "lesson": "endings"
+      },
+      {
+        "song": "jingle-bells"
+      },
+      {
+        "lesson": "playing-together"
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "title": {
+      "en": "Low Re",
+      "nl": "Lage Re"
+    },
     "steps": [
-      { "lesson": "low-re" },
-      { "song": "ode-to-joy-full" }
-    ] },
-  { "chapter": 4, "title": { "en": "The low notes", "nl": "De lage noten" },
+      {
+        "lesson": "low-re"
+      },
+      {
+        "song": "ode-to-joy-full"
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "title": {
+      "en": "The low notes",
+      "nl": "De lage noten"
+    },
     "steps": [
-      { "lesson": "low-notes" },
-      { "song": "twinkle" }
-    ] }
+      {
+        "lesson": "low-notes"
+      },
+      {
+        "song": "twinkle"
+      },
+      {
+        "lesson": "three-four"
+      },
+      {
+        "song": "amazing-grace"
+      },
+      {
+        "song": "brahms-lullaby"
+      }
+    ]
+  },
+  {
+    "chapter": 5,
+    "title": {
+      "en": "High notes: pinch the thumb",
+      "nl": "Hoge noten: knijp de duim"
+    },
+    "steps": [
+      {
+        "lesson": "pinched-thumb"
+      },
+      {
+        "song": "frere-jacques"
+      },
+      {
+        "song": "when-the-saints"
+      },
+      {
+        "song": "auld-lang-syne"
+      }
+    ]
+  },
+  {
+    "chapter": 6,
+    "title": {
+      "en": "Sharps and the key of G",
+      "nl": "Kruisen en G groot"
+    },
+    "steps": [
+      {
+        "lesson": "high-la-si"
+      },
+      {
+        "lesson": "fa-sharp"
+      },
+      {
+        "lesson": "more-sharps"
+      },
+      {
+        "song": "minuet-in-g"
+      }
+    ]
+  },
+  {
+    "chapter": 7,
+    "title": {
+      "en": "Si♭ and the key of F",
+      "nl": "Si♭ en F groot"
+    },
+    "steps": [
+      {
+        "lesson": "si-flat"
+      },
+      {
+        "song": "japart-tmeiskin"
+      }
+    ]
+  },
+  {
+    "chapter": 8,
+    "title": {
+      "en": "Quick notes and six-eight",
+      "nl": "Snelle noten en zes-achtste"
+    },
+    "steps": [
+      {
+        "lesson": "sixteenth-notes"
+      },
+      {
+        "lesson": "six-eight"
+      },
+      {
+        "song": "greensleeves"
+      }
+    ]
+  },
+  {
+    "chapter": 9,
+    "title": {
+      "en": "Baroque flats and Do''",
+      "nl": "Barokke mollen en Do''"
+    },
+    "steps": [
+      {
+        "lesson": "flats-up-high"
+      },
+      {
+        "song": "minuet-in-g-minor"
+      },
+      {
+        "song": "fairest-isle"
+      },
+      {
+        "song": "musette"
+      },
+      {
+        "song": "bach-prelude-opening"
+      }
+    ]
+  },
+  {
+    "chapter": 10,
+    "title": {
+      "en": "The alto and the sonatas",
+      "nl": "De alt en de sonates"
+    },
+    "steps": [
+      {
+        "lesson": "alto-recorder"
+      },
+      {
+        "song": "handel-hwv369-1"
+      },
+      {
+        "song": "telemann-twv40-107-3"
+      }
+    ]
+  }
 ]

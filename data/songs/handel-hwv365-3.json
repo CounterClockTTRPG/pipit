@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv365-3",
+  "title": {
+    "en": "Sonata in C major, HWV 365: III. Larghetto",
+    "nl": "Sonate in C groot, HWV 365: III. Larghetto"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 66,
+  "time": "3/4",
+  "key": "C",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "E5/h.~ | E5/h A5/q | G#5/h E5/q | D5/q C5/q B4/q | C5/e. B4/s A4/q R/q | R/q E5/q F5/q | G5/h.~ | G5/h C6/q | B5/h C6/q | D5/q E5/q F5/q | E5/h.~ | E5/q G5/q F#5/q | G5/h. | G#5/h. | A5/h. | B5/h. | C6/h B5/q | E5/h F#5/q | D#5/q. C#5/e B4/q | R/q E5/q D5/q | C5/h B4/q | R/q A5/e. G#5/s A5/q | A5/q. B5/e G5/q~ | G5/e F#5/e F#5/q. E5/e | E5/h. | R/h. | R/h. | R/q B5/q B5/e C6/s D6/s | C6/q E5/q F5/q | G5/h A5/q | F5/q. E5/e D5/q | R/q B5/q E5/q | C6/q. B5/e A5/q~ | A5/e B5/e G#5/q. A5/e | D5/h.~ | D5/q. E5/e B4/q | C5/h E5/q | A5/q D5/q. E5/e | E5/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "A2/q C4/q B3/q | A3/q G3/q F3/q | E3/q D3/q C3/q | D3/q E3/q E2/q | A2/q C4/q B3/q | A3/q G3/q F3/q | E3/q E4/q D4/q | C4/q B3/q A3/q | G3/q F3/q E3/q | F3/q G3/q G2/q | C3/q E3/q D3/q | C3/q B2/q A2/q | G2/q G3/q F3/q | E3/q E4/q D4/q | C4/q B3/q A3/q | G#3/q F#3/q E3/q | A3/q F#3/q G3/q | C4/q B3/q A3/q | B3/q B2/q A2/q | G2/q G3/q F#3/q | E3/q E4/q D4/q | C4/q A3/q C4/q | D#3/q B2/q E3/q | A3/q B3/q B2/q | E3/q C4/q B3/q | A3/q G3/q F3/q | E3/q D3/q C3/q | D3/q E3/q E2/q | A2/q G2/q F2/q | E2/q C#3/q A2/q | D3/q E3/q F3/q | G#2/h G#3/q | A3/q E3/q F3/q | D3/q E3/q E2/q | R/q F3/q D3/q | G#2/h G#3/q | A3/q A2/q G3/q | F3/h. | E3/h."
+    }
+  ]
+}

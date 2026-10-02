@@ -14,6 +14,12 @@ public partial class LibraryScreen : Screen
         [2] = "New notes: high Do and Re",
         [3] = "New note: low Re",
         [4] = "The low notes: Do, Mi and Fa",
+        [5] = "High notes: Mi', Fa' and Sol'",
+        [6] = "Sharps: Fa♯, Do♯' and Sol♯; and La', Si'",
+        [7] = "A flat: Si♭",
+        [8] = "Sixteenth notes and six-eight time",
+        [9] = "Mi♭', Si♭', La♭' and Do''",
+        [10] = "Sonatas for the alto recorder",
     };
 
     private readonly VBoxContainer _list = Ui.VBox(14);

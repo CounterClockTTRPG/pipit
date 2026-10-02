@@ -15,6 +15,12 @@ public class SongLibraryTests(Xunit.Abstractions.ITestOutputHelper output)
         [2] = new[] { "G4", "A4", "B4", "C5", "D5" },
         [3] = new[] { "D4", "E4", "G4", "A4", "B4", "C5", "D5" },
         [4] = new[] { "C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5" },
+        [5] = new[] { "C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5" },
+        [6] = new[] { "C4", "D4", "E4", "F4", "F#4", "G4", "G#4", "A4", "B4", "C5", "C#5", "D5", "E5", "F5", "F#5", "G5", "A5", "B5" },
+        [7] = new[] { "C4", "D4", "E4", "F4", "F#4", "G4", "G#4", "A4", "Bb4", "B4", "C5", "C#5", "D5", "E5", "F5", "F#5", "G5", "A5", "B5" },
+        [8] = new[] { "C4", "D4", "E4", "F4", "F#4", "G4", "G#4", "A4", "Bb4", "B4", "C5", "C#5", "D5", "E5", "F5", "F#5", "G5", "A5", "B5" },
+        [9] = new[] { "C4", "D4", "E4", "F4", "F#4", "G4", "G#4", "A4", "Bb4", "B4", "C5", "C#5", "D5", "Eb5", "E5", "F5", "F#5", "G5", "Ab5", "A5", "Bb5", "B5", "C6" },
+        // Chapter 10 is the alto's sonatas: Pipit transposes them for a soprano.
     };
 
     [Fact]

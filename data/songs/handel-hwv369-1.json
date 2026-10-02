@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv369-1",
+  "title": {
+    "en": "Sonata in F major, HWV 369: I. Larghetto",
+    "nl": "Sonate in F groot, HWV 369: I. Larghetto"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 10,
+  "tempo": 66,
+  "time": "3/4",
+  "key": "F",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "R/q A4/q Bb4/q | C5/h.~ | C5/q C5/q D5/q | E5/h F5/q | G5/q A5/q F5/q | Bb5/q G5/q C6/q | A5/q. G5/e F5/q | R/e D5/e G4/q A4/e. Bb4/s | A4/q A4/q Bb4/q | C5/h.~ | C5/q C5/q D5/q | E5/h F5/q | G5/q A5/q F5/q | D5/h E5/q | F5/q D5/q. C5/e | C5/h. | R/q A5/q G5/q | E5/e. D5/s C5/q R/q | R/q C6/q A5/q | Bb5/q. A5/e Bb5/e G5/e | A5/q. G5/e A5/e F5/e | G5/q. F5/e G5/e E5/e | F5/q Bb5/q A5/q | G5/q F5/q E5/q | F5/e G5/e E5/q. D5/e | D5/q Bb5/e. A5/s Bb5/q | C5/q A5/e. G5/s A5/q | Bb4/e A5/e G5/e. F5/s F5/e. E5/s | E5/q C5/q C5/q | C5/q D5/e C5/e Bb4/e A4/e | G4/q A5/q A5/q | A5/h.~ | A5/e. G5/s F5/q Bb5/q~ | Bb5/q. G5/e A5/q | G5/e F5/e E5/q. F5/e | A4/q A4/q A4/q | F5/q A4/q D5/q | C5/q. D5/e Bb4/q | A4/e G4/e G4/q. F4/e | F4/q F5/q E5/e. D5/s | C5/h. | R/q A5/q G5/e C5/e | F5/e A4/e B4/q. C5/e | C5/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "F3/h R/q | R/q F2/q G2/q | A2/q A2/q Bb2/q | C3/q C3/q D3/q | E3/q F3/q Bb3/q | G3/q C4/q C3/q | F3/q C3/q D3/q | Bb2/q C3/q C2/q | F2/h R/q | R/q F2/q G2/q | A2/q A2/q Bb2/q | C3/q C3/q D3/q | E3/q F3/q D3/q | G3/q B3/q C4/q | F3/q G3/q G2/q | C3/q F3/q G3/q | A3/q A2/q Bb2/q | C3/q C3/q D3/q | E3/q C3/q F3/q | G3/q D3/q E3/q | F3/q A2/q A2/q | B2/q C#3/q A2/q | D3/q D4/q C4/q | Bb3/q A3/q G3/q | A3/h A2/q | D3/q G3/q F3/q | E3/q F3/q E3/q | D3/q Bb2/q G2/q | C3/q F3/q G3/q | A3/q A2/q Bb2/q | C3/q F3/q E3/q | D3/q C3/q Bb2/q | A2/q Bb2/q G2/q | C3/q E3/q F3/q | Bb3/q C4/q C3/q | R/q F3/q E3/q | D3/q C3/q Bb2/q | A2/h G2/q | F2/q C3/q C2/q | F2/h R/q | R/q A3/q G3/q | F3/h E3/q | D3/h. | C3/h."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv360-3",
+  "title": {
+    "en": "Sonata in G minor, HWV 360: III. Adagio",
+    "nl": "Sonate in g klein, HWV 360: III. Adagio"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 60,
+  "time": "3/2",
+  "key": "Gm",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "R/h G5/h Eb5/h | Bb5/w~ Bb5/h | R/h Ab5/h F5/h | C6/w~ C6/h | C6/h Bb5/h G5/h | Ab5/q Bb5/q Ab5/h G5/q. F5/e | F5/h A5/h. A5/q | Bb5/h B5/h. B5/q | C6/h Ab5/h G5/h | F#5/h D6/h. F#5/q | G5/q Bb4/q C5/h. D5/q | D5/w~ D5/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "Eb3/w R/h | R/h D3/h Bb2/h | F3/w~ F3/h | F3/h Eb3/h C3/h | C#3/w Bb2/h | C3/w C3/h | F3/h Eb3/w | D3/h G3/h F3/h | Eb3/h C4/w~ | C4/h Bb3/h D3/h | Eb3/w~ Eb3/h | D3/w~ D3/h"
+    }
+  ]
+}

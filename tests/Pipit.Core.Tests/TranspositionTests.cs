@@ -26,6 +26,9 @@ public class TranspositionTests
         Assert.Equal("C#5", Transposition.SpellIn(73, new KeySignature(0)).ToString());  // chromatic in C: sharp
         Assert.Equal("Ab4", Transposition.SpellIn(68, new KeySignature(-2)).ToString()); // chromatic in Bb: flat
         Assert.Equal("B3", Transposition.SpellIn(59, new KeySignature(0)).ToString());
+        Assert.Equal("F5", Transposition.SpellIn(77, new KeySignature(1)).ToString());  // a natural in G, not E sharp
+        Assert.Equal("A4", Transposition.SpellIn(69, new KeySignature(-3)).ToString()); // a natural in E flat
+        Assert.Equal("B4", Transposition.SpellIn(71, new KeySignature(-2)).ToString()); // not C flat
     }
 
     [Fact]

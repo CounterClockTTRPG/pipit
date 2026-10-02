@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv369-4",
+  "title": {
+    "en": "Sonata in F major, HWV 369: IV. Allegro",
+    "nl": "Sonate in F groot, HWV 369: IV. Allegro"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 116,
+  "time": "12/8",
+  "key": "F",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "F5/e A5/e F5/e C5/e A4/e C5/e F5/e A5/e F5/e C5/e A4/e C5/e | G5/e Bb5/e G5/e E5/e C5/e E5/e A5/e G5/e F5/e R/q A5/e | G5/e A5/e Bb5/e C6/e Bb5/e C6/e F5/q. R/q F5/e | E5/e F5/e G5/e A5/e G5/e A5/e D5/q. R/q G5/e | C5/e D5/e E5/e F5/e G5/e A5/e Bb5/e A5/e G5/e A5/e G5/e F5/e | G5/e F5/e E5/e F5/e E5/e D5/e E5/e D5/e C5/e G5/e F5/e E5/e | A5/e G5/e F5/e E5/e D5/e C5/e B5/e A5/e G5/e C6/e B5/e A5/e | G5/e F5/e E5/e F5/e E5/e D5/e C5/h. | C5/e E5/e G5/e E5/e C5/e G4/e C5/e E5/e G5/e C6/e G5/e E5/e | A5/e F5/e D5/e B4/e D5/e G5/e E5/e D5/e C5/e R/q. | F5/e A5/e F5/e C5/e A4/e C5/e F5/e A5/e F5/e C5/e A4/e C5/e | G5/e Bb5/e G5/e E5/e C5/e E5/e A5/e G5/e F5/e R/q A5/e | Bb5/e A5/e G5/e F5/e E5/e D5/e C#5/q Bb5/e A5/q. | R/q Bb5/e A5/q. R/q Bb5/e A5/q G5/e | F5/e E5/e D5/e A4/e D5/e C#5/e D5/q. R/q D6/e | E5/q D6/e D6/q D6/e D6/e C6/e B5/e C6/q C6/e | D5/q C6/e C6/q C6/e C6/e Bb5/e A5/e Bb5/q Bb5/e | C5/q Bb5/e Bb5/q Bb5/e Bb5/e A5/e G5/e A5/e Bb5/e C6/e | D6/e C6/e Bb5/e A5/e G5/e F5/e E5/q. R/q C5/e | D5/e E5/e F5/e G5/e A5/e Bb5/e C5/e D5/e E5/e F5/e G5/e A5/e | Bb5/e C6/e D6/e C6/e D6/e Bb5/e A5/q. R/q A5/e | G5/e A5/e Bb5/e C6/e Bb5/e C6/e F5/q. R/q F5/e | E5/e F5/e G5/e A5/e G5/e A5/e D5/q. R/q G5/e | C5/e D5/e E5/e F5/e G5/e A5/e Bb5/e A5/e G5/e A5/e G5/e F5/e | G5/e F5/e E5/e F5/e E5/e D5/e E5/e D5/e C5/e F5/e G5/e A5/e | D5/e E5/e F5/e C5/e F5/e E5/e F5/h G5/e E5/e | F5/h G5/e A5/e Bb5/e A5/e G5/e A5/e G5/e F5/e | G5/e E5/e F5/e C5/e F5/e E5/e F5/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "F3/q. E3/q. D3/q. A3/q. | Bb3/q. C4/q. F4/e C4/e A3/e F3/e C4/e F4/e | F4/q F4/e E4/q E4/e D4/e A3/e F3/e D3/e A3/e D4/e | D4/q D4/e C4/q C4/e Bb3/e F3/e D3/e Bb2/e F3/e Bb3/e | Bb3/q Bb3/e A3/q A3/e G3/q E4/e F3/q D4/e | E3/q C4/e D3/q B3/e C4/q C3/e E3/e D3/e C3/e | F3/q. A3/q. G3/q. E3/q F3/e | G3/q C3/e G3/q G2/e C3/h. | C4/q. B3/q. A3/q. E3/q. | F3/q. G3/q. C3/q C4/e Bb3/e A3/e G3/e | F3/q. E3/q. D3/q. A3/q. | Bb3/q. C4/q. F4/e C4/e A3/e F3/e A3/e D4/e | G3/q. Bb2/q. A2/q. R/q D4/e | C#4/q. R/q D4/e C#4/q. R/q A3/e | D4/q G3/e A3/q A2/e D3/e D4/e C4/e B3/e C4/e D4/e | G#3/e A3/e B3/e E3/e F#3/e G#3/e A3/e E3/e C3/e A2/e E3/e A3/e | F#3/e G3/e A3/e D3/e E3/e F#3/e G3/e D3/e Bb2/e G2/e D3/e G3/e | E3/e F3/e G3/e C3/e D3/e E3/e F3/e C3/e A2/e F2/q A3/e | Bb3/q. D4/q. C4/e G3/e E3/e C3/e G3/e C4/e | C4/q C4/e Bb3/q Bb3/e Bb3/q Bb3/e A3/q A3/e | G3/q G3/e E4/q E4/e F4/e C4/e A3/e F3/e C4/e F4/e | F4/q F4/e E4/q E4/e D4/e A3/e F3/e D3/e A3/e D4/e | D4/q D4/e C4/q C4/e Bb3/e F3/e D3/e Bb2/e F3/e Bb3/e | Bb3/q Bb3/e A3/q A3/e G3/q E4/e F3/q D4/e | E3/q C4/e D3/q Bb3/e C3/q Bb3/e A3/e G3/e F3/e | Bb3/q G3/e C4/q C3/e F3/e A3/e C4/e C3/q. | D3/e F3/e A3/e A2/q F3/e G3/q E3/e F3/q A2/e | Bb2/q D3/e C3/q C2/e F2/h."
+    }
+  ]
+}

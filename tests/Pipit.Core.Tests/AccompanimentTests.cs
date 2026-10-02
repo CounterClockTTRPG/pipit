@@ -110,11 +110,13 @@ public class AccompanimentContentTests
         foreach (var song in Library.Songs.Where(s => s.Accompaniment.Count > 0))
         {
             var melodyEnd = song.Melody.Performance.Max(n => n.EndBeat);
-            var melodyStart = song.Melody.Performance.Min(n => n.StartBeat);
+            // Real pieces often start with the bass alone, so the band may start before the tune's
+            // first note, but not before the song (its pickup) does.
+            var songStart = -song.Pickup;
             foreach (var part in song.Accompaniment)
             {
                 // It starts with the song (not before its pickup) and ends with it.
-                Assert.True(part.Performance.Min(n => n.StartBeat) >= melodyStart - 1e-9, $"{song.Id}/{part.Id} starts early");
+                Assert.True(part.Performance.Min(n => n.StartBeat) >= songStart - 1e-9, $"{song.Id}/{part.Id} starts early");
                 Assert.Equal(melodyEnd, part.Performance.Max(n => n.EndBeat), 6);
             }
         }

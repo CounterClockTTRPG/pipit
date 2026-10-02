@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv360-4",
+  "title": {
+    "en": "Sonata in G minor, HWV 360: IV. Presto",
+    "nl": "Sonate in g klein, HWV 360: IV. Presto"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "Gm",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "D5/q G5/e. A5/s F#5/q. D5/e | G5/q A5/q Bb5/h | D5/q A5/q Bb5/q. A5/e | Bb5/q C6/q A5/h | A5/q Bb5/q G5/q. F#5/e | G5/q A5/q F#5/h | G5/q D5/q Eb5/q. D5/e | Eb5/q F5/q D5/q. F5/e | Bb5/q C6/q A5/q. F5/e | Bb5/q. F5/e G5/e F5/e Eb5/e D5/e | C5/q A5/q Bb5/h | F5/q Bb5/e A5/e G5/e F5/e Eb5/e D5/e | C5/q. Bb4/e Bb4/h | D5/e F5/e C5/e F5/e D5/e F5/e C5/e F5/e | D5/e F5/e C5/e F5/e D5/h | Eb5/e G5/e D5/e G5/e Eb5/e G5/e D5/e G5/e | Eb5/e G5/e D5/e G5/e Eb5/q. G5/e | C5/q F5/q. G5/e Eb5/e D5/e | D5/q. C5/e C5/q. C5/e | F5/q Eb5/e. D5/s D5/q. D5/e | G5/q F5/e. E5/s E5/q. E5/e | A5/q G5/e. F#5/s F#5/q. G5/e | A5/q D6/q Bb5/q. A5/e | G5/q F5/e G5/e Eb5/q D5/q | C5/q. D5/e D5/h | D5/q G5/e. A5/s F#5/q. D5/e | G5/q A5/q Bb5/q. A5/e | Bb5/e D6/e A5/e D6/e Bb5/e D6/e A5/e D6/e | Bb5/e D6/e F#5/e D6/e G5/q. G5/e | C6/e Bb5/e A5/e G5/e F#5/q G5/e C6/e | Bb5/q A5/e. G5/s G5/q. F5/e | Eb5/e D5/e C5/q. D5/e Bb4/e A4/e | A4/q. G4/e G4/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "G2/e A2/e Bb2/e C3/e D3/e A2/e D3/e C3/e | Bb2/e G3/e F#3/e D3/e G3/e D3/e G2/e G3/e | F#3/e E3/e F#3/e D3/e G3/e G2/e G3/e F3/e | E3/e D3/e E3/e C3/e F3/e F2/e F3/e Eb3/e | D3/e C3/e D3/e Bb2/e Eb3/e Bb2/e Eb3/e D3/e | C3/e Bb2/e C3/e A2/e D3/e A3/e D4/e C4/e | Bb3/e A3/e Bb3/e G3/e C4/e C3/e C4/e Bb3/e | A3/e G3/e A3/e F3/e Bb3/e Bb2/e Bb3/e A3/e | G3/e F3/e E3/e C3/e F3/e C3/e F3/e Eb3/e | D3/e C3/e D3/e Bb2/e Eb3/e F3/e G3/e D3/e | Eb3/e C3/e F3/e F2/e Bb2/e A2/e Bb2/e C3/e | D3/e C3/e D3/e Bb2/e Eb3/e F3/e G3/e D3/e | Eb3/e C3/e F3/e F2/e Bb2/h | Bb2/e Bb3/e A3/e F3/e Bb2/e Bb3/e A3/e F3/e | Bb2/e Bb3/e A3/e F3/e Bb3/e Bb2/e D3/e Bb2/e | C3/e C4/e B3/e G3/e C3/e C4/e B3/e G3/e | C3/e C4/e B3/e G3/e C4/e C3/e Eb3/e C3/e | Ab3/e G3/e Ab3/e F3/e B3/e G3/e C4/e F3/e | G3/e F3/e G3/e G2/e C3/e G3/e C4/e Bb3/e | A3/e G3/e A3/e F3/e Bb3/e C4/e Bb3/e A3/e | G3/e A3/e Bb3/e G3/e C4/e D4/e C4/e Bb3/e | A3/e Bb3/e C4/e A3/e D4/e A3/e D3/e E3/e | F#3/e E3/e F#3/e D3/e G3/e F#3/e G3/e A3/e | Bb3/e G3/e A3/e Bb3/e C4/e C3/e D3/e D4/e | Eb4/e D4/e Eb4/e Eb3/e D3/e E3/e F#3/e D3/e | G3/e A3/e Bb3/e C4/e D4/e A3/e D4/e C4/e | Bb3/e G3/e F#3/e D3/e G3/e G2/e Bb2/e D3/e | G3/e G2/e F#3/e D3/e G3/e G2/e F#3/e D3/e | G3/e Bb3/e D4/e D3/e Eb3/e F3/e Eb3/e D3/e | C3/e G3/e C4/e A3/e D4/e D3/e Eb3/e C3/e | D3/e C3/e D3/e D2/e G2/e A2/e Bb2/e G2/e | C3/e D3/e Eb3/e C3/e F#3/e D3/e G3/e C3/e | D3/e C3/e D3/e D2/e G2/h"
+    }
+  ]
+}

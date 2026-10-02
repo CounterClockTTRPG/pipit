@@ -22,10 +22,10 @@ scripts/import-fixtures.sh     # guided Studio takes -> tests/fixtures/audio (re
 | Recorders: several per player, soprano/alto/tenor, **baroque and German fingering** (per recorder, Settings or Calibrate), pitch of A | done |
 | M2 songs: format/parser, segmenter, grader, Rhythm and Casual modes, speed dial, listen, replay, analysis, XP, levels, streaks, 18 achievements | done |
 | M3 score view (Bravura), Bars / Score / **Highway** views | done |
-| Study path: 4 chapters, 14 lessons EN/NL with try/exercise/quiz blocks | done (first version) |
+| Study path: 10 chapters, 25 lessons EN/NL with try/exercise/quiz blocks: up to the pinched thumb, sharps (G), Si♭ (F), sixteenths, 6/8, baroque flats, Re'', and the alto | done; chapter songs only use notes taught so far (tests) |
 | Pip mascot (vector rig, 6 moods), see `docs/pip.md` | done |
 | Survival mode, per-song top-10 leaderboard | done |
-| Repertoire: folk, baroque (Mutopia, PD), Renaissance dances (Bellugi, **personal use only**, `data/songs/personal/`) | 32 songs |
+| Repertoire: folk, baroque (Mutopia, PD / CC BY-SA), Renaissance dances (Bellugi, **personal use only**, `data/songs/personal/`); Handel sonatas HWV 360/365/369 with continuo, Telemann duet TWV 40:107 (two parts), Japart *Tmeiskin* (consort), Brahms' Lullaby (`tools/import-songs.py`) | 48 songs |
 
 ## Players (M4), done 2026-10-02
 
@@ -76,7 +76,7 @@ Next steps, in order:
 | **Baroque vs German fingering** | Supported: per-recorder setting, German chart = baroque with Fa/Fa♯ overrides (both octaves), used everywhere (diagrams, lessons, trainer). Still to do: the lesson "Baroque vs German" with a live comparison of both Fa fingerings (in DESIGN §11.3); show alternative fingerings in the trainer; verify the German table against a Mollenhauer chart. |
 | Player profiles (M4) | done; leaderboard entries carry the player name. A shared board across players on this computer would be a nice next step. |
 | **Android APK for tablets** | Godot 4 C# exports to Android (.NET 8). Needs: Android SDK/JDK + export templates, `RECORD_AUDIO` permission and a runtime prompt, touch-sized controls (most buttons are already 48 px+), checking YIN/segmenter CPU on a tablet (narrow the search range, maybe hop 512), the SoundFont size (31 MB; consider a trimmed bank), `user://` paths (already used everywhere), no F11/keyboard assumptions, and Windows-only bits (`OS.ShellOpen` on folders, "Segoe UI" font: bundle an OFL font instead). |
-| More music | Needs Public Domain / CC-BY sources: Dowland *Flow my tears* (the downloaded file was *Burst forth my tears*, Kunstderfuge, not used), Van Eyck *Pavaen Lachrymae* / *Engels Nachtegaeltje*, *Lamento di Tristano*, Scarborough Fair. Gettys' consort MIDIs suit the band later (personal use). |
+| More music | Candidates in the user's `C:\data\flute` (all scanned PDFs, so transcription by hand or OMR): Pachelbel *Canon* SATB recorders (mfiles, © J. Paterson, personal use), Mel Bay *Celtic Tunes for Recorder* (tunes from O'Neill/Roche, PD at source), baroque flute pieces playable on recorder (Hotteterre, Naudot, Boismortier, Loeillet, Blavet, Marcello, Mattheson, Telemann duets), *A Tune a Day* / Suzuki (copyrighted, personal use only). Also needs Public Domain / CC-BY sources: Dowland *Flow my tears* (the downloaded file was *Burst forth my tears*, Kunstderfuge, not used), Van Eyck *Pavaen Lachrymae* / *Engels Nachtegaeltje*, *Lamento di Tristano*, Scarborough Fair. Gettys' consort MIDIs suit the band later (personal use). |
 | Windows export (M9) | Export preset must include `data/*`, `assets/fonts/*`, `assets/soundfont/*.sf2` as non-resource files. |
 
 ## Known issues / notes

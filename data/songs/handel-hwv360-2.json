@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv360-2",
+  "title": {
+    "en": "Sonata in G minor, HWV 360: II. Andante",
+    "nl": "Sonate in g klein, HWV 360: II. Andante"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 76,
+  "time": "3/4",
+  "key": "Gm",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "D5/q G5/q. A5/e | F#5/h G5/q | A5/q. C6/e Bb5/e A5/e | Bb5/q. A5/e G5/q | R/q D5/q D5/q~ | D5/e G5/e G5/s F5/s Eb5/e Eb5/s D5/s C5/e | C5/q C5/q C5/q~ | C5/e F5/e F5/s Eb5/s D5/e D5/s C5/s Bb4/e | Bb4/q Bb5/q Bb5/q~ | Bb5/e Eb6/e Eb6/s D6/s C6/e C6/s Bb5/s A5/e | A5/q A5/q A5/q~ | A5/e D6/e D6/s C6/s Bb5/e Bb5/s A5/s G5/e | G5/q G5/q G5/q~ | G5/e C6/e C6/s Bb5/s A5/e A5/s G5/s F#5/e | F#5/e. G5/s G5/q. F#5/s G5/s | A5/e. D5/s A5/s Bb5/s C6/e C6/s Bb5/s A5/e | Bb5/s A5/s G5/e G5/s F5/s E5/e E5/e. Bb5/s | A5/s G5/s F5/e F5/s E5/s D5/e D5/e. A5/s | G5/s F5/s E5/e E5/s D5/s C#5/e C#5/e. G5/s | F5/s E5/s D5/e G5/s F5/s E5/e A5/s G5/s F5/e | Bb5/s A5/s Bb5/e G5/s A5/s F5/e E5/s F5/s D5/e | C#5/q A5/q. A5/e | D6/q G5/q. G5/e | G5/q. A5/e F5/e. E5/s | F5/e. D6/s F5/q E5/e. D5/s | D5/q A5/q. A5/e | D5/q G5/q. Bb4/e | A4/q. G5/e F5/e. E5/s | F5/s E5/s D5/e C#5/q. D5/e | D5/h. | F5/q Bb5/q. C6/e | A5/h Bb5/q | C5/q D5/q Eb5/q | D5/q. E5/e F5/q | G5/q A5/q Bb5/e. C6/s | A5/q. G5/e F5/q | R/q F5/q F5/q | F5/q. G5/e Eb5/e D5/e | Eb5/e. Ab5/s Eb5/q D5/e. C5/s | C5/q Eb5/q Eb5/q | C6/q. Bb5/s A5/s Bb5/e A5/s G5/s | F5/s G5/s Eb5/e D5/q C5/e. Bb4/s | Bb4/e. Bb5/s Bb5/s A5/s G5/e G5/s F5/s E5/e | E5/e. C6/s C6/s Bb5/s A5/e A5/s G5/s F#5/e | F#5/e. D6/s D6/s C6/s Bb5/e Bb5/s A5/s G5/e | G5/s F5/s Eb5/e Eb5/s D5/s C5/e C5/s Bb4/s A4/e | A4/e. C6/s C6/s Bb5/s A5/e A5/s G5/s F#5/e | F#5/s E5/s D5/e D5/s C5/s Bb4/e C5/s Bb4/s A4/e | Bb4/e. D5/s A4/e. D5/s G4/e. G5/s | F#5/e. D5/s G5/e. D5/s A5/e. D5/s | Bb5/e. D5/s A5/e. D5/s G5/e. A5/s | F#5/q D6/q. D6/e | G5/q C6/q. C6/e | D5/q. C6/e Bb5/e A5/e | Bb5/s A5/s G5/e F#5/q. G5/e | G5/q D5/q. D5/e | G4/q C5/q. C5/e | A5/q. G5/s F#5/s G5/e. A4/s | Bb4/e. C5/s Bb4/q A4/e. G4/s | G4/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "G3/e F#3/e G3/e A3/e Bb3/e C4/e | D4/e Eb4/e D4/e C4/e Bb3/e G3/e | C4/e A3/e D4/q D3/q | G3/e D3/e G3/e F#3/e G3/e A3/e | Bb3/s C4/s D4/s C4/s Bb3/s C4/s A3/s Bb3/s G3/s A3/s F3/s G3/s | Eb3/q Eb4/q R/q | A3/s Bb3/s C4/s Bb3/s A3/s Bb3/s G3/s A3/s F3/s G3/s Eb3/s F3/s | D3/q D4/q R/q | G3/s A3/s Bb3/s A3/s G3/s A3/s F3/s G3/s Eb3/s F3/s D3/s Eb3/s | C3/q C4/q R/q | F3/s G3/s A3/s G3/s F3/s G3/s Eb3/s F3/s D3/s Eb3/s C3/s D3/s | Bb2/q Bb3/q R/q | Eb3/s F3/s G3/s F3/s Eb3/s F3/s D3/s Eb3/s C3/s D3/s Bb2/s C3/s | A2/q A3/q R/q | D3/q Bb2/q G2/q | D3/q F#3/q D3/q | G3/q Bb3/q C4/q | F3/q A3/q Bb3/q | E3/q G3/q A3/q | D3/q E3/q F3/q | G3/q Bb3/q G3/q | A2/e A3/s G3/s F3/s G3/s E3/s F3/s D3/s E3/s C3/s D3/s | Bb2/e Bb3/s A3/s G3/s A3/s F3/s G3/s E3/s F3/s D3/s E3/s | C#3/q C#4/q D4/q | G3/q A3/q A2/q | D3/e A3/s G3/s F3/s G3/s E3/s F3/s D3/s E3/s C3/s D3/s | Bb2/e Bb3/s A3/s G3/s A3/s F3/s G3/s E3/s F3/s D3/s E3/s | C#3/q A2/q D3/q | G2/q A2/h | D3/e Eb3/e D3/e C3/e Bb2/e A2/e | Bb2/e A2/e Bb2/e C3/e D3/e Eb3/e | F3/e G3/e F3/e Eb3/e D3/e Bb2/e | Eb3/e C3/e F3/e Eb3/e F3/e F2/e | Bb2/e A3/e Bb3/e C4/e D4/e C4/e | Bb3/e G3/e C4/e Bb3/e C4/e C3/e | F3/e E3/e F3/e G3/e A3/e F3/e | D4/s Eb4/s F4/s Eb4/s D4/s Eb4/s C4/s D4/s B3/s C4/s A3/s B3/s | G3/e A3/e B3/e G3/e C4/q | F3/q G3/q G2/q | C4/s D4/s Eb4/s D4/s C4/s D4/s Bb3/s C4/s A3/s Bb3/s G3/s A3/s | F3/e G3/e A3/e F3/e G3/q | D3/e Eb3/e F3/q F2/q | Bb2/q G2/q Bb2/q | C3/q A2/q C3/q | D3/q Bb2/q G2/q | Eb3/q G3/q Eb3/q | C3/q A2/q C3/q | D3/q F#3/q D3/q | G3/q F3/q Eb3/q | D3/q E3/q F#3/q | G3/q F3/q Eb3/q | D3/e D4/s C4/s Bb3/s C4/s A3/s Bb3/s G3/s A3/s F3/s G3/s | Eb3/e Eb4/s D4/s C4/s D4/s Bb3/s C4/s A3/s Bb3/s G3/s A3/s | F#3/q D3/q G3/q | C3/q D3/q D2/q | G2/e D3/s C3/s Bb2/s C3/s A2/s Bb2/s G2/s A2/s F2/s G2/s | Eb2/e Eb3/s D3/s C3/s D3/s Bb2/s C3/s A2/s Bb2/s G2/s A2/s | F#2/q D3/q Eb3/q | C3/q D3/q D2/q | G2/h."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "auld-lang-syne",
+  "title": {
+    "en": "Auld Lang Syne",
+    "nl": "Auld Lang Syne",
+    "fr": "Ce n'est qu'un au revoir"
+  },
+  "composer": "Traditional (Scotland); words by Robert Burns",
+  "chapter": 5,
+  "tempo": 84,
+  "time": "4/4",
+  "key": "G",
+  "pickup": "q",
+  "about": {
+    "en": "Robert Burns wrote down these words in 1788, after an old Scottish song: \"auld lang syne\" means \"long, long ago\". All over the world people sing it at midnight on New Year's Eve, holding hands in a circle.",
+    "nl": "Robert Burns schreef deze tekst in 1788 op, naar een oud Schots lied: \"auld lang syne\" betekent \"lang, lang geleden\". Over de hele wereld zingen mensen het om middernacht op oudejaarsavond, hand in hand in een kring."
+  },
+  "tip": {
+    "en": "Every bar starts with a long-short pair: a dotted quarter and an eighth. Mi' and Sol' are the high, pinched notes.",
+    "nl": "Elke maat begint met een lang-kort paartje: een gepunteerde kwart en een achtste. Mi' en Sol' zijn de hoge, geknepen noten."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D4/q | G4/q. G4/e G4/q B4/q | A4/q. G4/e A4/q B4/e A4/e | G4/q. G4/e B4/q D5/q | E5/h. E5/q | D5/q. B4/e B4/q G4/q | A4/q. G4/e A4/q B4/e A4/e | G4/q. E4/e E4/q D4/q | G4/h. E5/q | D5/q. B4/e B4/q G4/q | A4/q. G4/e A4/q E5/q | D5/q. B4/e B4/q D5/q | E5/h. G5/q | D5/q. B4/e B4/q G4/q | A4/q. G4/e A4/q B4/e A4/e | G4/q. E4/e E4/q D4/q | G4/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | G2/h G2/h | D3/h D3/h | G2/h G2/h | C3/h C3/h | G2/h G2/h | D3/h D3/h | C3/h D3/h | G2/h. R/q | G2/h G2/h | D3/h D3/h | G2/h G2/h | C3/h C3/h | G2/h G2/h | D3/h D3/h | C3/h D3/h | G2/h."
+    }
+  ]
+}

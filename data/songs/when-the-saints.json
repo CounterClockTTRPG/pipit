@@ -1,0 +1,38 @@
+{
+  "id": "when-the-saints",
+  "title": {
+    "en": "When the Saints Go Marching In",
+    "nl": "When the Saints Go Marching In",
+    "fr": "When the Saints Go Marching In"
+  },
+  "composer": "Traditional (United States)",
+  "chapter": 5,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "C",
+  "pickup": "h.",
+  "about": {
+    "en": "A spiritual from the American South. In New Orleans brass bands played it slowly on the way to a funeral and fast and joyful on the way back. Louis Armstrong made it world famous in 1938.",
+    "nl": "Een spiritual uit het zuiden van de Verenigde Staten. In New Orleans speelden fanfares het traag op weg naar een begrafenis, en snel en vrolijk op de terugweg. Louis Armstrong maakte het in 1938 wereldberoemd."
+  },
+  "tip": {
+    "en": "The long Sol' notes are pinched: keep a little gap at the top of the thumb hole and blow steadily.",
+    "nl": "De lange Sol'-noten zijn geknepen: houd een klein spleetje boven aan het duimgat en blaas gelijkmatig."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C5/q E5 F5 | G5/w | R/q C5 E5 F5 | G5/w | R/q C5 E5 F5 | G5/h E5/h | C5/h E5/h | D5/w | R/q E5 E5 D5 | C5/h. C5/q | E5/h G5/h | G5/q F5/h. | R/h E5/q F5 | G5/h E5/h | C5/h D5/h | C5/w"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "tuba",
+      "music": "R/h. | C3/h G2/h | C3/h G2/h | C3/h G2/h | C3/h G2/h | C3/h E3/h | C3/h G2/h | G2/h D3/h | G2/h G2/h | C3/h G2/h | C3/h C3/h | F2/h C3/h | F2/h F2/h | C3/h G2/h | G2/h G2/h | C3/w"
+    }
+  ]
+}

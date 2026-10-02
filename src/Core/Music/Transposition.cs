@@ -82,14 +82,13 @@ public static class Transposition
             if (((naturals[s] + alter) % 12 + 12) % 12 == pc)
                 return new Pitch(step, alter, (midi - naturals[s] - alter) / 12 - 1);
         }
-        // Not in the key: a sharp in sharp keys (and C), a flat in flat keys.
+        // Not in the key: a natural (cancelling the key) if it is one, else a sharp in sharp keys
+        // (and C) and a flat in flat keys, never E sharp, C flat and the like.
         var up = key.Fifths >= 0;
-        for (var s = 0; s < 7; s++)
-        {
-            var alter = up ? 1 : -1;
-            if (((naturals[s] + alter) % 12 + 12) % 12 == pc)
-                return new Pitch((Step)s, alter, (midi - naturals[s] - alter) / 12 - 1);
-        }
+        foreach (var alter in new[] { 0, up ? 1 : -1 })
+            for (var s = 0; s < 7; s++)
+                if (((naturals[s] + alter) % 12 + 12) % 12 == pc)
+                    return new Pitch((Step)s, alter, (midi - naturals[s] - alter) / 12 - 1);
         throw new InvalidOperationException("unreachable");
     }
 }

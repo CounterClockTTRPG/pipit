@@ -1,0 +1,37 @@
+{
+  "id": "handel-hwv369-3",
+  "title": {
+    "en": "Sonata in F major, HWV 369: III. Siciliana",
+    "nl": "Sonate in F groot, HWV 369: III. Siciliana"
+  },
+  "composer": "George Frideric Handel",
+  "chapter": 0,
+  "tempo": 72,
+  "time": "12/8",
+  "key": "F",
+  "source": "Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py",
+  "about": {
+    "en": "Handel wrote a handful of sonatas specifically for the alto recorder (\"flauto\") with basso continuo, in London in the 1720s. They were printed around 1730 as part of his Opus 1, and recorder players have loved them ever since.",
+    "nl": "Händel schreef in de jaren 1720 in Londen een handvol sonates speciaal voor de altblokfluit (\"flauto\") met basso continuo. Ze werden rond 1730 gedrukt als deel van zijn Opus 1, en blokfluitisten zijn er sindsdien dol op."
+  },
+  "tip": {
+    "en": "Written for alto recorder; on a soprano Pipit moves it to fit. The bass line is the harpsichord's: let it carry you.",
+    "nl": "Geschreven voor altblokfluit; op een sopraan verschuift Pipit het zodat het past. De baslijn is van het klavecimbel: laat je erdoor dragen."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "D5/e. E5/s D5/e A5/q D5/e D5/q C#5/e R/q. | F5/e. G5/s F5/e C6/q F5/e F5/q E5/e R/q A5/e | D5/q C#5/e D5/e. F5/s E5/e C#5/q. D5/q E5/e | F5/e E5/e G5/e F5/e. E5/s D5/e D5/q. R/q G5/e | A5/e G5/e Bb5/e A5/e. G5/s F5/e F5/q. R/q. | G5/e. A5/s G5/e A4/q G5/e G5/q F5/e R/q A5/e | Bb5/h~ Bb5/e E5/e A5/h~ A5/e D5/e | G5/h~ G5/s Bb5/s A5/e F5/e. E5/s D5/e R/q A5/e | E5/e F5/e G5/e F5/e. E5/s D5/e D5/q G5/e G5/e F#5/e C6/e | C6/e Bb5/e D5/e D5/e C#5/e A5/e D6/q F5/e G5/q. | A5/w~ A5/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Basso continuo",
+      "sound": "harpsichord",
+      "music": "D3/q E3/e F3/q G3/e A3/q A2/e A3/q G3/e | F3/q G3/e A3/q Bb3/e C4/q C3/e C4/q F3/e | Bb3/q A3/e Bb3/q G3/e A3/q G3/e F3/q E3/e | D3/q Bb3/e A3/q A2/e D3/q D4/e Bb3/q C4/e | F3/e E3/e D3/e C3/q C2/e F2/q A3/e F3/q D3/e | E3/q D3/e C#3/q A2/e D3/q A3/e D4/q F3/e | G3/q G2/e C3/q. R/q F3/e Bb3/q. | R/q E3/e A3/q C#3/e D3/q E3/e F3/e. E3/s D3/e | G3/e A3/e Bb3/e A3/q A2/e Bb2/q. A2/q. | G2/q. A2/q. Bb2/h. | A2/w~ A2/h"
+    }
+  ]
+}
