@@ -20,13 +20,16 @@ public partial class SettingsScreen : Screen
     private readonly Button _checkButton;
     private readonly Label _checkStatus;
 
+    /// <summary>For `--shots`.</summary>
+    public InstrumentEditor Editor { get; }
+
     public override string Title => "Settings";
 
     private static readonly string[] Languages = { "en", "nl", "fr" };
 
     public SettingsScreen()
     {
-        var editor = new InstrumentEditor();
+        var editor = Editor = new InstrumentEditor();
         var language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, S.Settings.Language)), ix =>
         {
             // Screens build their texts once, so rebuild them in the new language.

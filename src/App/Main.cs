@@ -71,6 +71,7 @@ public partial class Main : Control
             MicProbe();
         if (OS.GetCmdlineUserArgs().Contains("--shots"))
         {
+            Services.Instance.ReadOnly = true;
             // `--lang=nl`: shoot in Dutch (not saved) and list texts shown untranslated.
             if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--lang=")) is { } lang)
             {
@@ -265,6 +266,17 @@ public partial class Main : Control
         highway.DebugListen();
         await ToSignal(GetTree().CreateTimer(4.0), SceneTreeTimer.SignalName.Timeout);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "highway.png"));
+        Back();
+
+        // "Don't know?" recorder size: Pip hears the lowest note.
+        var settings = new SettingsScreen();
+        Show(settings);
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        settings.Editor.DebugDetect();
+        for (var i = 0; i < 5; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "settings-size.png"));
         Back();
 
         // Survival callouts: a grade, the streak and a milestone over the highway.

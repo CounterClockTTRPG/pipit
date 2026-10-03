@@ -155,8 +155,16 @@ public partial class Services : Node
         return chart;
     }
 
+    /// <summary>Set by `--shots`: nothing is written, so a screenshot run cannot change the players' files.</summary>
+    public bool ReadOnly { get; set; }
+
     public void Save()
     {
+        if (ReadOnly)
+        {
+            Changed?.Invoke();
+            return;
+        }
         Store.SaveMachine(Machine);
         if (!IsGuest)
             Store.Save(Player);
@@ -227,7 +235,7 @@ public partial class Services : Node
 
     public void SaveProgress()
     {
-        if (!IsGuest)
+        if (!IsGuest && !ReadOnly)
             Store.SaveProgress(Player.Id, Progress);
     }
 
@@ -297,7 +305,8 @@ public partial class Services : Node
     public void SetStartLanguage(string language)
     {
         Machine.Language = language;
-        Store.SaveMachine(Machine);
+        if (!ReadOnly)
+            Store.SaveMachine(Machine);
         if (IsGuest)
             Player.Settings.Language = language;
         ApplyLanguage(language);
@@ -331,8 +340,14 @@ public partial class Services : Node
         Player = player;
         Progress = Store.LoadProgress(player.Id);
         Machine.LastPlayerId = player.Id;
-        Store.SaveMachine(Machine);
+        if (!ReadOnly)
+            Store.SaveMachine(Machine);
         ApplyLanguage();
+        // Recorders made before names followed the language ("My soprano" for a Dutch player).
+        var names = Settings.Instruments.Select(i => i.Name).ToList();
+        SetLanguage(Settings, Settings.Language);
+        if (!names.SequenceEqual(Settings.Instruments.Select(i => i.Name)) && !ReadOnly)
+            Store.Save(Player);
         ApplyInstrument();
         Changed?.Invoke();
     }
