@@ -31,6 +31,19 @@ public class NotationTests
     public void Staff_positions(string pitch, int position) => Assert.Equal(position, StaffLayout.PositionOf(Pitch.Parse(pitch)));
 
     [Fact]
+    public void Triplets_and_thirty_seconds_are_written_and_grouped()
+    {
+        var bar = Engrave("C5/e3 D5 E5 F5/q G5/t A5 B5 C6 D6/s E6 R/e3 R C5").SelectMany(s => s.Bars).Single();
+        var n = bar.Notes;
+        Assert.Equal(new[] { NoteValue.Eighth, NoteValue.Eighth, NoteValue.Eighth }, n.Take(3).Select(x => x.Value));
+        Assert.Equal(1, n[0].Beams);
+        Assert.Equal(new[] { 3, 3, 3, 3 }, n.Skip(4).Take(4).Select(x => x.Beams));
+        Assert.All(n.Skip(4).Take(6), x => Assert.Equal(n[4].BeamGroup, x.BeamGroup)); // 32nds and 16ths share the beat
+        Assert.Equal(new[] { (0, 2), (10, 12) }, bar.Triplets);
+        Assert.Equal(n[0].BeamGroup, n[2].BeamGroup);
+    }
+
+    [Fact]
     public void Accidentals_follow_the_key_and_the_bar()
     {
         // G major: F# needs no sign; F natural does; a second F natural in the bar does not;

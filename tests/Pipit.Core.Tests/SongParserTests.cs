@@ -9,6 +9,19 @@ public class SongParserTests
         SongParser.ParseMusic(music, TimeSignature.Parse(time), pickup, "test").Performance;
 
     [Fact]
+    public void Triplets_and_thirty_seconds()
+    {
+        var (bars, performance) = SongParser.ParseMusic("C5/e3 D5 E5 F5/q. G5/t A5 B5 C6 D5/q | C5/q3 D5 E5 F5/h", TimeSignature.Parse("4/4"), 0, "t");
+        Assert.Equal(new[] { 4.0, 4.0 }, bars.Select(b => Math.Round(b.Beats, 9)));
+        Assert.True(bars[0].Notes[2].Triplet);
+        Assert.False(bars[0].Notes[3].Triplet);
+        Assert.Equal(1.0 / 3, performance[1].StartBeat, 9);
+        Assert.Equal(0.125, performance[4].Beats, 9);
+        Assert.Equal(4 + 2.0 / 3, performance[10].StartBeat, 9);
+        Assert.Throws<SongFormatException>(() => SongParser.ParseMusic("C5/e4", TimeSignature.Parse("4/4"), 0, "t"));
+    }
+
+    [Fact]
     public void Durations_carry_over()
     {
         var notes = Perform("G4/q G4 G4 A4 | B4/h A4 | G4/w");

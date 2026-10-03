@@ -13,7 +13,10 @@ from fractions import Fraction as Fr
 
 STEPS = 'CDEFGAB'
 NAT = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
-DUR = {Fr(4): 'w', Fr(3): 'h.', Fr(2): 'h', Fr(3, 2): 'q.', Fr(1): 'q', Fr(3, 4): 'e.', Fr(1, 2): 'e', Fr(3, 8): 's.', Fr(1, 4): 's'}
+DUR = {Fr(4): 'w', Fr(3): 'h.', Fr(2): 'h', Fr(3, 2): 'q.', Fr(1): 'q', Fr(3, 4): 'e.', Fr(1, 2): 'e', Fr(3, 8): 's.', Fr(1, 4): 's',
+       Fr(3, 16): 't.', Fr(1, 8): 't'}
+# Triplets (time-modification 3:2): two thirds of the written value.
+TRIPLETS = {Fr(4, 3): 'h3', Fr(2, 3): 'q3', Fr(1, 3): 'e3', Fr(1, 6): 's3', Fr(1, 12): 't3'}
 MAJOR = {-3: 'Eb', -2: 'Bb', -1: 'F', 0: 'C', 1: 'G', 2: 'D', 3: 'A'}
 
 def text(e):
@@ -51,8 +54,13 @@ def pieces(root):
         current['measures'].append((m, divisions, time, fifths))
     return out
 
+def name_of(d):
+    return DUR.get(d) or TRIPLETS[d]
+
 def split(d):
     """A duration as representable pieces, longest first (tied); None if it cannot be written."""
+    if d in TRIPLETS:
+        return [d]
     out = []
     while d > 0:
         fit = [k for k in DUR if k <= d]
@@ -89,7 +97,7 @@ def convert(piece, staff=None, transpose=0):
             if pieces_ is None:
                 problems.add(f'duration {d}'); pieces_ = [Fr(1)]
             if n.find('rest') is not None:
-                toks.extend('R/' + DUR[x] for x in pieces_)
+                toks.extend('R/' + name_of(x) for x in pieces_)
                 continue
             p = n.find('pitch')
             step, octave = text(p.find('step')), int(text(p.find('octave')))
@@ -100,7 +108,7 @@ def convert(piece, staff=None, transpose=0):
             name = f"{step}{ {1: '#', -1: 'b', 0: ''}[alter] }{octave}".replace(' ', '')
             for k, x in enumerate(pieces_):
                 last = k == len(pieces_) - 1
-                toks.append(f"{name}/{DUR[x]}" + ('~' if tie or not last else ''))
+                toks.append(f"{name}/{name_of(x)}" + ('~' if tie or not last else ''))
         for b in m.findall('barline'):
             if b.find('repeat') is not None and b.find('repeat').get('direction') == 'backward':
                 toks.append(':|')
@@ -219,13 +227,13 @@ def rebar(piece, staff=None, transpose=0):
             parts = split(take)
             for k, x in enumerate(parts):
                 tie = name is not None and (k < len(parts) - 1 or d - take > 0)
-                cur.append(('R' if name is None else name) + '/' + DUR[x] + ('~' if tie else ''))
+                cur.append(('R' if name is None else name) + '/' + name_of(x) + ('~' if tie else ''))
             d -= take; pos += take
             if pos == bar:
                 bars.append(' '.join(cur)); cur, pos = [], Fr(0)
     if cur:
         rest = split(bar - pos)
-        bars.append(' '.join(cur + ['R/' + DUR[x] for x in rest]))
+        bars.append(' '.join(cur + ['R/' + name_of(x) for x in rest]))
     return f"{t[0]}/{t[1]}", pickup, bars
 
 def load_mxl(path):

@@ -1,0 +1,37 @@
+{
+  "id": "polonaise-bwv-anh-119",
+  "title": {
+    "en": "Polonaise in G minor, BWV Anh. 119",
+    "nl": "Polonaise in g klein, BWV Anh. 119"
+  },
+  "composer": "Anonymous (Notebook for Anna Magdalena Bach)",
+  "chapter": 0,
+  "tempo": 80,
+  "time": "3/4",
+  "key": "Gm",
+  "source": "Mutopia Project edition after the Bach-Gesellschaft Ausgabe vol. 43 (1894), Public Domain; an octave up for the alto; converted with tools/import-songs.py",
+  "about": {
+    "en": "From the music notebook that J. S. Bach gave his wife Anna Magdalena in 1725. A polonaise is a stately Polish dance in three; nobody knows who wrote this one. An octave up, it fits the alto recorder from its lowest note to its highest.",
+    "nl": "Uit het muziekboekje dat J. S. Bach in 1725 aan zijn vrouw Anna Magdalena gaf. Een polonaise is een statige Poolse dans in drie; niemand weet wie deze schreef. Een octaaf hoger past ze op de altblokfluit van de laagste tot de hoogste noot."
+  },
+  "tip": {
+    "en": "Walk it like a proud dance: the first beat of every bar is a little heavier.",
+    "nl": "Speel ze als een fiere dans: de eerste tel van elke maat is iets zwaarder."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder",
+      "instrument": "alto",
+      "music": "G5/e. A5/s Bb5/q C6/q | A5/e A5/s Bb5/s C6/h | Bb5/e Bb5/s C6/s D6/e G6/e C6/e G6/e | Bb5/e A5/s Bb5/s G5/h | Bb5/e. C6/s D6/q F6/q | D6/e C6/s Bb5/s A5/s Bb5/s C6/s A5/s F5/q | F6/e D6/e Bb5/e F6/e G6/s F6/s Eb6/s D6/s | Eb6/e C6/e A5/e Eb6/e F6/s Eb6/s D6/s C6/s | D6/e C6/s D6/s Eb6/e D6/e C6/e Bb5/e | A5/s Bb5/s C6/s A5/s Bb5/q Bb4/q | D6/q Eb6/q G5/q | F#5/e F#5/s G5/s A5/e D5/e F#5/e A5/e | D6/q Eb6/q G5/q | F#5/e F#5/s G5/s A5/e D5/e F#5/e A5/e | D6/e D6/s Eb6/s D6/e D6/s Eb6/s D6/e G6/e | Bb5/e A5/s Bb5/s G5/q G4/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "voice2",
+      "name": "Bass",
+      "sound": "harpsichord",
+      "music": "G4/q G4/q G4/q | G4/q F#4/e E4/e F#4/e D4/e | G4/q G3/q C4/q | D4/q G4/e G3/e Bb3/e D4/e | G4/e. A4/s Bb4/q A4/q | Bb4/q F4/q F4/e Eb4/e | D4/q F4/q Eb4/q | C4/q F4/q D4/q | Bb3/q G4/q Eb4/q | F4/e Eb4/e D4/e Eb4/e D4/e C4/e | Bb3/q C4/q Eb4/q | D4/q D4/q C4/q | Bb3/q C4/q Eb4/q | D4/h C4/q | Bb3/q G3/q Bb3/q | D4/q G3/h"
+    }
+  ]
+}

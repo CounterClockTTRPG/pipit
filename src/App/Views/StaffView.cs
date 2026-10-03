@@ -20,8 +20,9 @@ public partial class StaffView : Control, ISongView
     // SMuFL code points.
     private const string GClef = "", GClef8va = "", HeadBlack = "", HeadHalf = "", HeadWhole = "";
     private const string Sharp = "", Flat = "", Natural = "", Dot = "", Breath = "", RepeatDot = "";
-    private const string RestWhole = "", RestHalf = "", RestQuarter = "", Rest8th = "", Rest16th = "";
-    private const string Flag8Up = "", Flag8Down = "", Flag16Up = "", Flag16Down = "";
+    private const string RestWhole = "", RestHalf = "", RestQuarter = "", Rest8th = "", Rest16th = "", Rest32nd = "";
+    private const string Flag8Up = "", Flag8Down = "", Flag16Up = "", Flag16Down = "", Flag32Up = "", Flag32Down = "";
+    private const string Tuplet3 = "";
     private const char TimeSigZero = '';
     // Bravura engraving defaults and glyph widths, in staff spaces (from Bravura.json).
     private const float StemW = 0.12f, LineW = 0.13f, BeamW = 0.5f, LedgerW = 0.16f, LedgerExt = 0.4f, ThinBar = 0.16f, ThickBar = 0.5f;
@@ -270,7 +271,7 @@ public partial class StaffView : Control, ISongView
                 var (glyph, position) = n.Value switch
                 {
                     NoteValue.Whole => (RestWhole, 6), NoteValue.Half => (RestHalf, 4), NoteValue.Quarter => (RestQuarter, 4),
-                    NoteValue.Eighth => (Rest8th, 4), _ => (Rest16th, 4),
+                    NoteValue.Eighth => (Rest8th, 4), NoteValue.Sixteenth => (Rest16th, 4), _ => (Rest32nd, 4),
                 };
                 DrawString(font, new Vector2(x, Y(position)), glyph, HorizontalAlignment.Left, -1, fontSize, color);
                 DrawDots(font, fontSize, n, x + sp * 1.4f, 5, color, Y);
@@ -293,7 +294,11 @@ public partial class StaffView : Control, ISongView
                 DrawLine(new Vector2(stemX, from), new Vector2(stemX, Y(n.StemEnd)), color, StemW * sp);
                 if (n.BeamGroup is null && n.Beams > 0)
                 {
-                    var flag = (n.Beams, n.StemUp) switch { (1, true) => Flag8Up, (1, false) => Flag8Down, (_, true) => Flag16Up, _ => Flag16Down };
+                    var flag = (n.Beams, n.StemUp) switch
+                    {
+                        (1, true) => Flag8Up, (1, false) => Flag8Down, (2, true) => Flag16Up, (2, false) => Flag16Down,
+                        (_, true) => Flag32Up, _ => Flag32Down,
+                    };
                     DrawString(font, new Vector2(stemX - StemW / 2 * sp, Y(n.StemEnd)), flag, HorizontalAlignment.Left, -1, fontSize, color);
                 }
             }
@@ -306,8 +311,8 @@ public partial class StaffView : Control, ISongView
             }
         }
 
-        // Beams: a primary beam over each group, a second one between consecutive sixteenths,
-        // and a short stub for a lone sixteenth.
+        // Beams: a primary beam over each group; for sixteenths and thirty-seconds a second and
+        // third one between consecutive notes that have them, and a short stub for a lone one.
         foreach (var group in bar.Notes.Where(n => n.BeamGroup is not null).GroupBy(n => n.BeamGroup))
         {
             var g = group.ToList();
@@ -315,22 +320,37 @@ public partial class StaffView : Control, ISongView
             Vector2 Tip(PlacedNote n) => new((n.StemUp ? X(bar.X + n.X) + (HeadWidth - StemW / 2) * sp : X(bar.X + n.X) + StemW / 2 * sp), Y(n.StemEnd));
             var color = g.Select(n => ColorOf(n, current)).FirstOrDefault(c => c != PipitTheme.Ink, PipitTheme.Ink);
             Beam(Tip(g[0]), Tip(g[^1]), up, 0, sp, color);
-            for (var i = 0; i < g.Count; i++)
-            {
-                if (g[i].Beams < 2)
-                    continue;
-                var prev = i > 0 && g[i - 1].Beams >= 2;
-                var next = i + 1 < g.Count && g[i + 1].Beams >= 2;
-                if (next)
-                    Beam(Tip(g[i]), Tip(g[i + 1]), up, 1, sp, color);
-                else if (!prev)
+            for (var level = 1; level <= 2; level++)
+                for (var i = 0; i < g.Count; i++)
                 {
-                    var a = Tip(g[i]);
-                    var b = i + 1 < g.Count ? Tip(g[i + 1]) : Tip(g[i - 1]);
-                    var stub = a + (b - a).Normalized() * sp * 1.1f;
-                    Beam(i + 1 < g.Count ? a : stub, i + 1 < g.Count ? stub : a, up, 1, sp, color);
+                    if (g[i].Beams <= level)
+                        continue;
+                    var prev = i > 0 && g[i - 1].Beams > level;
+                    var next = i + 1 < g.Count && g[i + 1].Beams > level;
+                    if (next)
+                        Beam(Tip(g[i]), Tip(g[i + 1]), up, level, sp, color);
+                    else if (!prev)
+                    {
+                        var a = Tip(g[i]);
+                        var b = i + 1 < g.Count ? Tip(g[i + 1]) : Tip(g[i - 1]);
+                        var stub = a + (b - a).Normalized() * sp * 1.1f;
+                        Beam(i + 1 < g.Count ? a : stub, i + 1 < g.Count ? stub : a, up, level, sp, color);
+                    }
                 }
-            }
+        }
+
+        // Triplets: a small 3 beyond the beam (or the notes), centred over the group.
+        foreach (var (from, to) in bar.Triplets)
+        {
+            var a = bar.Notes[from];
+            var b = bar.Notes[to];
+            var up = a.IsRest ? b.StemUp : a.StemUp;
+            var notes = bar.Notes.Skip(from).Take(to - from + 1).ToList();
+            var edge = up
+                ? notes.Max(n => n.IsRest ? 8 : Math.Max(n.Position, n.StemEnd)) + 2
+                : notes.Min(n => n.IsRest ? 0 : Math.Min(n.Position, n.StemEnd)) - 1;
+            var mid = (X(bar.X + a.X) + X(bar.X + b.X)) / 2 + HeadWidth * sp / 2;
+            DrawString(font, new Vector2(mid - sp * 0.5f, Y(edge)), Tuplet3, HorizontalAlignment.Left, -1, (int)(fontSize * 0.7f), ink);
         }
     }
 

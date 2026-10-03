@@ -5,7 +5,7 @@ namespace Pipit.Core.Notation;
 public enum Accidental { None, Sharp, Flat, Natural }
 
 /// <summary>How a duration is written: the notehead/flag type, and its dots.</summary>
-public enum NoteValue { Whole, Half, Quarter, Eighth, Sixteenth }
+public enum NoteValue { Whole, Half, Quarter, Eighth, Sixteenth, ThirtySecond }
 
 /// <summary>
 /// One note or rest placed on the staff. Units are staff spaces; <see cref="Position"/> counts
@@ -27,7 +27,7 @@ public sealed class PlacedNote
     /// <summary>Beat within the bar where the note starts.</summary>
     public double BeatInBar { get; init; }
     public bool IsRest => Note.Pitch is null;
-    public int Beams => Value switch { NoteValue.Eighth => 1, NoteValue.Sixteenth => 2, _ => 0 };
+    public int Beams => Value switch { NoteValue.Eighth => 1, NoteValue.Sixteenth => 2, NoteValue.ThirtySecond => 3, _ => 0 };
 }
 
 public sealed class PlacedBar
@@ -36,6 +36,8 @@ public sealed class PlacedBar
     public double X { get; set; }
     public double Width { get; set; }
     public required List<PlacedNote> Notes { get; init; }
+    /// <summary>Triplet groups, as indexes of their first and last note in <see cref="Notes"/>.</summary>
+    public List<(int First, int Last)> Triplets { get; init; } = new();
 }
 
 public sealed class StaffSystem
@@ -120,9 +122,14 @@ public static class StaffLayout
         4 => (NoteValue.Whole, 0), 3 => (NoteValue.Half, 1), 2 => (NoteValue.Half, 0),
         1.5 => (NoteValue.Quarter, 1), 1 => (NoteValue.Quarter, 0), 0.75 => (NoteValue.Eighth, 1),
         0.5 => (NoteValue.Eighth, 0), 0.375 => (NoteValue.Sixteenth, 1), 0.25 => (NoteValue.Sixteenth, 0),
+        0.1875 => (NoteValue.ThirtySecond, 1), 0.125 => (NoteValue.ThirtySecond, 0),
         6 => (NoteValue.Whole, 1),
         _ => throw new ArgumentOutOfRangeException(nameof(beats), beats, "Duration cannot be written as one note"),
     };
+
+    /// <summary>The written value of a note: a triplet is written as the value it is two thirds of.</summary>
+    public static (NoteValue Value, int Dots) ValueOf(WrittenNote note) =>
+        ValueOf(note.Triplet ? Math.Round(note.Beats * 1.5 * 64) / 64 : note.Beats);
 
     private static PlacedBar PlaceBar(Bar bar, TimeSignature time, KeySignature key, LayoutOptions o, WrittenNote? previous)
     {
@@ -134,7 +141,7 @@ public static class StaffLayout
         var beat = 0.0;
         foreach (var n in bar.Notes)
         {
-            var (value, dots) = ValueOf(n.Beats);
+            var (value, dots) = ValueOf(n);
             var accidental = Accidental.None;
             var position = 4; // rests sit on the middle line
             if (n.Pitch is { } pitch)
@@ -158,11 +165,44 @@ public static class StaffLayout
             previous = n;
         }
         Beam(notes, time, o);
-        return new PlacedBar { Bar = bar, Notes = notes, Width = x + o.BarPadding * 0.5 };
+        return new PlacedBar { Bar = bar, Notes = notes, Width = x + o.BarPadding * 0.5, Triplets = TripletGroups(notes) };
     }
 
     /// <summary>
-    /// Groups eighths and sixteenths within one beat (see below for the beat unit), gives each
+    /// Consecutive triplet notes in groups that fill twice their first note's written value
+    /// (three triplet eighths make one beat).
+    /// </summary>
+    private static List<(int First, int Last)> TripletGroups(List<PlacedNote> notes)
+    {
+        var groups = new List<(int, int)>();
+        int? start = null;
+        double sum = 0, target = 0;
+        for (var i = 0; i < notes.Count; i++)
+        {
+            var n = notes[i].Note;
+            if (!n.Triplet)
+            {
+                start = null;
+                continue;
+            }
+            if (start is null)
+            {
+                start = i;
+                sum = 0;
+                target = n.Beats * 1.5 * 2;
+            }
+            sum += n.Beats;
+            if (sum >= target - 1e-6)
+            {
+                groups.Add((start.Value, i));
+                start = null;
+            }
+        }
+        return groups;
+    }
+
+    /// <summary>
+    /// Groups eighths, sixteenths and thirty-seconds within one beat (see below for the beat unit), gives each
     /// group a common stem direction (away from the note furthest from the middle line) and a
     /// straight beam that clears every notehead by a full stem length at its shortest.
     /// </summary>

@@ -16,7 +16,7 @@ CONV = os.path.join(ROOT, 'tools', 'midi2pipit.py')
 M = os.path.join(ROOT, 'tools', 'sources', 'mutopia')
 MAJOR = {0: 'C', 1: 'G', 2: 'D', 3: 'A', -1: 'F', -2: 'Bb', -3: 'Eb'}
 SHARPS, FLATS = 'FCGDAEB', 'BEADGCF'
-DUR = {'w': 4, 'h': 2, 'q': 1, 'e': 0.5, 's': 0.25}
+DUR = {'w': 4, 'h': 2, 'q': 1, 'e': 0.5, 's': 0.25, 't': 0.125}
 REST = {6: 'R/w.', 4: 'R/w', 3: 'R/h.', 2: 'R/h', 1.5: 'R/q.', 1: 'R/q', 0.75: 'R/e.', 0.5: 'R/e', 0.25: 'R/s'}
 
 HANDEL = 'Mutopia Project edition after Chrysander (Händel-Gesellschaft, 1879), CC BY-SA 3.0; converted with tools/import-songs.py'
@@ -78,6 +78,48 @@ SONGS = [
 
 PICKUP = {'h': 8, 'q': 4, 'e': 2}
 FIFTHS = {'C': 0, 'Am': 0, 'G': 1, 'D': 2, 'F': -1, 'Dm': -1, 'Bb': -2, 'Gm': -2, 'Eb': -3}
+
+TELEMANN_SONATA_ABOUT = {
+    'en': "Telemann wrote six sonatas for two flutes or recorders without any accompaniment; they were engraved in Paris in the 1730s. The two parts take turns with the tune and answer each other, so either player can lead.",
+    'nl': "Telemann schreef zes sonates voor twee fluiten of blokfluiten zonder begeleiding; ze werden in de jaren 1730 in Parijs gegraveerd. De twee partijen wisselen de melodie af en antwoorden elkaar, zodat elke speler kan leiden.",
+}
+MORE_MUTOPIA = [
+    dict(id='polonaise-bwv-anh-119', midi=f'{M}/BWV-119.mid', time='3/4', tempo=80, key='Gm', transpose=12,
+         title={'en': 'Polonaise in G minor, BWV Anh. 119', 'nl': 'Polonaise in g klein, BWV Anh. 119'},
+         composer='Anonymous (Notebook for Anna Magdalena Bach)',
+         source='Mutopia Project edition after the Bach-Gesellschaft Ausgabe vol. 43 (1894), Public Domain; an octave up for the alto; converted with tools/import-songs.py',
+         about={'en': "From the music notebook that J. S. Bach gave his wife Anna Magdalena in 1725. A polonaise is a stately Polish dance in three; nobody knows who wrote this one. An octave up, it fits the alto recorder from its lowest note to its highest.",
+                'nl': "Uit het muziekboekje dat J. S. Bach in 1725 aan zijn vrouw Anna Magdalena gaf. Een polonaise is een statige Poolse dans in drie; niemand weet wie deze schreef. Een octaaf hoger past ze op de altblokfluit van de laagste tot de hoogste noot."},
+         tip={'en': "Walk it like a proud dance: the first beat of every bar is a little heavier.", 'nl': "Speel ze als een fiere dans: de eerste tel van elke maat is iets zwaarder."},
+         parts=[(1, 'Recorder', 'alto')], accompaniment=[(2, 'Bass', 'harpsichord', 'bottom')]),
+    dict(id='marcello-ciaccona', midi=f'{M}/O2-Ciaccona.mid', time='3/4', tempo=88, key='F',
+         title={'en': 'Ciaccona, Op. 2 No. 13', 'nl': 'Ciaccona, opus 2 nr. 13'}, composer='Benedetto Marcello',
+         source='Mutopia Project edition after Gieddes Samling I,51 (Copenhagen), CC BY-SA 3.0; converted with tools/import-songs.py',
+         about={'en': "Benedetto Marcello (1686-1739) was a Venetian nobleman, lawyer and composer. A ciaccona repeats the same short bass line over and over while the melody above it changes every time: here the recorder goes through more than forty variations.",
+                'nl': "Benedetto Marcello (1686-1739) was een Venetiaans edelman, advocaat en componist. Een ciaccona herhaalt steeds dezelfde korte baslijn terwijl de melodie erboven telkens verandert: hier gaat de blokfluit door meer dan veertig variaties."},
+         tip={'en': "An advanced alto piece. Listen for the bass: every four bars it starts again, and you can practise one variation at a time.",
+              'nl': "Een gevorderd stuk voor alt. Luister naar de bas: om de vier maten begint ze opnieuw, en je kan een variatie per keer oefenen."},
+         parts=[(1, 'Recorder', 'alto')], accompaniment=[(2, 'Basso continuo', 'harpsichord', 'bottom')]),
+    dict(id='bach-contrapunctus-16', midi=f'{M}/BWV1080-rectus.mid', time='2/2', tempo=96, key='Dm', pickup='q',
+         title={'en': 'The Art of Fugue: Contrapunctus XVI', 'nl': 'De kunst van de fuga: Contrapunctus XVI'}, composer='Johann Sebastian Bach',
+         source='Mutopia Project edition (BWV 1080), set for two recorders and bass, Public Domain; converted with tools/import-songs.py',
+         about={'en': "In \"The Art of Fugue\", Bach's last great work, every piece is built from one short theme. This is a mirror fugue: it also exists upside down, with every interval turned over. Here two recorders and a bass play it.",
+                'nl': "In \"De kunst van de fuga\", Bachs laatste grote werk, is elk stuk gebouwd op één kort thema. Dit is een spiegelfuga: ze bestaat ook omgekeerd, met elk interval ondersteboven. Hier spelen twee blokfluiten en een bas ze."},
+         tip={'en': "Pick a part. Each voice enters with the theme in turn: listen for it in the others too.",
+              'nl': "Kies een partij. Elke stem valt beurtelings in met het thema: luister er ook naar bij de anderen."},
+         parts=[(1, 'Recorder 1', 'alto'), (2, 'Recorder 2', 'alto')], accompaniment=[(3, 'Bass', 'bassoon', 'top')]),
+] + [
+    dict(id=f'telemann-sonata-two-recorders-1-{i + 1}', midi=f'{M}/Sonata_1-Sonata_1-mids/{mid}', time=time, tempo=tempo,
+         title={'en': f'Sonata No. 1 for two recorders: {roman}. {name}', 'nl': f'Sonate nr. 1 voor twee blokfluiten: {roman}. {name}'},
+         composer='Georg Philipp Telemann',
+         source='Mutopia Project edition after the Paris edition engraved by J.-L. Renou (1730s), Public Domain; converted with tools/import-songs.py',
+         about=TELEMANN_SONATA_ABOUT, tip=PLAY_EITHER,
+         parts=[(2, 'Recorder 1', 'alto'), (1, 'Recorder 2', 'alto')], accompaniment=[])
+    for i, (mid, roman, name, time, tempo) in enumerate([
+        ('Sonata_1.mid', 'I', 'Dolce', '4/4', 50), ('Sonata_1-1.mid', 'II', 'Allegro', '4/4', 76),
+        ('Sonata_1-2.mid', 'III', 'Largo', '3/4', 60), ('Sonata_1-3.mid', 'IV', 'Vivace', '3/8', 80)])
+]
+SONGS += MORE_MUTOPIA
 
 B = os.path.join(ROOT, 'tools', 'sources', 'personal-bellugi')
 BELLUGI = 'davidbellugi.com/midi.html: MIDI transcription by David Bellugi (bellugi@dada.it), used with acknowledgment as the files ask; PERSONAL USE ONLY (no licence stated)'
@@ -173,7 +215,7 @@ def beats(bar):
         if '/' not in t:
             continue
         d = t.split('/')[1].rstrip('~,')
-        total += DUR[d[0]] * (1.5 if d.endswith('.') else 1)
+        total += DUR[d[0]] * (1.5 if d.endswith('.') else 2 / 3 if d.endswith('3') else 1)
     return total
 
 def is_rest(bar):
@@ -268,6 +310,10 @@ EYCK_NOTES = {
     'amarilli': ("The tune is Giulio Caccini's famous song \"Amarilli, mia bella\" (1602). In this version van Eyck wrote two recorder parts.",
                  "De melodie is het beroemde lied \"Amarilli, mia bella\" van Giulio Caccini (1602). In deze versie schreef van Eyck twee blokfluitpartijen."),
     'bethlehem': ("A Christmas song about the stable in Bethlehem.", "Een kerstlied over de stal in Bethlehem."),
+    'nachtegaeltje': ("\"The English Nightingale\": in the variations the recorder turns into a bird, with quick trills and runs like birdsong.",
+                      "\"De Engelse nachtegaal\": in de variaties wordt de blokfluit een vogel, met snelle trillers en loopjes als vogelzang."),
+    'echo': ("Each phrase is answered by its echo: play the first time out loud, the repeat softly, as if from far away.",
+             "Elke frase krijgt een echo als antwoord: speel ze de eerste keer luid en de herhaling zacht, alsof van ver weg."),
     'engels-duet': ("An English song for two recorders: van Eyck wrote both parts.", "Een Engels lied voor twee blokfluiten: van Eyck schreef beide partijen."),
 }
 THEME_TIP = {'en': "This is the tune itself. In the book van Eyck follows it with variations; try the full version when this one goes well.",
@@ -305,6 +351,14 @@ XML_SONGS = [
     eyck('van-eyck-courante-mars', [44], 'Courante Mars', 'Courante Mars', 'full', 80),
     eyck('van-eyck-janneman', [54], 'Janneman and Alemoer', 'Janneman en Alemoer', 'full', 72),
     eyck('van-eyck-prins-robberts-masco', [76], "Prince Rupert's Masque", 'Prins Robberts masco', 'full', 72),
+    eyck('van-eyck-nachtegaeltje-tune', [26], 'The English Nightingale', 'Engels Nachtegaeltje', 'theme', 72, 'nachtegaeltje'),
+    eyck('van-eyck-nachtegaeltje', [26], 'The English Nightingale', 'Engels Nachtegaeltje', 'full', 60, 'nachtegaeltje'),
+    eyck('van-eyck-fantasia-echo', [14], 'Fantasia and Echo', 'Fantasia & Echo', 'full', 66, 'echo'),
+    eyck('van-eyck-frans-ballet', [12], 'French Ballet', 'Frans Ballet', 'full', 72),
+    eyck('van-eyck-van-goosen-tune', [21], 'About Goosen', 'Van Goosen', 'theme', 76),
+    eyck('van-eyck-lus-de-mi-alma', [35], 'Light of my soul', 'Lus de mi alma', 'full', 66),
+    eyck('van-eyck-tweede-daphne', [33], 'Second Daphne', 'Tweede Daphne', 'full', 88),
+    eyck('van-eyck-courant', [32], 'Courante', 'Courant', 'full', 72),
     eyck('van-eyck-engels-liedt-duet', [80, 81], 'English song, for two', 'Engels liedt, à 2', 'duet', 72, 'engels-duet'),
     eyck('van-eyck-amarilli-duet', [84, 85], 'Amarilli mia bella, for two', 'Amarilli mia bella, à 2', 'duet', 66, 'amarilli'),
     dict(id='dowland-flow-my-tears', dir='personal', xml=f'{MS}/dowland-flow-my-tears-lachrimae-pavan-satb.mxl', pieces=[0], tempo=60, key='Am',
@@ -344,7 +398,7 @@ for song in XML_SONGS:
     full = Fraction(int(time.split('/')[0]) * 4, int(time.split('/')[1]))
     def pad(bars):
         # A shorter part waits in whole-bar rests (the parts of a duet end together).
-        return bars + [' '.join('R/' + mx.DUR[x] for x in mx.split(full))] * (length - len(bars))
+        return bars + [' '.join('R/' + mx.name_of(x) for x in mx.split(full))] * (length - len(bars))
     # The edition's own key signature (major name; the score only needs the signature).
     key = song['key'] or MAJOR[pieces_[song['pieces'][0]]['measures'][0][3]]
     rel = f"{song['dir']}/{song['id']}.json"
@@ -354,7 +408,7 @@ for song in XML_SONGS:
         'id': song['id'], 'title': song['title'], 'composer': song['composer'], 'chapter': old.get('chapter', 0), 'tempo': song['tempo'],
         'time': time, 'key': key, 'source': song['source'],
         'about': old.get('about', song['about']), 'tip': old.get('tip', song['tip']),
-        **({'pickup': mx.DUR[pickup]} if pickup else {}),
+        **({'pickup': mx.name_of(pickup)} if pickup else {}),
         'parts': [{'id': f'part{k + 1}', 'name': name, 'instrument': instr, 'music': ' | '.join(pad(b))} for k, ((_, _, b), name, instr) in enumerate(playable)],
     }
     if band:

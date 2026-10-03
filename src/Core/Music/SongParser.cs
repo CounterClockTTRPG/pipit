@@ -11,8 +11,9 @@ public sealed class SongFormatException(string message) : Exception(message);
 ///   G4/q G4 G4 A4 | B4/h A4 | G4/q B4 A4 A4 | G4/w
 /// </code>
 /// <list type="bullet">
-/// <item><c>PITCH[/DUR]</c>: G4, F#4, Bb4. DUR is w h q e s, with a trailing "." for dotted. The
-/// duration carries over to following notes until it changes.</item>
+/// <item><c>PITCH[/DUR]</c>: G4, F#4, Bb4. DUR is w h q e s t (t = thirty-second), with a trailing
+/// "." for dotted or "3" for a triplet (<c>e3</c>: three of them fill one beat). The duration
+/// carries over to following notes until it changes.</item>
 /// <item><c>R[/DUR]</c>: a rest.</item>
 /// <item>A trailing <c>~</c> ties a note to the next one (same pitch); a trailing <c>,</c> marks a breath.</item>
 /// <item><c>|</c> bar line, <c>||</c> double bar, <c>|:</c> and <c>:|</c> repeats, <c>[1</c> and <c>[2</c> first and second endings.</item>
@@ -22,7 +23,7 @@ public sealed class SongFormatException(string message) : Exception(message);
 /// </summary>
 public static class SongParser
 {
-    private static readonly Dictionary<char, double> Durations = new() { ['w'] = 4, ['h'] = 2, ['q'] = 1, ['e'] = 0.5, ['s'] = 0.25 };
+    private static readonly Dictionary<char, double> Durations = new() { ['w'] = 4, ['h'] = 2, ['q'] = 1, ['e'] = 0.5, ['s'] = 0.25, ['t'] = 0.125 };
 
     public static Song ParseJson(string json)
     {
@@ -109,11 +110,14 @@ public static class SongParser
         };
     }
 
-    public static double ParseDuration(string text, string context)
+    public static double ParseDuration(string text, string context) => ParseDurationMark(text, context).Beats;
+
+    /// <summary>A duration and whether it is a triplet: "q", "e.", "e3", "t".</summary>
+    public static (double Beats, bool Triplet) ParseDurationMark(string text, string context)
     {
-        if (text.Length is < 1 or > 2 || !Durations.TryGetValue(text[0], out var beats) || (text.Length == 2 && text[1] != '.'))
-            throw new SongFormatException($"{context}: bad duration '{text}' (use w h q e s, optionally dotted)");
-        return text.Length == 2 ? beats * 1.5 : beats;
+        if (text.Length is < 1 or > 2 || !Durations.TryGetValue(text[0], out var beats) || (text.Length == 2 && text[1] is not ('.' or '3')))
+            throw new SongFormatException($"{context}: bad duration '{text}' (use w h q e s t, optionally dotted or a triplet)");
+        return text.Length == 1 ? (beats, false) : text[1] == '.' ? (beats * 1.5, false) : (beats * 2 / 3, true);
     }
 
     private enum Mark { Note, Bar, DoubleBar, RepeatStart, RepeatEnd, Ending1, Ending2 }
@@ -172,6 +176,7 @@ public static class SongParser
     {
         var tokens = new List<Token>();
         var duration = 1.0;
+        var triplet = false;
         foreach (var raw in music.Split((char[])[' ', '\t', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries))
         {
             switch (raw)
@@ -193,7 +198,7 @@ public static class SongParser
             var slash = text.IndexOf('/');
             if (slash >= 0)
             {
-                duration = ParseDuration(text[(slash + 1)..], context);
+                (duration, triplet) = ParseDurationMark(text[(slash + 1)..], context);
                 text = text[..slash];
             }
             Pitch? pitch = null;
@@ -202,7 +207,7 @@ public static class SongParser
                 try { pitch = Pitch.Parse(text); }
                 catch (FormatException) { throw new SongFormatException($"{context}: cannot read '{raw}'"); }
             }
-            tokens.Add(new Token(Mark.Note, new WrittenNote(tokens.Count, pitch, duration, tie, breath)));
+            tokens.Add(new Token(Mark.Note, new WrittenNote(tokens.Count, pitch, duration, tie, breath) { Triplet = triplet }));
         }
         return tokens;
     }

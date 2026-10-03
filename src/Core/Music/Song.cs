@@ -28,6 +28,8 @@ public readonly record struct TimeSignature(int Upper, int Lower)
 public sealed record WrittenNote(int Id, Pitch? Pitch, double Beats, bool TieToNext, bool BreathAfter)
 {
     public bool IsRest => Pitch is null;
+    /// <summary>Part of a triplet: <see cref="Beats"/> is two thirds of the written value.</summary>
+    public bool Triplet { get; init; }
 }
 
 /// <summary>A written bar with its repeat and ending marks, as notated (repeats not expanded).</summary>

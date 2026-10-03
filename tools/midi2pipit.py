@@ -51,7 +51,22 @@ def parse(path):
     return division, tracks
 
 NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
-DURS = {16: 'w', 12: 'h.', 8: 'h', 6: 'q.', 4: 'q', 3: 'e.', 2: 'e', 1: 's'}
+# Durations in units of 1/24 beat, so 32nd notes (3) and triplets (e3 = 8, s3 = 4) fit the grid.
+UNIT = 24
+DURS = {96: 'w', 72: 'h.', 48: 'h', 36: 'q.', 24: 'q', 18: 'e.', 12: 'e', 9: 's.', 6: 's', 3: 't'}
+TRIPLETS = {32: 'h3', 16: 'q3', 8: 'e3', 4: 's3', 2: 't3'}
+
+def pieces(length):
+    """A length in units as written durations, longest first: plain values when it fits the
+    32nd grid, triplets otherwise."""
+    table = DURS if length % 3 == 0 else TRIPLETS
+    out = []
+    while length > 0:
+        fit = [k for k in table if k <= length]
+        if not fit:
+            raise SystemExit(f"cannot write a length of {length}/{UNIT} beat")
+        out.append(max(fit)); length -= max(fit)
+    return out
 
 def name(midi):
     return f"{NAMES[midi % 12]}{midi // 12 - 1}"
@@ -92,12 +107,29 @@ def main():
             mono[-1] = (mono[-1][0], s_, mono[-1][2])
         mono.append((s_, e_, p_))
     notes = mono
-    sixteenth = division / 4
+    unit = division / UNIT
     up, low = map(int, a.time.split('/'))
-    bar16 = up * 16 // low
+    bar16 = up * 4 * UNIT // low  # units per bar
+    pickup = a.pickup * UNIT // 4  # --pickup is in sixteenths
     # With a pickup, shift so the first full bar starts at a bar line (the pickup sits in "bar 0").
-    shift = (bar16 - a.pickup) % bar16 if a.pickup else 0
-    q = [(round(s / sixteenth) + shift, max(1, round((e - s) / sixteenth)), p + a.transpose) for s, e, p in notes]
+    shift = (bar16 - pickup) % bar16 if pickup else 0
+    # Note edges sit on the 32nd grid, or on the triplet-sixteenth grid; anything else is timing
+    # noise in the file and goes to the nearest 32nd.
+    def snap(t):
+        t = round(t / unit)
+        return t if t % 3 == 0 or t % 4 == 0 else 3 * round(t / 3)
+    q = [(snap(s) + shift, max(1, snap(e) - snap(s)), p + a.transpose) for s, e, p in notes]
+    # Grace notes (LilyPond plays them as slivers) are shorter than any written note: their
+    # time goes to the note before, so the main note keeps its place.
+    merged = []
+    for s_, d_, p_ in q:
+        if d_ < 3 and merged and merged[-1][0] + merged[-1][1] == s_:
+            merged[-1] = (merged[-1][0], merged[-1][1] + d_, merged[-1][2])
+        elif d_ >= 3:
+            merged.append((s_, d_, p_))
+    # Gaps shorter than a 32nd are articulation, not rests: the note before lasts until the next.
+    q = [(s_, d_ + (gap if 0 < (gap := merged[i + 1][0] - s_ - d_) < 3 else 0), p_) if i + 1 < len(merged) else (s_, d_, p_)
+         for i, (s_, d_, p_) in enumerate(merged)]
     # Fill gaps with rests; split notes and rests at bar lines with ties.
     out, pos, first, last = [], 0, None, None
     if a.bars:
@@ -107,11 +139,10 @@ def main():
             room = bar16 - start % bar16
             take = min(length, room)
             # Split into representable durations.
-            while take > 0:
-                d = max(k for k in DURS if k <= take)
+            for d in pieces(take):
                 bar = start // bar16 + 1
                 tie = '~' if pitch is not None and (take - d > 0 or length - take > 0) else ''
-                out.append((bar, (name(pitch) if pitch is not None else 'R') + '/' + DURS[d] + tie))
+                out.append((bar, (name(pitch) if pitch is not None else 'R') + '/' + (DURS.get(d) or TRIPLETS[d]) + tie))
                 start += d; take -= d; length -= d
     pos = shift
     for s, d, p in q:
@@ -124,6 +155,6 @@ def main():
     keys = [b for b in sorted(bars) if (first is None or first <= b <= last)]
     print(' | '.join(' '.join(bars[b]) for b in keys))
     sel = [p for (s, d, p) in q if first is None or first <= s // bar16 + 1 <= last]
-    print(f"bars {keys[0]}-{keys[-1]}, {len(sel)} notes, range {name(min(sel))}-{name(max(sel))}, shortest {min(d for _, d, _ in q)}/16", file=sys.stderr)
+    print(f"bars {keys[0]}-{keys[-1]}, {len(sel)} notes, range {name(min(sel))}-{name(max(sel))}, shortest {min(d for _, d, _ in q)}/{UNIT} beat", file=sys.stderr)
 
 main()

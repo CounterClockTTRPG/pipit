@@ -25,7 +25,7 @@ scripts/import-fixtures.sh     # guided Studio takes -> tests/fixtures/audio (re
 | Study path: 10 chapters, 25 lessons EN/NL with try/exercise/quiz blocks: up to the pinched thumb, sharps (G), Si♭ (F), sixteenths, 6/8, baroque flats, Re'', and the alto | done; chapter songs only use notes taught so far (tests) |
 | Pip mascot (vector rig, 6 moods), see `docs/pip.md` | done |
 | Survival mode, per-song top-10 leaderboard | done |
-| Repertoire: folk, baroque (Mutopia, PD / CC BY-SA), Renaissance dances (Bellugi, **personal use only**, `data/songs/personal/`); Handel sonatas HWV 360/365/369 with continuo, Telemann duet TWV 40:107 (two parts), Japart *Tmeiskin* (consort), Brahms' Lullaby (`tools/import-songs.py`); personal: 21 van Eyck pieces (MusicXML via `tools/musicxml2pipit.py`), Dowland *Flow my tears* SATB, Encina, Lasso, Ravenscroft, *Procurans odium*, Handel recorder concerto | 85 songs |
+| Repertoire: folk, baroque (Mutopia, PD / CC BY-SA), Renaissance dances (Bellugi, **personal use only**, `data/songs/personal/`); Handel sonatas HWV 360/365/369 with continuo, Telemann duet TWV 40:107 (two parts), Japart *Tmeiskin* (consort), Brahms' Lullaby (`tools/import-songs.py`); personal: 21 van Eyck pieces (MusicXML via `tools/musicxml2pipit.py`), Dowland *Flow my tears* SATB, Encina, Lasso, Ravenscroft, *Procurans odium*, Handel recorder concerto | 100 songs |
 
 ## Players (M4), done 2026-10-02
 
@@ -82,7 +82,8 @@ Next steps, in order:
 ## Known issues / notes
 
 - The full test suite takes about 4 minutes: the end-to-end songs run in six parallel classes (`EndToEndShard0-5`), and songs over 80 s are checked in four 20 s excerpts. Without them (`--filter 'FullyQualifiedName!~EndToEnd'`) it takes ~40 s.
-- Song format still lacks triplets and 32nd notes: 17 van Eyck pieces (e.g. *Engels Nachtegaeltje*) wait for them.
+- Song format: triplets (`e3`) and 32nd notes (`t`) since 2026-10-03. Van Eyck pieces that change time signature mid-piece (*Batali*, *Rosemond die lagh gedoocken*, *Stemme nova* 2) or use 64ths (*Amarilli*, vol. 1) are still out.
+- The pitch tracker's speed test (`PitchPerformanceTests`, < 2.5 s for 10 s of audio) can fail when Windows is busy; rerun it alone.
 - The user's laptop mic needs Windows "Audio enhancements" off (Settings → Check for Windows voice processing).
 - User: recorder beginner, Yamaha baroque soprano; prefers hand-coloured fingering holes; analyse
   recordings before assuming playing errors (two "failures" were app bugs).

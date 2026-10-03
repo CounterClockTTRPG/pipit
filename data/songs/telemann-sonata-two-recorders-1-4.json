@@ -1,0 +1,35 @@
+{
+  "id": "telemann-sonata-two-recorders-1-4",
+  "title": {
+    "en": "Sonata No. 1 for two recorders: IV. Vivace",
+    "nl": "Sonate nr. 1 voor twee blokfluiten: IV. Vivace"
+  },
+  "composer": "Georg Philipp Telemann",
+  "chapter": 0,
+  "tempo": 80,
+  "time": "3/8",
+  "key": "F",
+  "source": "Mutopia Project edition after the Paris edition engraved by J.-L. Renou (1730s), Public Domain; converted with tools/import-songs.py",
+  "about": {
+    "en": "Telemann wrote six sonatas for two flutes or recorders without any accompaniment; they were engraved in Paris in the 1730s. The two parts take turns with the tune and answer each other, so either player can lead.",
+    "nl": "Telemann schreef zes sonates voor twee fluiten of blokfluiten zonder begeleiding; ze werden in de jaren 1730 in Parijs gegraveerd. De twee partijen wisselen de melodie af en antwoorden elkaar, zodat elke speler kan leiden."
+  },
+  "tip": {
+    "en": "Pick a part: the band plays the other recorder.",
+    "nl": "Kies een partij: de band speelt de andere blokfluit."
+  },
+  "parts": [
+    {
+      "id": "part1",
+      "name": "Recorder 1",
+      "instrument": "alto",
+      "music": "F5/s G5/s G5/q | A5/e R/q | Bb5/e G5/q | E5/s F5/t G5/t F5/t E5/t D5/t C5/t G5/s C5/s | A4/e F5/e A4/e | E5/e G5/e E5/e | F5/e A5/e G5/e | F5/s A4/s Bb4/s G4/s A4/s C5/s | F5/s G5/s G5/q | A5/e R/q | Bb5/e G5/q | E5/s F5/t G5/t F5/t E5/t D5/t C5/t G5/s C5/s | E5/s3 F5/s3 G5/s3 F5/s3 G5/s3 A5/s3 G5/s3 A5/s3 Bb5/s3 | A5/s3 Bb5/s3 G5/s3 A5/s3 Bb5/s3 G5/s3 A5/s3 G5/s3 A5/s3 | C5/e D5/e E5/e | F5/e R/q | E5/s3 F5/s3 G5/s3 F5/s3 G5/s3 A5/s3 D5/s3 E5/s3 F5/s3 | E5/s3 F5/s3 D5/s3 E5/s3 F5/s3 D5/s3 E5/s3 D5/s3 E5/s3 | F5/e R/q | E5/e R/q | A5/s G5/s F5/s E5/s D5/s C5/s | G5/s F5/s E5/s D5/s C5/s B4/s | F5/s E5/s D5/s C5/s F5/s E5/s | F5/e. D5/s E5/e | E5/s F5/s D5/e. C5/s | C5/s G5/s E5/s G5/s E5/s G5/s | C6/s B5/t A5/t G5/t F5/t E5/t D5/t G5/t F5/t E5/t D5/t | E5/s G5/s E5/s G5/s E5/s G5/s | C6/s C5/s B4/e. C5/s | C5/q. | C5/s D5/s D5/q | E5/e R/q | D5/s E5/s E5/q | F5/s G5/t A5/t G5/t F5/t E5/t D5/t A5/s D5/s | F#5/e D5/e F#5/e | G5/s D5/s Bb5/s D5/s C6/s D5/s | F#5/e D5/e F#5/e | G5/s D5/s Bb5/s D5/s G5/s D5/s | C6/s Bb5/s A5/s G5/s F#5/s E5/s | D5/s E5/s F#5/s D5/s G5/s G4/s | Bb4/s C5/s D5/s C5/s D5/s Bb4/s | E5/s D5/s C#5/s D5/s C#5/s E5/s | Bb5/s A5/s G5/s F5/s E5/s D5/s | G5/e. A5/s F5/e | G5/s G5/s E5/e. D5/s | D5/e R/q | G5/s F5/t E5/t D5/t C5/t B4/t A4/t G5/t F5/t E5/t F5/t | E5/e R/q | F5/e G5/e A5/e | Bb5/e R/q | A5/s3 Bb5/s3 C6/s3 Bb5/s3 C6/s3 D6/s3 C6/s3 D6/s3 Eb6/s3 | D6/s3 Eb6/s3 C6/s3 D6/s3 Eb6/s3 C6/s3 D6/s3 C6/s3 D6/s3 | C5/s3 D5/s3 Eb5/s3 D5/s3 E5/s3 F5/s3 E5/s3 F5/s3 G5/s3 | F5/s3 G5/s3 E5/s3 F5/s3 G5/s3 E5/s3 F5/s3 E5/s3 F5/s3 | G5/s F5/s E5/s D5/s C5/s Bb4/s | F5/s E5/s D5/s C5/s Bb4/s A4/s | Bb4/e R/q | A4/e R/q | G5/s F5/s Bb5/s A5/s G5/s F5/s | E5/s C5/s D5/s E5/s F5/e | F5/s G5/s E5/e. F5/s | F5/s C6/s A5/s C6/s A5/s C6/s | F6/s E6/t D6/t C6/t Bb5/t A5/t G5/t C6/t Bb5/t A5/t G5/t | A5/s C6/s A5/s C6/s A5/s C6/s | F6/s F5/s Bb4/e C5/e | F4/q."
+    },
+    {
+      "id": "part2",
+      "name": "Recorder 2",
+      "instrument": "alto",
+      "music": "A5/s Bb5/s Bb5/q | C6/s Bb5/t A5/t Bb5/t A5/t G5/t F5/t C6/s F5/s | D6/e Bb5/q | G5/e R/q | F5/s C5/s A5/s C5/s F5/s C5/s | G5/s C5/s Bb5/s C5/s G5/s C5/s | A5/s C5/s C6/s C5/s Bb5/s C5/s | A5/s Bb5/s A5/s G5/s F5/s G5/s | A5/s Bb5/s Bb5/q | C6/s Bb5/t A5/t Bb5/t A5/t G5/t F5/t C6/s F5/s | D6/e Bb5/q | G5/e R/q | C5/e D5/e E5/e | F5/e R/q | E5/s3 F5/s3 G5/s3 F5/s3 G5/s3 A5/s3 G5/s3 A5/s3 Bb5/s3 | A5/s3 Bb5/s3 G5/s3 A5/s3 Bb5/s3 G5/s3 A5/s3 G5/s3 A5/s3 | G5/s3 A5/s3 Bb5/s3 A5/s3 B5/s3 C6/s3 B5/s3 C6/s3 D6/s3 | C6/s3 D6/s3 B5/s3 C6/s3 D6/s3 B5/s3 C6/s3 B5/s3 C6/s3 | D6/s C6/s B5/s A5/s G5/s F5/s | C6/s B5/s A5/s G5/s F5/s E5/s | F5/e R/q | E5/e R/q | D5/s C5/s F5/s E5/s D5/s C5/s | B5/s G5/s A5/s B5/s C6/e | C6/s D6/s B5/e. C6/s | C6/s B5/t A5/t G5/t F5/t E5/t D5/t G5/t F5/t E5/t D5/t | E5/s G5/s E5/s G5/s E5/s G5/s | C6/s B5/t A5/t G5/t F5/t E5/t D5/t G5/t F5/t E5/t D5/t | E5/s C6/s D5/e. C5/s | C5/q. | E5/s F5/s F5/q | G5/s F5/t E5/t F5/t E5/t D5/t C5/t G5/s C5/s | F5/s G5/s G5/q | A5/e R/q | A5/s D5/s D6/s D5/s A5/s D5/s | Bb5/e G5/e Bb5/e | A5/s D5/s Bb5/s D5/s A5/s D5/s | Bb5/e G5/e Bb5/e | Eb6/s D6/s C6/s Bb5/s A5/s G5/s | C6/e. D6/s Bb5/e | Bb5/s A5/s A5/e. C6/s | G5/e. F#5/s G5/e | G5/s F5/s E5/s D5/s C#5/s B4/s | A4/s B4/s C#5/s A4/s D5/s A5/s | D6/s E6/s C#6/e. D6/s | D6/s C6/t Bb5/t A5/t G5/t F5/t E5/t D6/t C6/t B5/t C6/t | B5/e R/q | C6/s Bb5/t A5/t G5/t F5/t E5/t D5/t C6/t Bb5/t A5/t Bb5/t | A5/s3 Bb5/s3 C6/s3 Bb5/s3 C6/s3 D6/s3 C6/s3 D6/s3 Eb6/s3 | D6/s3 Eb6/s3 C6/s3 D6/s3 Eb6/s3 C6/s3 D6/s3 C6/s3 D6/s3 | F5/e G5/e A5/e | Bb5/e R/q | A5/s3 Bb5/s3 C6/s3 Bb5/s3 C6/s3 D6/s3 G5/s3 A5/s3 Bb5/s3 | A5/s3 Bb5/s3 G5/s3 A5/s3 Bb5/s3 G5/s3 A5/s3 G5/s3 A5/s3 | Bb5/e R/q | A5/e R/q | D6/s C6/s Bb5/s A5/s G5/s F5/s | C6/s Bb5/s A5/s G5/s F5/s E5/s | Bb5/s A5/s G5/s F5/s Bb5/s A5/s | Bb5/e. A5/s G5/s A5/s | A5/s Bb5/s G5/e. F5/s | F6/s E6/t D6/t C6/t Bb5/t A5/t G5/t C6/t Bb5/t A5/t G5/t | A5/s C6/s A5/s C6/s A5/s C6/s | F6/s E6/t D6/t C6/t Bb5/t A5/t G5/t C6/t Bb5/t A5/t G5/t | A5/s F6/s G5/e. F5/s | F5/q."
+    }
+  ]
+}
