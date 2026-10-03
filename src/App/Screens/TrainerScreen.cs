@@ -63,6 +63,8 @@ public partial class TrainerScreen : Screen
     {
         S.ApplyInstrument();
         _diagram.Keyed = S.Instrument.Keyed;
+        // Allow for this recorder's tuning, so a sharp recorder's notes do not flip semitones.
+        _detector.TuningOffsetCents = S.Instrument.MeasuredOffsetCents;
         S.Audio.FrameReady += OnFrame;
         Restart();
     }

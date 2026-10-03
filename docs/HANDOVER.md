@@ -85,6 +85,7 @@ Next steps, in order:
 
 - The full test suite takes about 4 minutes: the end-to-end songs run in six parallel classes (`EndToEndShard0-5`), and songs over 80 s are checked in four 20 s excerpts. Without them (`--filter 'FullyQualifiedName!~EndToEnd'`) it takes ~40 s.
 - Song format: triplets (`e3`) and 32nd notes (`t`) since 2026-10-03. Van Eyck pieces that change time signature mid-piece (*Batali*, *Rosemond die lagh gedoocken*, *Stemme nova* 2) or use 64ths (*Amarilli*, vol. 1) are still out.
+- Held notes (lesson "Play this note", the fingering trainer) allow for the recorder's calibrated tuning and stick to a note until the pitch moves 0.7 semitone away: a recorder playing 40-50 cents sharp otherwise flipped semitones and was never heard (fixed 2026-10-03). `-- --lessonprobe=<lesson>` plays each target into a lesson as a sharp, wobbling note; test.sh runs it for three lessons.
 - The pitch tracker's speed test (`PitchPerformanceTests`, < 2.5 s for 10 s of audio) can fail when Windows is busy; rerun it alone.
 - The user's laptop mic needs Windows "Audio enhancements" off (Settings → Check for Windows voice processing).
 - User: recorder beginner, Yamaha baroque soprano; prefers hand-coloured fingering holes; analyse

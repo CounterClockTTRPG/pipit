@@ -76,6 +76,9 @@ public partial class AudioHub : Node
         _mic.Play();
     }
 
+    /// <summary>Diagnostics (`--lessonprobe`): hands a made-up frame to everyone listening, as if heard.</summary>
+    public void InjectFrame(PitchFrame frame) => FrameReady?.Invoke(frame);
+
     public static string[] InputDevices() => AudioServer.GetInputDeviceList();
 
     public string CurrentDevice => AudioServer.InputDevice;

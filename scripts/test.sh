@@ -25,6 +25,16 @@ log="$(timeout 120 "$GODOT" --headless --path "$PROJECT_UNC" -- --smoke 2>&1)" |
 if grep -E "^(ERROR|SCRIPT ERROR)" <<<"$log" || ! grep -q "SMOKE OK" <<<"$log"; then smoke_status=1; fi
 [ "$smoke_status" -eq 0 ] || printf '%s\n' "$log" | tail -40
 
+# Lesson probe: plays each "Play this note" target of a lesson into the app as a sharp,
+# wobbling note (no microphone) and checks every box completes.
+echo "==> lesson probe"
+probe_status=0
+for lesson in si-and-la high-do pinched-thumb; do
+    log="$(timeout 120 "$GODOT" --headless --path "$PROJECT_UNC" -- --lessonprobe=$lesson 2>&1)" || probe_status=1
+    grep -E "PROBE" <<<"$log" | tail -1
+    grep -q "PROBE OK" <<<"$log" || probe_status=1
+done
+
 ok() { [ "$1" -eq 0 ] && echo ok || echo FAILED; }
-echo "==> core tests: $(ok $core_status), boot: $(ok $boot_status), smoke: $(ok $smoke_status)"
-[ $core_status -eq 0 ] && [ $boot_status -eq 0 ] && [ $smoke_status -eq 0 ]
+echo "==> core tests: $(ok $core_status), boot: $(ok $boot_status), smoke: $(ok $smoke_status), lesson probe: $(ok $probe_status)"
+[ $core_status -eq 0 ] && [ $boot_status -eq 0 ] && [ $smoke_status -eq 0 ] && [ $probe_status -eq 0 ]

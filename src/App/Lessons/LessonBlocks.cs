@@ -142,6 +142,8 @@ public sealed class LessonContext
 public partial class TryBlock : PanelContainer, ITaskBlock
 {
     private readonly int _target;
+    /// <summary>The sounding note it waits for (for `--lessonprobe`).</summary>
+    public int Target => _target;
     private readonly HeldNoteDetector _detector;
     private readonly Label _status;
     public bool Done { get; private set; }
@@ -151,7 +153,7 @@ public partial class TryBlock : PanelContainer, ITaskBlock
     {
         var pitch = Pitch.Parse(d.Arg("note"));
         _target = Services.Instance.Recorder.WrittenToSounding(pitch.Midi);
-        _detector = new HeldNoteDetector(d.Number("hold", 1.0), settleSeconds: 0.15);
+        _detector = new HeldNoteDetector(d.Number("hold", 1.0), settleSeconds: 0.15) { TuningOffsetCents = Services.Instance.Instrument.MeasuredOffsetCents };
         AddThemeStyleboxOverride("panel", PipitTheme.Box(Colors.White, PipitTheme.WoodEdge, 12));
         _status = Ui.Label(Ui.T("Listening… play when you are ready."), 18, PipitTheme.InkSoft);
         AddChild(Ui.HBox(16, Ui.Label("🎵", 30), Ui.VBox(4, Ui.Label(d.Text ?? Ui.T("Play this note"), 21, PipitTheme.Ink), _status)));
@@ -205,7 +207,7 @@ public partial class CompareBlock : PanelContainer, ITaskBlock
         var s = Services.Instance;
         var pitch = Pitch.Parse(d.Arg("note"));
         _target = s.Recorder.WrittenToSounding(pitch.Midi);
-        _detector = new HeldNoteDetector(d.Number("hold", 1.5), settleSeconds: 0.25);
+        _detector = new HeldNoteDetector(d.Number("hold", 1.5), settleSeconds: 0.25) { TuningOffsetCents = s.Instrument.MeasuredOffsetCents };
         AddThemeStyleboxOverride("panel", PipitTheme.Box(Colors.White, PipitTheme.WoodEdge, 12));
         var columns = Ui.HBox(40);
         for (var i = 0; i < 2; i++)

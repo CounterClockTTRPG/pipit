@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Pipit.App.Lessons;
 using Pipit.App.Screens;
 using Pipit.App.UI;
+using Pipit.Core.Analysis;
 
 namespace Pipit.App;
 
@@ -49,10 +52,16 @@ public partial class Main : Control
         _content = Ui.Expand(new Control(), true, true);
         layout.AddChild(_content);
 
+        // The microphone level, in the top-right corner of every screen.
+        var mic = new Views.MicIndicator();
+        mic.SetAnchorsPreset(LayoutPreset.TopRight);
+        mic.Position = new Vector2(-mic.CustomMinimumSize.X - 18, 10);
+        AddChild(mic);
+
         // Normally the app starts by asking who is playing; the test and screenshot runs go
         // straight to Home as the last player.
         var args = OS.GetCmdlineUserArgs();
-        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback");
+        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback" || a.StartsWith("--lessonprobe="));
         Show(diagnostic ? new HomeScreen() : new ProfileScreen());
 
         if (OS.GetCmdlineUserArgs().Contains("--smoke"))
@@ -72,6 +81,8 @@ public partial class Main : Control
         }
         if (OS.GetCmdlineUserArgs().Contains("--miccheck"))
             MicCheckAndQuit();
+        if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--lessonprobe=")) is { } probe)
+            LessonProbe(probe["--lessonprobe=".Length..]);
         if (OS.GetCmdlineUserArgs().Contains("--loopback"))
         {
             var d = new Diagnostics();
@@ -333,6 +344,43 @@ public partial class Main : Control
             Back();
         else if (e is InputEventKey { Pressed: true, Echo: false, Keycode: Key.F11 })
             Services.Instance.SetFullscreen(!Services.Instance.Machine.Fullscreen);
+    }
+
+    // ---- lesson probe: `-- --lessonprobe=high-do` plays each "Play this note" target into the
+    // lesson as made-up frames (no microphone) and prints whether every box completed. --------
+
+    private async void LessonProbe(string id)
+    {
+        if (Services.Instance.LoadLesson(id) is not { } lesson)
+        {
+            GD.PrintErr($"PROBE: no lesson {id}");
+            GetTree().Quit(1);
+            return;
+        }
+        Show(new LessonScreen(lesson));
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        static IEnumerable<Node> All(Node n) => n.GetChildren().SelectMany(c => All(c).Prepend(c));
+        var blocks = All(this).OfType<TryBlock>().ToList();
+        var ok = blocks.Count > 0;
+        var time = Services.Instance.Audio.Now;
+        foreach (var block in blocks)
+        {
+            // 1.6 s of a note played like a sharp recorder: the calibrated offset plus 30 cents,
+            // wobbling ±10 cents, at the tracker's frame rate; then silence.
+            var sharp = Services.Instance.Instrument.MeasuredOffsetCents / 100 + 0.3;
+            for (var t = 0.0; t < 1.6; t += 256.0 / 48000)
+            {
+                var midi = block.Target + sharp + 0.1 * Math.Sin(t * 2 * Math.PI * 5);
+                Services.Instance.Audio.InjectFrame(new PitchFrame(time += 256.0 / 48000, 440 * Math.Pow(2, (midi - 69) / 12), 0.95, 0.05, true, midi, midi));
+            }
+            for (var t = 0.0; t < 0.3; t += 256.0 / 48000)
+                Services.Instance.Audio.InjectFrame(new PitchFrame(time += 256.0 / 48000, 0, 0, 0, false, double.NaN, double.NaN));
+            GD.Print($"PROBE try {block.Target}: {(block.Done ? "done" : "NOT DONE")}");
+            ok &= block.Done;
+        }
+        GD.Print(ok ? $"PROBE OK ({blocks.Count} tries)" : $"PROBE FAILED ({blocks.Count} tries)");
+        GetTree().Quit(ok ? 0 : 1);
     }
 
     // ---- smoke test: `-- --smoke` visits every screen and quits (scripts/test.sh) ----------
