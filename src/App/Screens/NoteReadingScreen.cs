@@ -202,6 +202,23 @@ public partial class NoteReadingScreen : Screen
 
     private double NoteTime(int i) => _t0 + (CountIn + i) * _spb;
 
+    /// <summary>For `--shots`: a finished round with one of each kind of answer.</summary>
+    public void DebugResults()
+    {
+        _spb = 1;
+        _t0 = S.Audio.Now - 100;
+        _answers.Clear();
+        var offsets = new[] { 0.02, -0.35, 0.3, 0.05, double.NaN, 0.1, 0.4, -0.05 };
+        for (var i = 0; i < _notes.Count; i++)
+        {
+            if (double.IsNaN(offsets[i]))
+                continue; // missed
+            var letter = i == 3 ? (NameDrill.LetterOf(_notes[i]) + 2) % 7 : NameDrill.LetterOf(_notes[i]); // one wrong
+            _answers.Add(new NameAnswer(letter, NoteTime(i) + offsets[i]));
+        }
+        Finish();
+    }
+
     private static string LetterName(int letter) => S.NoteName(60 + NaturalOffsets[letter]);
 
     /// <summary>Marks the note being named around <paramref name="time"/> and writes the name under it.</summary>
@@ -295,9 +312,17 @@ public partial class NoteReadingScreen : Screen
         foreach (var r in results)
         {
             _staff.SetMark(r.Index, r.RightOnTime ? NoteMark.Perfect : r.Result == NameResult.Missed ? NoteMark.Missed : r.Result == NameResult.Right ? NoteMark.Good : NoteMark.Wrong);
-            // Under each note: what was said or tapped (right on the beat, late, wrong, or nothing).
-            _staff.SetCaption(r.Index, r.Said is { } said ? LetterName(said) : "–",
-                r.RightOnTime ? PipitTheme.Good : r.Result == NameResult.Right ? PipitTheme.Warn : r.Result == NameResult.Missed ? PipitTheme.InkSoft : PipitTheme.Bad);
+            // Under each note: what was said or tapped, placed early (left) or late (right) of the
+            // note by when it came, with an arrow when it missed the beat; in grey under a wrong
+            // or missed one, what the note is.
+            var arrow = r.Timing switch { Timing.Early => "◂", Timing.Late => "▸", _ => "" };
+            var said = r.Said is { } letter ? LetterName(letter) : "–";
+            var text = r.Timing == Timing.Early ? arrow + said : said + arrow;
+            var shift = r.ErrorMs is { } ms ? ms / 1000 / _spb : 0;
+            var should = r.Result == NameResult.Right ? "" : LetterName(NameDrill.LetterOf(r.WrittenMidi));
+            _staff.SetCaption(r.Index, text,
+                r.RightOnTime ? PipitTheme.Good : r.Result == NameResult.Right ? PipitTheme.Warn : r.Result == NameResult.Missed ? PipitTheme.InkSoft : PipitTheme.Bad,
+                should, shift);
             S.Progress.Note(PlayerProgress.Reading, Kind, r.WrittenMidi).Record(r.RightOnTime, 0, now);
         }
         var good = results.Count(r => r.RightOnTime);

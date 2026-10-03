@@ -113,6 +113,15 @@ public partial class Main : Control
             if (make is not null)
                 Back();
         }
+        var reading = new NoteReadingScreen();
+        Show(reading);
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        reading.DebugResults();
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "note-reading-results.png"));
+        Back();
         var calibrate = new CalibrationScreen();
         Show(calibrate);
         calibrate.DebugStartLatency();

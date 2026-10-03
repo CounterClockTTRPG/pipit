@@ -34,7 +34,7 @@ public partial class StaffView : Control, ISongView
     private List<StaffSystem> _systems = new();
     private readonly Dictionary<int, (int System, PlacedBar Bar, PlacedNote Note)> _byWrittenId = new();
     private readonly Dictionary<int, NoteMark> _marks = new();      // by performed index
-    private readonly Dictionary<int, (string Text, Color Color)> _captions = new(); // by performed index
+    private readonly Dictionary<int, (string Text, Color Color, string Sub, double Shift)> _captions = new(); // by performed index
     private readonly Dictionary<int, int> _lastPerformedOf = new(); // written id -> latest performed index marked
     private Vector2 _laidOutFor;
     private float _scroll;
@@ -72,10 +72,14 @@ public partial class StaffView : Control, ISongView
             _lastPerformedOf[id] = performedIndex;
     }
 
-    /// <summary>A word under a note (what the player said or tapped in Note reading), in its own colour.</summary>
-    public void SetCaption(int performedIndex, string text, Color color)
+    /// <summary>
+    /// A word under a note (what the player said or tapped in Note reading), in its own colour,
+    /// shifted sideways by <paramref name="shiftBeats"/> (said early: left, late: right), with an
+    /// optional grey line under it (what the note should have been).
+    /// </summary>
+    public void SetCaption(int performedIndex, string text, Color color, string sub = "", double shiftBeats = 0)
     {
-        _captions[performedIndex] = (text, color);
+        _captions[performedIndex] = (text, color, sub, shiftBeats);
         if (_song is not null && performedIndex < _song.Melody.Performance.Count)
             foreach (var id in _song.Melody.Performance[performedIndex].WrittenIds)
                 _lastPerformedOf[id] = performedIndex;
@@ -317,7 +321,13 @@ public partial class StaffView : Control, ISongView
             if (n.Note.BreathAfter)
                 DrawString(font, new Vector2(x + sp * 2f, Y(10)), Breath, HorizontalAlignment.Left, -1, fontSize, ink);
             if (_lastPerformedOf.TryGetValue(n.Note.Id, out var captioned) && _captions.TryGetValue(captioned, out var caption))
-                DrawString(PipitTheme.BoldFont, new Vector2(x - sp * 1.0f, Y(-6.5)), caption.Text, HorizontalAlignment.Center, HeadWidth * sp + sp * 2f, (int)(sp * 1.5f), caption.Color);
+            {
+                // Half a beat early or late moves the word about two note-widths.
+                var shift = (float)Math.Clamp(caption.Shift, -0.5, 0.5) * sp * 4.5f;
+                DrawString(PipitTheme.BoldFont, new Vector2(x - sp * 1.5f + shift, Y(-6.5)), caption.Text, HorizontalAlignment.Center, HeadWidth * sp + sp * 3f, (int)(sp * 1.5f), caption.Color);
+                if (caption.Sub != "")
+                    DrawString(PipitTheme.Font, new Vector2(x - sp * 1.5f, Y(-10)), caption.Sub, HorizontalAlignment.Center, HeadWidth * sp + sp * 3f, (int)(sp * 1.3f), PipitTheme.InkSoft with { A = 0.75f });
+            }
             else if (ShowNames)
             {
                 var label = NoteLabel(n.Note.Pitch!.Value);
