@@ -16,6 +16,8 @@ public static class Sounds
         ["piano"] = 0, ["harpsichord"] = 6, ["organ"] = 19, ["guitar"] = 24, ["bass"] = 32,
         ["violin"] = 40, ["viola"] = 41, ["cello"] = 42, ["contrabass"] = 43, ["strings"] = 48, ["pizzicato"] = 45,
         ["tuba"] = 58, ["oboe"] = 68, ["bassoon"] = 70, ["clarinet"] = 71, ["flute"] = 73, ["recorder"] = 74, ["panflute"] = 75,
+        // Chip-like sounds for the voices of C64 (SID) tunes.
+        ["square"] = 80, ["sawtooth"] = 81, ["synthbass"] = 38,
     };
 
     public const int Recorder = 74;

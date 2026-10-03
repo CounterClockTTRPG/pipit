@@ -1,0 +1,38 @@
+{
+  "id": "greensleeves-to-a-ground",
+  "title": {
+    "en": "Greensleeves to a Ground",
+    "nl": "Greensleeves to a Ground"
+  },
+  "composer": "Anonymous",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 140,
+  "time": "3/2",
+  "key": "Gm",
+  "source": "Mutopia Project, division-violin-two-27 (Public Domain), from the 1705 edition of Playford's Division Violin, second part; converted with tools/midi2pipit.py. The ground bass is added (the edition has the violin line only).",
+  "about": {
+    "en": "\"Greensleeves to a Ground\" is a set of divisions (variations) on the old English tune Greensleeves, played over a bass line that repeats every eight bars, the \"ground\". It was printed in John Playford's \"The Division Violin\" and soon after in \"The Division Flute\" (1706) for recorder players. This version follows the 1705 edition of The Division Violin.",
+    "nl": "\"Greensleeves to a Ground\" is een reeks diminuties (variaties) op de oude Engelse melodie Greensleeves, boven een baslijn die elke acht maten terugkomt, de \"ground\". Het stond in John Playfords \"The Division Violin\" en kort daarna in \"The Division Flute\" (1706) voor blokfluitisten. Deze versie volgt de uitgave van The Division Violin uit 1705."
+  },
+  "tip": {
+    "en": "Each variation is eight bars, played twice, and gets busier as it goes. Practise one variation at a time with the speed dial; the ground in the bass keeps you on track.",
+    "nl": "Elke variatie is acht maten, twee keer gespeeld, en wordt steeds drukker. Oefen één variatie tegelijk met de snelheidsknop; de ground in de bas houdt je op koers."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "Bb4/h C5/q D5/h D5/q | C5/h A4/q F4/h. | G4/q. A4/e Bb4/q C5/q D5/q Bb4/q | A4/h F#4/q D4/h. | Bb4/h C5/q D5/q. C5/e Bb4/q | C5/h A4/q F4/q. G4/e A4/q | Bb4/q. A4/e G4/q A4/q. G4/e F#4/q | G4/h. G4/h. | Bb4/q. C5/e D5/q D5/q. D#5/e D5/q | C5/q. D5/e C5/q A4/q. Bb4/e C5/q | Bb4/q. A4/e Bb4/q G4/q. A4/e Bb4/q | A4/q. Bb4/e A4/q F#4/q. G4/e A4/q | Bb4/q. C5/e D5/q D5/q. D#5/e F5/q | C5/q. D5/e C5/q A4/q. Bb4/e C5/q | Bb4/q A4/q G4/q F#4/q. E4/e F#4/q | G4/h. G4/h. | F5/h F5/q F5/q D#5/q D5/q | C5/h C5/q A4/q Bb4/q C5/q | Bb4/h G4/q G4/q A4/q Bb4/q | A4/h A4/q F#4/q G4/q A4/q | F5/h F5/q F5/q D#5/q D5/q | C5/h C5/q A4/q Bb4/q C5/q | D5/q C5/q Bb4/q C5/q A4/h | G4/h. G4/h. | D5/q Bb4/q G4/q D5/q Bb4/q G4/q | C5/q A4/q F4/q C5/q A4/q F4/q | D5/q Bb4/q G4/q D5/q Bb4/q G4/q | A4/q F#4/q D4/q A4/q F#4/q D4/q | F5/q D5/q Bb4/q F5/q D5/q Bb4/q | C5/q A4/q F4/q C5/q A4/q F4/q | D5/q Bb4/q G4/q A4/q F#4/q D4/q | G4/h. G4/h. | F5/h. Bb4/h. | G5/h. F5/q. D#5/e D5/q | C5/q A4/q F4/q C5/q C4/q D#5/e F5/e | G5/q G4/q A5/q Bb5/q A5/q G5/q | F#5/q D5/q A4/q D5/q D5/q. D#5/e | F5/q Bb4/q G5/q F5/q. D#5/e D5/q | C5/q A4/q F4/q C5/q C4/q D5/e C5/e | Bb4/q A4/q G4/q A4/q F#4/q D4/q | G4/h. G4/h. | G4/q Bb4/q G4/q D5/e C5/e Bb4/e A4/e G4/q | F4/q A4/q F4/q C5/e Bb4/e A4/e G4/e F4/q | G4/q Bb4/q G4/q D5/e C5/e Bb4/e A4/e G4/q | D4/q F#4/q D4/q A4/e G4/e F#4/e E4/e D4/q | Bb4/q D5/q Bb4/q F5/e D#5/e D5/e C5/e Bb4/q | F4/q A4/q F4/q C5/e Bb4/e A4/e G4/e F4/q | D5/e C5/e Bb4/e A4/e G4/q A4/e G4/e F#4/e E4/e D4/q | G4/h. G4/h. | Bb4/q G4/q A4/q Bb4/q C5/q D5/q | A4/q F4/q G4/q A4/q Bb4/q C5/q | Bb4/q G4/q A4/q Bb4/q C5/q D5/q | A4/h F#4/q D4/h. | D5/q Bb4/q C5/q D5/q D#5/q F5/q | A4/q F4/q G4/q A4/q Bb4/q C5/q | Bb4/q G4/q Bb4/q A4/q F#4/q D4/q | G4/h. G4/h. | G4/e A4/e Bb4/e C5/e D5/e G4/e G5/e F#5/e G5/e A5/e Bb5/e G5/e | G5/h F5/q F5/h. | G4/e A4/e Bb4/e C5/e D5/e G4/e G5/e F#5/e G5/e A5/e Bb5/e G5/e | F#5/h D5/q D5/h. | Bb4/e A4/e Bb4/e C5/e D5/e D#5/e F5/e G5/e A5/e F5/e G5/e A5/e | F5/q C5/q C5/q C5/q. D5/e D#5/q | Bb4/q A4/q G4/q F#4/q. E4/e F#4/q | G4/h. G4/h. | Bb4/e A4/e Bb4/e C5/e D5/e C5/e Bb4/e A4/e Bb4/e C5/e D5/e C5/e | A4/e G4/e A4/e Bb4/e C5/e Bb4/e A4/e G4/e A4/e Bb4/e C5/e Bb4/e | Bb4/e A4/e Bb4/e C5/e Bb4/e A4/e G4/e F4/e G4/e A4/e Bb4/e G4/e | A4/e G4/e A4/e G4/e F#4/e E4/e D4/e E4/e F#4/e G4/e F#4/e D4/e | Bb4/e A4/e Bb4/e C5/e D5/e C5/e Bb4/e A4/e Bb4/e C5/e D5/e C5/e | C5/e Bb4/e C5/e D5/e C5/e Bb4/e A4/e G4/e A4/e Bb4/e C5/e A4/e | Bb4/e A4/e Bb4/e C5/e D5/e C5/e C5/e Bb4/e A4/e G4/e A4/e F#4/e | G4/h. G4/h. | G4/e A4/e Bb4/q G4/q Bb4/e C5/e D5/q G4/q | F4/e G4/e A4/q F4/q A4/e Bb4/e C5/q F4/q | G4/e A4/e Bb4/q G4/q Bb4/e C5/e D5/q G4/q | D4/e E4/e F#4/q D4/q F#4/e G4/e A4/q D4/q | Bb4/e C5/e D5/q Bb4/q D5/e D#5/e F5/q Bb4/q | F4/e G4/e A4/q F4/q A4/e Bb4/e C5/q F4/q | G5/e A5/e Bb5/q G5/q F#5/e G5/e A5/q F#5/q | G5/h. G5/h. | Bb5/q Bb5/q Bb5/q Bb4/q Bb4/q Bb4/q | F5/q F5/q F5/q F4/q. G4/e A4/q | G5/q G5/q G5/q G4/q. A4/e Bb4/e C5/e | D5/q D5/q D5/q F#4/q D4/q D4/q | Bb5/q Bb5/q Bb5/q Bb4/q. C5/e D5/e D#5/e | F5/q F5/q G5/q A5/q. G5/e F5/q | Bb5/q A5/q G5/q F#5/q. E5/e F#5/q | G5/h. G5/h. | Bb4/e D5/e D5/e D5/e D5/e D5/e Bb4/e D5/e D5/e D5/e D5/e D5/e | A4/e C5/e C5/e C5/e C5/e C5/e A4/e C5/e C5/e C5/e C5/e C5/e | G4/e Bb4/e Bb4/e Bb4/e Bb4/e Bb4/e G4/e Bb4/e Bb4/e Bb4/e Bb4/e Bb4/e | F4/e A4/e A4/e A4/e A4/e A4/e D4/e A4/e A4/e A4/e A4/e A4/e | D5/e F5/e F5/e F5/e F5/e F5/e Bb4/e F5/e F5/e F5/e F5/e F5/e | A4/e C5/e C5/e C5/e C5/e C5/e F4/e C5/e C5/e C5/e C5/e C5/e | G4/e Bb4/e Bb4/e Bb4/e Bb4/e Bb4/e D4/e A4/e A4/e A4/e A4/e A4/e | G4/h. G4/h. | G5/q F5/e D#5/e D5/e C5/e Bb4/h G4/q | F5/q D#5/e D5/e C5/e Bb4/e A4/h F4/q | G5/q F5/e D#5/e D5/e C5/e Bb4/h G4/q | D5/q C5/e Bb4/e A4/e G4/e F#4/h D4/q | Bb5/q A5/e G5/e F5/e D#5/e D5/h Bb4/q | F5/q D#5/e D5/e C5/e Bb4/e A4/h F4/q | Bb4/e C5/e D5/e E5/e F#5/e G5/e A5/e G5/e F#5/e D5/e E5/e F#5/e | G5/h. G5/h. | Bb4/q G4/q D5/e C5/e Bb4/q G4/q C5/e Bb4/e | A4/q F4/q C5/e Bb4/e A4/q F4/q D5/e C5/e | Bb4/q G4/q D5/e C5/e Bb4/q G4/q A4/e G4/e | F#4/q D4/q A4/e G4/e F#4/q D4/q F5/e D#5/e | D5/q Bb4/q F5/e D#5/e D5/q Bb4/q C5/e Bb4/e | A4/q F4/q C5/e Bb4/e A4/q F4/q D5/e D#5/e | F5/q D5/q G5/q F#5/h E5/e F#5/e | G5/h. G5/h. | Bb4/q F5/q D#5/q D5/q C5/q Bb4/q | F4/q C5/q Bb4/q A4/q G4/q F4/q | G4/q D5/q C5/q Bb4/q A4/q G4/q | D5/q A5/q G5/q F#5/q E5/q D5/q | Bb4/q F5/q D#5/q D5/q C5/q Bb4/q | F4/q C5/q Bb4/q A4/q G4/q F4/q | G4/q D5/q C5/e Bb4/e A4/e G4/e F#4/e E4/e F#4/e D4/e | G4/h. G4/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "ground",
+      "name": "Ground",
+      "sound": "cello",
+      "music": "Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w. | Bb2/w. | F2/w. | G2/w. | D2/w. | Bb2/w. | F2/w. | G2/h. D2/h. | G2/w."
+    }
+  ]
+}
