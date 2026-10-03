@@ -9,6 +9,7 @@ requests from play-testing) first. This file says where things stand and what co
 scripts/run.sh                 # build and start (--editor for the Godot editor)
 scripts/test.sh                # build, xUnit (~4 min), headless boot + smoke
 scripts/fetch-soundfont.sh     # GeneralUser GS SoundFont (31 MB, not in git) for the natural voice / band
+scripts/export-windows.sh      # release build in build/windows + build/Pipit-windows.zip, smoke-tested
 scripts/import-fixtures.sh     # guided Studio takes -> tests/fixtures/audio (rejected.txt excludes bad ones)
 "$GODOT" --path "$PROJECT_UNC" -- --shots   # screenshots of every screen into user://shots (opens a window)
 ```
@@ -77,7 +78,7 @@ Next steps, in order:
 | Player profiles (M4) | done; leaderboard entries carry the player name. A shared board across players on this computer would be a nice next step. |
 | **Android APK for tablets** | Godot 4 C# exports to Android (.NET 8). Needs: Android SDK/JDK + export templates, `RECORD_AUDIO` permission and a runtime prompt, touch-sized controls (most buttons are already 48 px+), checking YIN/segmenter CPU on a tablet (narrow the search range, maybe hop 512), the SoundFont size (31 MB; consider a trimmed bank), `user://` paths (already used everywhere), no F11/keyboard assumptions, and Windows-only bits (`OS.ShellOpen` on folders, "Segoe UI" font: bundle an OFL font instead). |
 | More music | Candidates in the user's `C:\data\flute` (all scanned PDFs, so transcription by hand or OMR): Pachelbel *Canon* SATB recorders (mfiles, © J. Paterson, personal use), Mel Bay *Celtic Tunes for Recorder* (tunes from O'Neill/Roche, PD at source), baroque flute pieces playable on recorder (Hotteterre, Naudot, Boismortier, Loeillet, Blavet, Marcello, Mattheson, Telemann duets), *A Tune a Day* / Suzuki (copyrighted, personal use only). Also needs Public Domain / CC-BY sources: Dowland *Flow my tears* (the downloaded file was *Burst forth my tears*, Kunstderfuge, not used), Van Eyck *Pavaen Lachrymae* / *Engels Nachtegaeltje*, *Lamento di Tristano*, Scarborough Fair. Gettys' consort MIDIs suit the band later (personal use). |
-| Windows export (M9) | Export preset must include `data/*`, `assets/fonts/*`, `assets/soundfont/*.sf2` as non-resource files. |
+| ~~Windows export (M9)~~ | Done 2026-10-03: `scripts/export-windows.sh` exports a release build with the committed `export_presets.cfg` (data, fonts and SoundFont packed into Pipit.pck), smoke-tests it and zips it to `build/Pipit-windows.zip`. Not yet: an app icon and version numbers in the preset. |
 
 ## Known issues / notes
 
