@@ -23,7 +23,7 @@ public partial class StudioScreen : Screen
     private readonly Label _summary;
     private readonly Button _record, _guided, _play, _delete, _star;
     private readonly OptionButton _sessions;
-    private readonly HSlider _speed = new() { MinValue = 50, MaxValue = 120, Step = 5, Value = 100, CustomMinimumSize = new Vector2(150, 0) };
+    private readonly HSlider _speed = new() { MinValue = 20, MaxValue = 200, Step = 5, Value = 100, CustomMinimumSize = new Vector2(190, 0) };
     private readonly Label _speedLabel = new() { Text = "100%" };
     private readonly LevelMeter _meter = new();
     private readonly AudioStreamPlayer _player = new();

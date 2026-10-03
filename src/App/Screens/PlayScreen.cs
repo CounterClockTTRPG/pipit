@@ -39,7 +39,7 @@ public partial class PlayScreen : Screen
     private readonly VBoxContainer _resultsBox = Ui.VBox(8);
     private readonly Button _start, _listen;
     private readonly OptionButton _modeOption, _difficultyOption;
-    private readonly HSlider _speed = new() { MinValue = 50, MaxValue = 120, Step = 5, Value = 100, CustomMinimumSize = new Vector2(120, 0), SizeFlagsVertical = SizeFlags.ShrinkCenter };
+    private readonly HSlider _speed = new() { MinValue = 20, MaxValue = 200, Step = 5, Value = 100, CustomMinimumSize = new Vector2(170, 0), SizeFlagsVertical = SizeFlags.ShrinkCenter };
     private readonly CheckBox _metronome = new() { ButtonPressed = true };
     private readonly CheckBox _help = new() { ButtonPressed = true };
     private readonly AudioStreamPlayer _player = new();
