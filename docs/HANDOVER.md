@@ -81,19 +81,18 @@ Next steps, in order:
 | More music | Candidates in the user's `C:\data\flute` (all scanned PDFs, so transcription by hand or OMR): Pachelbel *Canon* SATB recorders (mfiles, © J. Paterson, personal use), Mel Bay *Celtic Tunes for Recorder* (tunes from O'Neill/Roche, PD at source), baroque flute pieces playable on recorder (Hotteterre, Naudot, Boismortier, Loeillet, Blavet, Marcello, Mattheson, Telemann duets), *A Tune a Day* / Suzuki (copyrighted, personal use only). Also needs Public Domain / CC-BY sources: Dowland *Flow my tears* (the downloaded file was *Burst forth my tears*, Kunstderfuge, not used), Van Eyck *Pavaen Lachrymae* / *Engels Nachtegaeltje*, *Lamento di Tristano*, Scarborough Fair. Gettys' consort MIDIs suit the band later (personal use). |
 | ~~Windows export (M9)~~ | Done 2026-10-03: `scripts/export-windows.sh` exports a release build with the committed `export_presets.cfg` (data, fonts and SoundFont packed into Pipit.pck), smoke-tests it and zips it to `build/Pipit-windows.zip`. Not yet: an app icon and version numbers in the preset. |
 
-## In progress: speech for Note reading (2026-10-03)
+## Speech in Note reading (2026-10-03)
 
-Note reading works by tapping names or letter keys. Speech was started:
-`scripts/fetch-speech-models.sh` downloads the small Vosk models (en/nl/fr, ~66 MB each, into
-git-ignored `assets/speech/`). Next: add the `Vosk` NuGet package (0.3.38; native libs for
-win-x64/linux/osx, none for Android, so tablets stay tap-only), a `SpeechListener` fed from
-`AudioHub.SamplesCaptured` (resample 48 kHz to 16 kHz) with a grammar of the note names and
-word timings (`SetWords(true)`); at the end of a round, map each word's start time to the capture clock
-and grade with `NameDrill.Grade`. The small models have no words.txt to check the vocabulary,
-so test which spellings each model hears (do/re/ré/mi/fa/sol/la/si; c d e f g a b in English),
-for instance with Windows TTS (System.Speech) rendering test WAVs. Exported builds must copy
-the model out of the .pck to user:// (Vosk needs a real folder); leave the models out of the
-Android preset.
+"Say the names" in Note reading uses Vosk offline (`src/App/Audio/SpeechListener.cs`) with the
+small models from `scripts/fetch-speech-models.sh` (en/nl/fr, ~66 MB each, git-ignored in
+`assets/speech/`, which has a `.gdignore`: Godot scanning them made start-up take minutes).
+Exported Windows builds carry them in `speech/` next to the exe (zip ~230 MB). Native libs
+are loaded by full path from the build folder (Godot loads assemblies without a Location).
+Grammar and spellings in `Core/Practice/NoteWords.cs`. Verified with Windows TTS (English):
+do re mi fa sol and C D F G A B are heard with timings; La/Si by the TTS voice were not, and
+Dutch/French could not be checked by ear here (no voices installed): needs a real try.
+Not on Android (Vosk's .NET package has no Android library; vosk-android's libvosk.so could
+be bundled later).
 
 ## Known issues / notes
 
