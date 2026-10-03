@@ -1,0 +1,51 @@
+{
+  "id": "rufty-tufty",
+  "title": {
+    "en": "Rufty Tufty",
+    "nl": "Rufty Tufty"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "D",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "A cheerful dance in four with a pickup: count \"four\" and go.",
+    "nl": "Een vrolijke dans in vier met een opmaat: tel \"vier\" en begin."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q | D5/h D5/q E5/q | F#5/h E5/q F#5/q | G5/q G5/q F#5/q E5/q | D5/h. :| |: E5/e F#5/e | G5/q F#5/q E5/q D5/q | D5/q C5/q B4/q B4/e C5/e | D5/q D5/q C5/q B4/q | A4/h G4/q :| |: B4/q | B4/q. C5/e D5/q D5/q | E5/q C5/q D5/h | B4/q. C5/e D5/q D5/q | E5/q C5/q D5/q B4/e C5/e | D5/q D5/q C5/q B4/q | A4/h G4/q :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | D3/h. A2/q | D3/w | G2/h A2/h | D3/w | D3/h. A2/q | D3/w | G2/h A2/h | D3/w | G2/h C3/h | D3/h G2/h | D3/h C3/h | D3/h G2/h | G2/h C3/h | D3/h G2/h | D3/h C3/h | D3/h G2/h | G2/w | C3/h G2/h | G2/w | C3/h G2/h | D3/h C3/h | D3/h G2/h | G2/w | C3/h G2/h | G2/w | C3/h G2/h | D3/h C3/h | D3/h G2/q"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | F#4/h. C#4/q | F#4/w | B3/h C#4/h | F#4/w | F#4/h. C#4/q | F#4/w | B3/h C#4/h | F#4/w | B3/h E4/h | F#4/h B3/h | F#4/h E4/h | F#4/h B3/h | B3/h E4/h | F#4/h B3/h | F#4/h E4/h | F#4/h B3/h | B3/w | E4/h B3/h | B3/w | E4/h B3/h | F#4/h E4/h | F#4/h B3/h | B3/w | E4/h B3/h | B3/w | E4/h B3/h | F#4/h E4/h | F#4/h B3/q"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | A3/h. G3/q | A3/w | D4/h G3/h | A3/w | A3/h. G3/q | A3/w | D4/h G3/h | A3/w | D4/h G3/h | A3/h D4/h | A3/h G3/h | C4/h D4/h | D4/h G3/h | A3/h D4/h | A3/h G3/h | C4/h D4/h | D4/w | G3/h D4/h | D4/w | G3/h D4/h | A3/h G3/h | C4/h D4/h | D4/w | G3/h D4/h | D4/w | G3/h D4/h | A3/h G3/h | C4/h D4/q"
+    }
+  ]
+}

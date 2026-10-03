@@ -25,7 +25,7 @@
       "id": "melody",
       "name": "Melody",
       "instrument": "soprano",
-      "music": "C4/e | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e Bb4/e C5/e A4/e | G4/h | F4/q C4/q | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e. Bb4/s C5/e A4/e | G4/h | F4/q C5/q | F5/q E5/q | D5/q E5/e F5/e | E5/q D5/q | C5/q. Db5/e | D5/q. A4/e | A4/q Db5/q | D5/q E5/q | F5/q. F5/e | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e Bb4/e C5/e A4/e | G4/h | F4/q."
+      "music": "C4/e | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e Bb4/e C5/e A4/e | G4/h | F4/q C4/q | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e. Bb4/s C5/e A4/e | G4/h | F4/q C5/q | F5/q E5/q | D5/q E5/e F5/e | E5/q D5/q | C5/q. C#5/e | D5/q. A4/e | A4/q C#5/q | D5/q E5/q | F5/q. F5/e | F4/q. G4/e | Bb4/e A4/e G4/e F4/e | A4/q C5/q | F5/q E5/e F5/e | D5/q C5/q | A4/e Bb4/e C5/e A4/e | G4/h | F4/q."
     }
   ],
   "accompaniment": [
@@ -39,7 +39,7 @@
       "id": "chord1",
       "name": "Chords",
       "sound": "strings",
-      "music": "R/e | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q | A3/h | E4/h | A3/h | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q~ | A3/h | E4/h | A3/h | F4/q Db4/q | F4/q B3/q | E4/q B3/q | E4/h | F4/h | Db4/h | F4/q Db4/q | F4/h | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q~ | A3/h | E4/h | A3/q."
+      "music": "R/e | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q | A3/h | E4/h | A3/h | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q~ | A3/h | E4/h | A3/h | F4/q C#4/q | F4/q B3/q | E4/q B3/q | E4/h | F4/h | C#4/h | F4/q C#4/q | F4/h | A3/q. E4/e | A3/h~ | A3/q E4/q | F4/q E4/q | D4/q A3/q~ | A3/h | E4/h | A3/q."
     },
     {
       "id": "chord2",

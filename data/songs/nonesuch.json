@@ -1,0 +1,51 @@
+{
+  "id": "nonesuch",
+  "title": {
+    "en": "Nonesuch",
+    "nl": "Nonesuch"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "2/2",
+  "key": "Am",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "Two beats in a bar, in the Dorian mode. A good first Playford tune: small steps and an easy range.",
+    "nl": "Twee tellen per maat, in de dorische toonladder. Een goede eerste Playford-melodie: kleine stapjes en een klein bereik."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q | A4/q F4/q G4/q A4/q | F4/q E4/e F4/e D4/q A4/q | A4/q F4/q G4/q A4/q | F4/h D4/q A4/q | A4/q F4/q G4/q A4/q | F4/q E4/e F4/e D4/q A4/q | A4/q F4/q G4/q A4/q | D4/h. E4/q | E4/q C4/q D4/q E4/q | F4/q E4/e F4/e D4/q E4/q | E4/q C4/q D4/q E4/q | F4/h D4/q E4/q | E4/q C4/q D4/q E4/q | F4/q E4/e F4/e D4/q E4/q | E4/q C4/q D4/q E4/q | D4/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | D3/h C3/h | D3/w | D3/h C3/h | D3/w~ | D3/h C3/h | D3/w~ | D3/h C3/h | D3/w | C3/w | D3/w | C3/w | D3/w | C3/w | D3/w | C3/w | D3/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | F4/h E4/h | F4/w | F4/h E4/h | F4/w~ | F4/h E4/h | F4/w~ | F4/h E4/h | F4/w | E4/w | F4/w | E4/w | F4/w | E4/w | F4/w | E4/w | F4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | A3/h G3/h | A3/w | A3/h G3/h | A3/w~ | A3/h G3/h | A3/w~ | A3/h G3/h | A3/w | G3/w | A3/w | G3/w | A3/w | G3/w | A3/w | G3/w | A3/h."
+    }
+  ]
+}

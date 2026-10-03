@@ -1,0 +1,50 @@
+{
+  "id": "packingtons-pound",
+  "title": {
+    "en": "Packington's Pound",
+    "nl": "Packington's Pound"
+  },
+  "composer": "Anonymous",
+  "period": "renaissance",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "3/4",
+  "key": "Am",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A tune from Elizabethan England, around 1590, used for many ballads and later in \"The Beggar's Opera\" (1728).",
+    "nl": "Een melodie uit het Engeland van Elizabeth I, rond 1590, gebruikt voor veel balladen en later in \"The Beggar's Opera\" (1728)."
+  },
+  "tip": {
+    "en": "Three beats in a bar, with dotted rhythms: tongue the short notes lightly.",
+    "nl": "Drie tellen per maat, met gepunteerde ritmes: tong de korte noten licht."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q. B4/e C5/q | B4/h. | A4/q. B4/e C5/q | B4/h C5/e D5/e | E5/q. F5/e E5/q | D5/q B4/q G4/q | A4/q C5/q B4/q | A4/h. | A4/e G#4/e A4/e B4/e C5/q | B4/q G#4/q E4/q | A4/e B4/e C5/e D5/e C5/q | B4/h C5/e D5/e | E5/e F5/e E5/e D5/e E5/e C5/e | D5/q B4/q G4/q | A4/e B4/e C5/q B4/q | A4/h. || E5/q G5/q F#5/q | E5/h B4/q | E5/q G5/q F#5/q | E5/h. | E5/q G5/q F#5/q | E5/q G5/q F#5/q | E5/q G5/q F#5/q | E5/h B4/q || E5/q. F5/e E5/q | D5/q B4/q G4/q | C5/q. D5/e C5/q | B4/h. | E5/q. F5/e E5/q | D5/q B4/q G4/q | A4/e B4/e C5/q B4/q | A4/h. | E5/e D5/e E5/e F5/e E5/q | D5/e C5/e B4/e A4/e G4/q | C5/e B4/e C5/e D5/e C5/q | B4/h C5/e D5/e | E5/e F5/e E5/e D5/e E5/e C5/e | D5/q B4/q G4/q | A4/e B4/e C5/q B4/q | A4/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "A2/h. | E2/h. | A2/h. | E2/h. | C3/h. | G2/h. | A2/h E2/q | A2/h. | A2/h. | E2/h. | A2/h. | E2/h. | C3/h. | G2/h. | A2/h E2/q | A2/h. | E2/h.~ | E2/h.~ | E2/h.~ | E2/h.~ | E2/h.~ | E2/h.~ | E2/h.~ | E2/h. | C3/h. | G2/h. | A2/h. | E2/h. | C3/h. | G2/h. | A2/h E2/q | A2/h. | C3/h. | G2/h. | A2/h. | E2/h. | C3/h. | G2/h. | A2/h E2/q | A2/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "C4/h. | G#3/h. | C4/h. | G#3/h. | E4/h. | B3/h. | C4/h G#3/q | C4/h. | C4/h. | G#3/h. | C4/h. | G#3/h. | E4/h. | B3/h. | C4/h G#3/q | C4/h. | G3/h.~ | G3/h.~ | G3/h.~ | G3/h.~ | G3/h.~ | G3/h.~ | G3/h.~ | G3/h. | E4/h. | B3/h. | C4/h. | G3/h. | E4/h. | B3/h. | C4/h G#3/q | C4/h. | E4/h. | B3/h. | C4/h. | G3/h. | E4/h. | B3/h. | C4/h G#3/q | C4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "E4/h. | B3/h. | E4/h. | B3/h. | G3/h. | D4/h. | E4/h B3/q | E4/h. | E4/h. | B3/h. | E4/h. | B3/h. | G3/h. | D4/h. | E4/h B3/q | E4/h. | B3/h.~ | B3/h.~ | B3/h.~ | B3/h.~ | B3/h.~ | B3/h.~ | B3/h.~ | B3/h. | G3/h. | D4/h. | E4/h. | B3/h. | G3/h. | D4/h. | E4/h B3/q | E4/h. | G3/h. | D4/h. | E4/h. | B3/h. | G3/h. | D4/h. | E4/h B3/q | E4/h."
+    }
+  ]
+}

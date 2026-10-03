@@ -1,0 +1,51 @@
+{
+  "id": "newcastle",
+  "title": {
+    "en": "Newcastle",
+    "nl": "Newcastle"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "G",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "A march-like dance in four. Make the dotted rhythms crisp.",
+    "nl": "Een marsachtige dans in vier. Speel de gepunteerde ritmes scherp."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q | B4/q D5/q G4/q A4/q | G4/q. A4/e G4/q D4/q | B4/q D5/q G4/q D5/q | E5/q G5/h F#5/e E5/e | D5/q B4/q A4/q G4/q | E4/q E5/h D5/e C5/e | D5/q B4/q A4/q. G4/e | G4/h. :| |: E5/e F#5/e | G5/e F#5/e E5/e D5/e G5/q. B4/e | A4/q G5/h A4/q | G4/q. A4/e B4/q F#4/q | E4/q E5/h F#5/q | G5/e F#5/e E5/e D5/e G5/q. B4/e | A4/q A4/q C5/q. D5/e | E5/q B4/q A4/q. G4/e | G4/h. :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | G2/w~ | G2/w~ | G2/w | C3/w | G2/w | C3/w | G2/h D3/h | G2/w | G2/w~ | G2/w~ | G2/w | C3/w | G2/w | C3/w | G2/h D3/h | G2/w | G2/w | A2/w | E2/w | C3/w | G2/w | A2/w | E2/h D3/h | G2/w | G2/w | A2/w | E2/w | C3/w | G2/w | A2/w | E2/h D3/h | G2/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | B3/w~ | B3/w~ | B3/w | E4/w | B3/w | E4/w | B3/h F#4/h | B3/w | B3/w~ | B3/w~ | B3/w | E4/w | B3/w | E4/w | B3/h F#4/h | B3/w | B3/w | C4/w | G3/w | E4/w | B3/w | C4/w | G3/h F#4/h | B3/w | B3/w | C4/w | G3/w | E4/w | B3/w | C4/w | G3/h F#4/h | B3/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | D4/w~ | D4/w~ | D4/w | G3/w | D4/w | G3/w | D4/h C4/h | D4/w | D4/w~ | D4/w~ | D4/w | G3/w | D4/w | G3/w | D4/h C4/h | D4/w | D4/w | G3/w | B3/w | G3/w | D4/w | E4/w | B3/h C4/h | D4/w | D4/w | G3/w | B3/w | G3/w | D4/w | E4/w | B3/h C4/h | D4/h."
+    }
+  ]
+}

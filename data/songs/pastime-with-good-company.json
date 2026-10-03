@@ -1,0 +1,50 @@
+{
+  "id": "pastime-with-good-company",
+  "title": {
+    "en": "Pastime with Good Company",
+    "nl": "Pastime with Good Company"
+  },
+  "composer": "Henry VIII",
+  "period": "renaissance",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "Em",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A song written by King Henry VIII of England around 1513, when he was a young king who loved music, hunting and dancing.",
+    "nl": "Een lied geschreven door koning Hendrik VIII van Engeland rond 1513, toen hij een jonge koning was die van muziek, jagen en dansen hield."
+  },
+  "tip": {
+    "en": "Small range and a steady four: sing it in your head while you play.",
+    "nl": "Klein bereik en een gelijke vier: zing het in je hoofd terwijl je speelt."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C5/q. C5/e C5/q. C5/e | B4/e. C5/s B4/e A4/e G4/q. G4/e | C5/q. C5/e B4/q. A4/e | G#4/e A4/e G#4/s F#4/s G#4/e A4/h :| A4/q B4/q C5/q. G4/e | A4/q B4/q C5/q. C5/e | D5/e. C5/s B4/e A4/e G4/q. G4/e | A4/q B4/q C5/q. C5/e | A4/q B4/q C5/q. C5/e | B4/e A4/e G#4/s A4/s B4/s G#4/s A4/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "A2/w | G2/h E2/h | A2/h G2/h | E2/q E2/q A2/h | A2/w | G2/h E2/h | A2/h G2/h | E2/q E2/q A2/h | F2/q G2/q C3/h | F2/q G2/q C3/h | G2/h E2/h | F2/q G2/q C3/h | F2/q G2/q C3/h | D3/q E2/q A2/h"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "C4/w | B3/h G3/h | C4/h B3/h | G#3/q G#3/q C4/h | C4/w | B3/h G3/h | C4/h B3/h | G#3/q G#3/q C4/h | A3/q B3/q E4/h | A3/q B3/q E4/h | B3/h G3/h | A3/q B3/q E4/h | A3/q B3/q E4/h | F4/q G#3/q C#4/h"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "E4/w | D4/h B3/h | E4/h D4/h | B3/q D4/q E4/h | E4/w | D4/h B3/h | E4/h D4/h | B3/q D4/q E4/h | C4/q D4/q G3/h | C4/q D4/q G3/h | D4/h B3/h | C4/q D4/q G3/h | C4/q D4/q G3/h | A3/q D4/q E4/h"
+    }
+  ]
+}

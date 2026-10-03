@@ -1,0 +1,50 @@
+{
+  "id": "jenny-pluck-pears",
+  "title": {
+    "en": "Jenny Pluck Pears",
+    "nl": "Jenny Pluck Pears"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "6/8",
+  "key": "Em",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py. The first strain only: the second changes to 3/4.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "Six-eight, in the Aeolian mode: no sharps or flats, but it sounds minor.",
+    "nl": "Zes-achtste, in de eolische toonladder: geen kruisen of mollen, maar het klinkt mineur."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q A4/e B4/e. C5/s D5/e | C5/e. B4/s A4/e G4/q E4/e | A4/q A4/e B4/e. C5/s D5/e | C5/e. B4/s A4/e G4/q E4/e | E5/q E5/e D5/q B4/e | C5/e. B4/s A4/e G4/q E4/e | F#4/e. G4/s A4/e G4/e. F#4/s G4/e | A4/q. A4/q. :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "A2/q. G2/q. | A2/q. E2/q. | A2/q. G2/q. | A2/q. E2/q. | C3/q. G2/q. | A2/q. E2/q. | D3/q. E2/q. | A2/h. | A2/q. G2/q. | A2/q. E2/q. | A2/q. G2/q. | A2/q. E2/q. | C3/q. G2/q. | A2/q. E2/q. | D3/q. E2/q. | A2/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "C4/q. B3/q. | C4/q. G3/q. | C4/q. B3/q. | C4/q. G3/q. | E4/q. B3/q. | C4/q. G3/q. | F#4/q. G3/q. | C4/h. | C4/q. B3/q. | C4/q. G3/q. | C4/q. B3/q. | C4/q. G3/q. | E4/q. B3/q. | C4/q. G3/q. | F#4/q. G3/q. | C4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "E4/q. D4/q. | E4/q. B3/q. | E4/q. D4/q. | E4/q. B3/q. | G3/q. D4/q. | E4/q. B3/q. | A3/q. B3/q. | E4/h. | E4/q. D4/q. | E4/q. B3/q. | E4/q. D4/q. | E4/q. B3/q. | G3/q. D4/q. | E4/q. B3/q. | A3/q. B3/q. | E4/h."
+    }
+  ]
+}

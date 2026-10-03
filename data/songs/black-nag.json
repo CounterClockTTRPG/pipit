@@ -1,0 +1,51 @@
+{
+  "id": "black-nag",
+  "title": {
+    "en": "The Black Nag",
+    "nl": "The Black Nag"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "6/8",
+  "key": "Am",
+  "pickup": "e",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "A jig in six-eight: feel two big beats in a bar.",
+    "nl": "Een gigue in zes-achtste: voel twee grote tellen per maat."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "E4/e | A4/e. B4/s A4/e B4/e. A4/s B4/e | C5/e. B4/s C5/e B4/e C5/e D5/e | E5/e. D5/s C5/e B4/e. A4/s B4/e | A4/q. A4/q :| |: A4/e | B4/e. G4/s E4/e B4/e G4/e E4/e | B4/e G4/e E4/e B4/e C5/e D5/e | E5/e. C5/s A4/e E5/e C5/e A4/e | E5/e C5/e A4/e E5/e C5/e A4/e | B4/e. G4/s E4/e B4/e G4/e E4/e | B4/e G4/e E4/e B4/e. C5/s D5/e | E5/e. D5/s C5/e B4/e. A4/s B4/e | A4/q. A4/q :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/e | A2/q. E2/q. | A2/q. G2/q. | A2/q. E2/q. | A2/h. | A2/q. E2/q. | A2/q. G2/q. | A2/q. E2/q. | A2/h. | E2/h.~ | E2/h. | A2/h.~ | A2/h. | E2/h.~ | E2/h. | A2/q. E2/q. | A2/h. | E2/h.~ | E2/h. | A2/h.~ | A2/h. | E2/h.~ | E2/h. | A2/q. E2/q. | A2/h~ A2/e"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/e | C4/q. G3/q. | C4/q. B3/q. | C4/q. G3/q. | C4/h. | C4/q. G3/q. | C4/q. B3/q. | C4/q. G3/q. | C4/h. | G3/h.~ | G3/h. | C4/h.~ | C4/h. | G3/h.~ | G3/h. | C4/q. G3/q. | C4/h. | G3/h.~ | G3/h. | C4/h.~ | C4/h. | G3/h.~ | G3/h. | C4/q. G3/q. | C4/h~ C4/e"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/e | E4/q. B3/q. | E4/q. D4/q. | E4/q. B3/q. | E4/h. | E4/q. B3/q. | E4/q. D4/q. | E4/q. B3/q. | E4/h. | B3/h.~ | B3/h. | E4/h.~ | E4/h. | B3/h.~ | B3/h. | E4/q. B3/q. | E4/h. | B3/h.~ | B3/h. | E4/h.~ | E4/h. | B3/h.~ | B3/h. | E4/q. B3/q. | E4/h~ E4/e"
+    }
+  ]
+}

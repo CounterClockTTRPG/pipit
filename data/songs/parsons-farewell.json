@@ -1,0 +1,51 @@
+{
+  "id": "parsons-farewell",
+  "title": {
+    "en": "Parson's Farewell",
+    "nl": "Parson's Farewell"
+  },
+  "composer": "Anonymous (Playford)",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "Am",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's Session Tunebook (pghardy.net, CC BY-NC-SA); chord symbols as the band; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "John Playford's \"The English Dancing Master\" (1651) collected the country dances of his time, tunes with the steps to dance them. It went through eighteen editions in eighty years.",
+    "nl": "John Playfords \"The English Dancing Master\" (1651) verzamelde de volksdansen van zijn tijd, melodieën met de passen om ze te dansen. Het boek kende achttien drukken in tachtig jaar."
+  },
+  "tip": {
+    "en": "A slow strain and a fast one: change the speed in your head when the second part starts.",
+    "nl": "Een trage strofe en een snelle: wissel het tempo in je hoofd als het tweede deel begint."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q | C5/q A4/q A4/q B4/e C5/e | D5/q G4/q G4/q. G4/e | A4/e B4/e C5/q B4/q A4/q | G4/q E4/q E4/q :| |: E5/q | C5/h C5/q E5/q | C5/h C5/q E5/q | C5/e D5/e E5/q C5/e D5/e E5/q | D5/q B4/q B4/h | B4/e C5/e D5/q B4/e C5/e D5/q | C5/q A4/q A4/e B4/e C5/e D5/e | E5/q D5/e C5/e B4/e A4/e B4/q | A4/h. :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | A2/w | G2/w | A2/w | E2/w | A2/w | G2/w | A2/w | E2/w | C3/w~ | C3/w~ | C3/w | G2/w~ | G2/w | A2/w | E2/w | A2/w | C3/w~ | C3/w~ | C3/w | G2/w~ | G2/w | A2/w | E2/w | A2/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | C4/w | B3/w | C4/w | G3/w | C4/w | B3/w | C4/w | G3/w | E4/w~ | E4/w~ | E4/w | B3/w~ | B3/w | C4/w | G3/w | C4/w | E4/w~ | E4/w~ | E4/w | B3/w~ | B3/w | C4/w | G3/w | C4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | E4/w | D4/w | E4/w | B3/w | E4/w | D4/w | E4/w | B3/w | G3/w~ | G3/w~ | G3/w | D4/w~ | D4/w | E4/w | B3/w | E4/w | G3/w~ | G3/w~ | G3/w | D4/w~ | D4/w | E4/w | B3/w | E4/h."
+    }
+  ]
+}

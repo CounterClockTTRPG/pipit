@@ -9,6 +9,8 @@ rhythms a>b. Chords [ceg] keep their top note; grace notes, decorations and lyri
 dropped. Chord symbols ("Em", "D7", "G/B") become three band parts: a bass on the root
 (or the given bass note) and two held chord tones.
 
+--halve halves every note value (4/2 becomes 4/4), as modern editions of early music do.
+--voice N reads the Nth voice of a multi-voice tune (a consort part).
 --part Bass reads a named P: section instead (a ground or bass written after the tune).
 --tune picks the Nth tune in the file (from 1, default 1). --json prints title, time, key,
 pickup, music and the band parts; otherwise the music and a summary on stderr.
@@ -19,6 +21,8 @@ from fractions import Fraction as Fr
 STEP = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
 SHARPS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
 FLATS = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+# Keys with one to three flats keep the leading notes F# and C# (G minor, D minor).
+FEW_FLATS = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
 ORDER_SHARPS, ORDER_FLATS = 'FCGDAEB', 'BEADGCF'
 MODES = {'': 0, 'maj': 0, 'ion': 0, 'm': -3, 'min': -3, 'aeo': -3, 'dor': -2, 'mix': -1, 'lyd': 1, 'phr': -4, 'loc': -5}
 MAJOR_FIFTHS = {'C': 0, 'G': 1, 'D': 2, 'A': 3, 'E': 4, 'B': 5, 'F#': 6, 'C#': 7, 'F': -1, 'Bb': -2, 'Eb': -3, 'Ab': -4, 'Db': -5, 'Gb': -6, 'Cb': -7}
@@ -105,13 +109,20 @@ class Writer:
                 out.append(':|')
         return ' '.join(out).replace(' |: ', ' |: ').strip()
 
-def parse(lines, transpose, names, part=None):
-    """part: the label of a P: section to read instead of the tune (e.g. "Bass")."""
+def parse(lines, transpose, names, part=None, voice_no=1, halve=False):
+    """part: the label of a P: section to read instead of the tune (e.g. "Bass");
+    voice_no: which V: voice to read, counted in order of appearance (1 = the first)."""
     head, body = {}, []
     in_body = False
-    first_voice = voice = None
+    voices, voice = [], None
     selecting = part is None
+    in_text = False
     for line in lines:
+        if line.startswith('%%begintext'):
+            in_text = True
+        if in_text:  # a block of words (verses) between %%begintext and %%endtext
+            in_text = not line.startswith('%%endtext')
+            continue
         if line.startswith('%') or re.match(r'^[wWNHZSOBDFGIR]:', line):
             continue
         m = re.match(r'^([A-Za-z]):(.*)$', line)
@@ -122,9 +133,12 @@ def parse(lines, transpose, names, part=None):
             continue
         if not in_body:
             continue
+        if not line.strip():
+            break  # a blank line ends the tune (verses often follow)
         if m and m.group(1) == 'V':
             voice = m.group(2).split()[0] if m.group(2).split() else ''
-            first_voice = first_voice if first_voice is not None else voice
+            if voice not in voices:
+                voices.append(voice)
             continue
         if m and m.group(1) == 'P':
             label = m.group(2).strip()
@@ -133,15 +147,20 @@ def parse(lines, transpose, names, part=None):
             elif not re.fullmatch(r'[A-Z]\d*\.?', label):
                 break  # another part (a bass, a descant): the tune ends here
             continue
-        if voice is not None and voice != first_voice:
-            continue  # only the first voice
+        if voice is not None and voices.index(voice) != voice_no - 1:
+            continue  # another voice
         if m and m.group(1) in 'KLM':
             line = f'[{m.group(1)}:{m.group(2).strip()}]'
         if selecting:
             body.append(line)
     meter = head.get('M', '4/4').replace('C|', '2/2').replace('C', '4/4')
-    up, low = (int(x) for x in meter.split('/'))
+    if not re.match(r'\s*\d+/\d+', meter):
+        raise SystemExit(f"no time signature (M:{head.get('M')}): free rhythm cannot be written")
+    up, low = (int(x) for x in meter.split()[0].split('/'))
     unit = Fr(head['L']) * 4 if 'L' in head else (Fr(1, 16) if up / low < 0.75 else Fr(1, 8)) * 4
+    if halve:  # early music in halves (4/2, 3/2) read in quarters, as modern editions do
+        low, unit = low * 2, unit / 2
+        head['M'] = f'{up}/{low}' 
     fifths, keysig = key_signature(head.get('K', 'C'))
     bar_beats = Fr(up * 4, low)
     w = Writer(bar_beats, names)
@@ -154,7 +173,10 @@ def parse(lines, transpose, names, part=None):
     while i < len(text):
         c = text[i]
         if c == '"':
-            j = text.index('"', i + 1); sym = text[i+1:j]; i = j + 1
+            j = text.find('"', i + 1)
+            if j < 0:  # an unclosed annotation: skip it
+                i += 1; continue
+            sym = text[i+1:j]; i = j + 1
             if sym and sym[0] not in '^_<>@':
                 chords.append((beat, sym))
             continue
@@ -311,11 +333,14 @@ def main():
     ap.add_argument('--transpose', type=int, default=0); ap.add_argument('--flats', action='store_true')
     ap.add_argument('--json', action='store_true')
     ap.add_argument('--part', help='read this P: section (e.g. Bass) instead of the tune')
+    ap.add_argument('--halve', action='store_true', help='halve all note values (4/2 becomes 4/4)')
+    ap.add_argument('--voice', type=int, default=1, help='read the Nth V: voice (1 = the first, the default)')
     a = ap.parse_args()
     lines = tunes(open(a.abc, encoding='utf-8', errors='replace').read())[a.tune - 1]
     fifths0, _ = key_signature(next((l[2:] for l in lines if l.startswith('K:')), 'C'))
-    names = FLATS if a.flats or fifths0 + a.transpose * 7 % 12 < 0 and fifths0 < 0 else SHARPS
-    head, w, chords, pickup, fifths, bar_beats = parse(lines, a.transpose, names, a.part)
+    target = ((fifths0 + 7 * a.transpose + 6) % 12) - 6  # the key signature after transposing
+    names = (FLATS if target <= -4 else FEW_FLATS) if a.flats or target < 0 else SHARPS
+    head, w, chords, pickup, fifths, bar_beats = parse(lines, a.transpose, names, a.part, a.voice, a.halve)
     music = w.music()
     total = sum(sum(pieces_len(t) for t in notes) for _, notes, _ in w.bars)
     pick = NAME_OF.get(pickup, None) if pickup else None
@@ -326,7 +351,7 @@ def main():
     parts = band(performed_chords(music, chords), performed, pickup, bar_beats, names, a.transpose)
     midis = [int(m.group(2)) * 12 + 12 + SHARPS.index(m.group(1)) if m.group(1) in SHARPS else int(m.group(2)) * 12 + 12 + FLATS.index(m.group(1))
              for m in re.finditer(r'\b([A-G][#b]?)(\d)/', music)]
-    info = {"title": head.get('T', ''), "time": f"{head.get('M', '4/4')}".replace('C|', '2/2').replace('C', '4/4'), "key": head.get('K', ''),
+    info = {"title": head.get('T', ''), "time": head.get('M', '4/4').split()[0].replace('C|', '2/2').replace('C', '4/4'), "key": head.get('K', ''),
             "pickup": pick, "music": music, "accompaniment": parts,
             "range": [min(midis), max(midis)] if midis else None, "source": {k: head[k] for k in ('S', 'Z', 'O', 'C', 'B') if k in head}}
     if a.json:
