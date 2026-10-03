@@ -638,7 +638,7 @@ Still to do, roughly in the order agreed:
 | Renaissance dances from David Bellugi's site | done, personal use only (`data/songs/personal/`) |
 | A natural (sampled) recorder sound next to the simple one | with MeltySynth, M7 |
 | Accompaniment through headphones | M7, in progress (see docs/HANDOVER.md) |
-| ~~UI translation: EN/NL~~; FR | done for Dutch (342+ texts, tested); French to do |
+| ~~UI translation: EN/NL/FR~~ | done: Dutch and French interface (387 texts each, tested), Pip's tour in all three; lessons and song notes in French still to do |
 | Baroque vs German fingering | done: per recorder, chart checked against Mollenhauer's, comparison lesson with a live measurement (chapter 4) |
 | Android APK for tablets | after M9; see docs/HANDOVER.md for what it needs |
 | More lessons, spaced out along the path | done: 10 chapters, 25 lessons |

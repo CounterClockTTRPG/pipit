@@ -6,7 +6,7 @@ namespace Pipit.Core.Tests;
 
 /// <summary>
 /// Every interface text has a Dutch translation (the same rules as tools/extract-strings.py,
-/// which adds new texts to data/i18n/nl.json for translating).
+/// which adds new texts to every data/i18n/*.json for translating).
 /// </summary>
 public partial class LocalisationTests
 {
@@ -44,15 +44,17 @@ public partial class LocalisationTests
         return found.Where(t => t.Any(char.IsLetter) && !t.StartsWith("res://") && !Regex.IsMatch(t, @"\{(?!\d)") && !Regex.IsMatch(t, @"\b[a-z]\w*\.[A-Z]\w*"));
     }
 
-    private static Dictionary<string, string> Dutch =>
-        JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Repo.Data("i18n", "nl.json")))!;
+    private static Dictionary<string, string> Table(string language) =>
+        JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Repo.Data("i18n", language + ".json")))!;
 
-    [Fact]
-    public void Every_interface_text_has_a_dutch_translation()
+    [Theory]
+    [InlineData("nl")]
+    [InlineData("fr")]
+    public void Every_interface_text_is_translated(string language)
     {
-        var dutch = Dutch;
-        var missing = Texts().Where(t => !dutch.TryGetValue(t, out var nl) || nl == "").OrderBy(t => t).ToList();
-        Assert.True(missing.Count == 0, "Not translated (run tools/extract-strings.py --update):\n" + string.Join("\n", missing));
+        var table = Table(language);
+        var missing = Texts().Where(t => !table.TryGetValue(t, out var translated) || translated == "").OrderBy(t => t).ToList();
+        Assert.True(missing.Count == 0, $"Not translated into {language} (run tools/extract-strings.py --update):\n" + string.Join("\n", missing));
     }
 
     [Fact]
@@ -65,11 +67,13 @@ public partial class LocalisationTests
         Assert.True(texts.Count > 250, $"only {texts.Count} texts found");
     }
 
-    [Fact]
-    public void Translations_keep_their_placeholders()
+    [Theory]
+    [InlineData("nl")]
+    [InlineData("fr")]
+    public void Translations_keep_their_placeholders(string language)
     {
         static string Placeholders(string s) => string.Join(",", Regex.Matches(s, @"\{\d+[^}]*\}").Select(m => m.Value).OrderBy(x => x));
-        var broken = Dutch.Where(kv => kv.Value != "" && Placeholders(kv.Key) != Placeholders(kv.Value)).Select(kv => kv.Key).ToList();
+        var broken = Table(language).Where(kv => kv.Value != "" && Placeholders(kv.Key) != Placeholders(kv.Value)).Select(kv => kv.Key).ToList();
         Assert.Empty(broken);
     }
 

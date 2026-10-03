@@ -2,7 +2,7 @@
 """Lists the interface texts that need translating.
 
     tools/extract-strings.py            # print them, one per line
-    tools/extract-strings.py --update   # add missing ones to data/i18n/nl.json (value "")
+    tools/extract-strings.py --update   # add missing ones to every data/i18n/*.json (value "")
 
 Texts are the string literals passed to Ui.T / Ui.Label / Ui.Text / Ui.Button, items of
 Ui.Options(new[] { ... }), screen titles, and the Core texts the app shows (achievements,
@@ -72,11 +72,15 @@ def texts():
 if __name__ == '__main__':
     items = texts()
     if '--update' in sys.argv:
-        path = os.path.join(ROOT, 'data', 'i18n', 'nl.json')
-        table = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
-        for t in items:
-            table.setdefault(t, '')
-        json.dump(dict(sorted(table.items())), open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        print(f'{len(items)} texts, {sum(1 for t in items if not table.get(t))} untranslated')
+        folder = os.path.join(ROOT, 'data', 'i18n')
+        for name in sorted(os.listdir(folder)):
+            if not name.endswith('.json'):
+                continue
+            path = os.path.join(folder, name)
+            table = json.load(open(path, encoding='utf-8'))
+            for t in items:
+                table.setdefault(t, '')
+            json.dump(dict(sorted(table.items())), open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            print(f'{name}: {len(items)} texts, {sum(1 for t in items if not table.get(t))} untranslated')
     else:
         print('\n'.join(items))
