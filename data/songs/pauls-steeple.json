@@ -1,0 +1,39 @@
+{
+  "id": "pauls-steeple",
+  "title": {
+    "en": "Duke of Norfolk, or Paul's Steeple",
+    "nl": "Duke of Norfolk, or Paul's Steeple"
+  },
+  "composer": "Anonymous",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 110,
+  "time": "2/2",
+  "key": "Dm",
+  "pickup": "q",
+  "source": "Mutopia Project, division-violin-02 (Public Domain), from Playford's Division Violin (1685); converted with tools/midi2pipit.py. 4 notes outside the soprano's range are moved by an octave. The divisions before the 12/8 section only.",
+  "about": {
+    "en": "John Playford's \"The Division Violin\" (1685) collected divisions, sets of ever busier variations, played over a repeating bass, the ground. Violinists, viol and recorder players all played from it. \"Paul's Steeple\" is named after the spire of old St Paul's Cathedral in London, which burnt down in 1666.",
+    "nl": "John Playfords \"The Division Violin\" (1685) verzamelde diminuties, reeksen van steeds drukkere variaties, gespeeld boven een herhaalde bas, de grond. Violisten, gambisten en blokfluitisten speelden er allemaal uit. \"Paul's Steeple\" is genoemd naar de torenspits van de oude St Paul's-kathedraal in Londen, die in 1666 afbrandde."
+  },
+  "tip": {
+    "en": "Two beats in a bar (2/2): count half notes. The pickup quarter leads into the first bar.",
+    "nl": "Twee tellen per maat (2/2): tel halve noten. De opmaat van een kwart leidt naar de eerste maat."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "R/e E5/e | F5/e. E5/s D5/e E5/e F5/q F5/e. G5/s | E5/e C5/e C5/e C5/e C5/q. C5/e | D5/e C#5/e D5/e E5/e F5/q E5/e. D5/s | A5/e A5/e A5/e A5/e A5/q. G5/e | F5/e F5/e F5/e F5/e F5/q. F5/e | G5/e G5/e G5/e G5/e G5/q. G5/e | A5/q G5/e. F5/s E5/e D5/e D5/e C#5/e | D5/e D4/e F4/e A4/e D5/q A5/e. G5/s | F5/e E5/s F5/s D5/e E5/e F5/e A5/e G5/e F5/e | E5/e D5/s E5/s C5/e D5/e E5/e G5/e F5/e E5/e | F5/e E5/s F5/s D5/e E5/e F5/q G5/q | A5/e G5/s F5/s E5/s F5/s D5/s E5/s C#5/q A4/q | F5/q C5/q F4/q A5/q | G5/q G4/q E4/q G5/q | A5/e F5/e G5/e E5/e F5/e D5/e E5/e C#5/e | D5/q D4/q D5/q. E5/e | A4/e F5/s E5/s D5/e C#5/e D5/e F5/e E5/e D5/e | C5/e E5/s D5/s C5/e B4/e C5/e E5/e D5/e C5/e | D5/e D5/s E5/s F5/e E5/e D5/q E5/q | C#5/q E4/q A4/q C#5/q | C5/e E5/s D5/s F5/e C5/s Bb4/s A4/e G4/s A4/s F4/q | C5/e C5/s D5/s E5/e E5/s F5/s G5/e F5/s G5/s E5/e D5/s C#5/s | D5/e A5/e E5/e G5/e A5/e F5/e C#5/e A4/e | D5/e. D4/s F4/e A4/e D5/q. E5/e | F5/s E5/s D5/s C#5/s D5/s E5/s F5/s G5/s A5/s G5/s A5/s F5/s G5/s F5/s E5/s D5/s | C5/s B4/s C5/s D5/s E5/s F5/s G5/s A5/s G5/s F5/s E5/s D5/s C5/s D5/s E5/s C5/s | D5/s C#5/s D5/s E5/s F5/s E5/s D5/s C5/s Bb4/s A4/s G4/s F4/s G4/s A5/s G#5/e | A5/e E5/s F5/s E5/e D5/s E5/s C#5/e B4/s C#5/s A4/e A4/e | F5/e C5/s D5/s C5/e Bb4/s C5/s A4/e G4/s A4/s F4/e A5/e | G5/e E5/s F5/s E5/e C5/s D5/s C5/e E4/s F4/s E4/e C4/e | F5/s E5/s D5/s C#5/s D5/s E5/s F5/s G5/s A5/e D6/e C#6/s D6/s E5/s C#6/s | D6/e A5/s Bb5/s A5/s G5/s F5/s E5/s D5/h | F5/e D5/e F4/e D4/e C5/e F5/e A5/e C6/e | E5/e C5/e G4/e E4/e C4/e C5/e E5/e G5/e | F5/e D5/e D4/e E4/e F4/e E4/e F4/e G4/e | A4/e E5/e C#5/e E5/e A4/e E4/e C#4/e A4/e | F5/e C5/e A4/e F4/e C5/e F5/e A5/e C6/e | E5/e C5/e E4/e G4/e C4/e G5/e E5/e C5/e | D5/e F5/e C#5/e E5/e D5/e A5/s G5/s F5/s E5/s D5/s C#5/s | D5/q D4/q D5/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "ground",
+      "name": "Ground",
+      "sound": "cello",
+      "music": "R/q | D3/q D3/q D3/q D3/q | C3/q C3/q C3/q C3/q | Bb2/q Bb2/q Bb2/q Bb2/q | A2/h. G2/q | F2/q F2/q F2/q F2/q | C3/q C3/q C3/q C3/q | D3/q G2/q A2/h | D2/w | D3/q D3/q D3/q D3/q | C3/q C3/q C3/q C3/q | Bb2/q Bb2/q Bb2/q Bb2/q | A2/h. G2/q | F2/q F2/q F2/q F2/q | C3/q C3/q C3/q C3/q | D3/q G2/q A2/h | D2/w | D3/q D3/q D3/q D3/q | C3/q C3/q C3/q C3/q | Bb2/q Bb2/q Bb2/q Bb2/q | A2/h. G2/q | F2/q F2/q F2/q F2/q | C3/q C3/q C3/q C3/q | D3/q G2/q A2/h | D2/w | D3/q D3/q D3/q D3/q | C3/q C3/q C3/q C3/q | Bb2/q Bb2/q Bb2/q Bb2/q | A2/h. G2/q | F2/q F2/q F2/q F2/q | C3/q C3/q C3/q C3/q | D3/q G2/q A2/h | D2/w | D3/q D3/q D3/q D3/q | C3/q C3/q C3/q C3/q | Bb2/q Bb2/q Bb2/q Bb2/q | A2/h. G2/q | F2/q F2/q F2/q F2/q | C3/q C3/q C3/q C3/q | D3/q G2/q A2/h | D2/h."
+    }
+  ]
+}

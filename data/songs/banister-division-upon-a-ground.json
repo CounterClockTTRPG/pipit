@@ -1,0 +1,30 @@
+{
+  "id": "banister-division-upon-a-ground",
+  "title": {
+    "en": "A Division upon a Ground",
+    "nl": "A Division upon a Ground"
+  },
+  "composer": "John Banister",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "3/4",
+  "key": "F",
+  "source": "Mutopia Project, division-violin-19 (Public Domain), from Playford's Division Violin (1685); converted with tools/midi2pipit.py. 11 notes outside the soprano's range are moved by an octave. The edition has the violin line only.",
+  "about": {
+    "en": "John Playford's \"The Division Violin\" (1685) collected divisions, sets of ever busier variations, played over a repeating bass, the ground. Violinists, viol and recorder players all played from it. John Banister (1630-1679) was a violinist at the court of Charles II and organised the first public concerts in London.",
+    "nl": "John Playfords \"The Division Violin\" (1685) verzamelde diminuties, reeksen van steeds drukkere variaties, gespeeld boven een herhaalde bas, de grond. Violisten, gambisten en blokfluitisten speelden er allemaal uit. John Banister (1630-1679) was violist aan het hof van Karel II en organiseerde de eerste openbare concerten in Londen."
+  },
+  "tip": {
+    "en": "No band here: the ground is in your head. Keep a steady three, and practise each division on its own.",
+    "nl": "Geen band hier: de grond zit in je hoofd. Hou een gelijke drie aan, en oefen elke diminutie apart."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "F4/q C5/h | C5/q. C5/e D5/e E5/e | F5/q F5/q. E5/e | E5/q. E5/e F5/q | G5/q A5/q Bb5/q | C5/q. C5/e D5/e E5/e | F5/q F5/q. E5/e | F5/q. F5/e G5/q | A5/q. A5/e Bb5/q | G5/q. G5/e A5/q | F5/e. E5/s F5/q G5/q | E5/q. D5/e C5/q | D5/q E5/q F5/q | C5/q. Bb4/e A4/q | Bb4/e. A4/s G4/e. D5/s C5/e. Bb4/s | A4/q. G4/e F4/q | F4/e. E4/s F4/e. G4/s A4/e. B4/s | C5/e. Bb4/s C5/e. D5/s E5/e. C5/s | F5/e. E5/s D5/e. E5/s F5/e. G5/s | E5/e. F5/s E5/e. D5/s C5/q | G5/e. F5/s G5/e. A5/s Bb5/e. E5/s | F5/e. G5/s F5/e. E5/s D5/e. G5/s | E5/q F5/q F5/e. E5/s | F5/q F5/q. G5/e | A5/e. G5/s A5/e. Bb5/s C6/e. A5/s | Bb5/e. A5/s G5/e. F5/s E5/e. A5/s | F5/e. G5/s F5/e. E5/s D5/e. G5/s | E5/e. F5/s E5/e. D5/s C5/e. F5/s | D5/e. C5/s D5/e. E5/s F5/e. D5/s | C5/e. D5/s C5/e. Bb4/s A4/e. Bb4/s | Bb4/e. A4/s G4/e. D5/s C5/e. Bb4/s | A4/q. G4/e F4/q | F4/q A4/q. Bb4/e | C5/q C#5/q. C#5/e | D5/q E5/q F5/q | E5/q F#5/q. F#5/e | G5/q A5/q Bb5/q | C6/q A5/q. A5/e | Bb5/q G5/q F5/q | F5/q. C5/e G5/q | A5/q F5/e. G5/s A5/q | G5/q E5/q F5/e. G5/s | F5/q D5/e. E5/s F5/q | E5/q. D5/e C5/q | D5/q D5/e. E5/s F5/e. D5/s | C5/e. D5/s C5/e. Bb4/s A4/q | Bb4/e. A4/s G4/e. D5/s C5/q | A4/q. G4/e F4/q | F4/q C5/h | C5/q. Bb4/e C5/q | Bb4/q. E5/e F5/q | E5/q. D5/e C5/q | D5/q F5/h | F5/q. E5/e F5/q | E5/q. A5/e Bb5/q | A5/q. G5/e F5/q | A5/q. Bb5/e A5/q | G5/q. F5/e E5/q | F5/q. D5/e G5/q | E5/q. D5/e C5/q | D5/q. E5/e F5/q | C5/q. Bb4/e A4/q | Bb4/q. G4/e C5/q | A4/q. G4/e F4/q | A4/q. G4/e A4/e Bb4/e | C5/q A4/e. C5/s D5/e. E5/s | F5/q. D5/e G5/q | E5/q. E5/e F#5/q | G5/q. G5/e A5/e Bb5/e | C6/q A5/q. Bb5/e | G5/e. D5/s E5/q. F5/e | F5/h. | A5/h. | A5/h. | F5/h. | E5/h. | D5/h. | C5/h. | Bb4/q Bb4/q. A4/e | A4/h. | F4/e. E4/s F4/e. G4/s A4/e. Bb4/s | C5/e. G4/s A4/e. E4/s F4/e. G4/s | F4/e. E4/s D4/e. A4/s Bb4/e. A4/s | G4/e. F4/s E4/e. D4/s C4/q | D5/e. C5/s D5/e. E5/s F5/e. G5/s | E5/e. D5/s C5/e. Bb4/s A4/e. Bb4/s | Bb4/e. A4/s G4/e. F5/s E5/e. D5/s | C5/e. Bb4/s A4/e. G4/s F4/q | A5/e. G5/s A5/e. Bb5/s A5/e. Bb5/s | G5/e. F5/s G5/e. A5/s G5/e. A5/s | F5/e. E5/s F5/e. G5/s D5/e. F5/s | E5/e. F5/s E5/e. D5/s C5/e. F5/s | D5/e. C5/s D5/e. E5/s F5/e. D5/s | C5/e. D5/s C5/e. Bb4/s A4/e. Bb4/s | Bb4/e. A4/s Bb4/e. G4/s D5/e. E5/s | C5/q. Bb4/e A4/q | A4/e. G4/s A4/e. Bb4/s A4/e. Bb4/s | G4/e. F4/s G4/e. A4/s G4/e. A4/s | F4/e. E4/s F4/e. G4/s D4/e. F4/s | E4/e. F4/s E4/e. D4/s C4/e. F4/s | D4/e. C4/s D4/e. E4/s F4/e. D4/s | C4/e. D4/s C4/e. Bb4/s A4/e. Bb4/s | Bb4/e. A4/s G4/e. A4/s Bb4/e. C4/s | A4/q. G4/e A4/q | C5/e A4/s Bb4/s C5/e G4/e A4/e G4/e | G4/e E4/s F4/s G4/e A4/e F4/e E4/e | F4/e D4/s E4/s F4/s G4/s A4/s Bb4/s C5/s D5/s E5/s F5/s | G5/s A5/s G5/s F5/s E5/s F5/s E5/s D5/s C5/q | G5/e G5/s A5/s Bb5/e A5/e Bb5/e D5/e | C5/e D5/s C5/s Bb4/e C5/e A4/e F5/s E5/s | F5/e G5/q F5/e F5/e. E5/s | F5/h G5/q | A5/e F5/s A5/s A5/e F5/e Bb5/e A5/e | G5/e E5/s F5/s G5/e C5/e A5/e G5/e | F5/s E5/s D5/s C5/s B4/e G5/e D5/e F5/e | E5/s F5/s E5/s D5/s C5/e G5/e E5/e F5/e | D5/s C5/s D5/s E5/s F5/s E5/s F5/s G5/s F5/s E5/s F5/s D5/s | C5/s Bb4/s C5/s D5/s C5/s D5/s C5/s Bb4/s A4/s Bb4/s C5/s A4/s | Bb4/s C5/s Bb4/s A4/s G4/s F4/s G4/s A4/s Bb4/s A4/s Bb4/s C5/s | A4/e. Bb4/s A4/e. G4/s F4/q | A5/s G5/s A5/s Bb5/s A5/s Bb5/s A5/s G5/s A5/s G5/s A5/s F5/s | G5/s F5/s G5/s A5/s G5/s A5/s G5/s F5/s E5/s F5/s G5/s E5/s | F5/s E5/s F5/s G5/s F5/s G5/s F5/s E5/s D5/s E5/s F5/s E5/s | E5/s F5/s E5/s D5/s C5/s Bb4/s C5/s D5/s E5/s D5/s E5/s C5/s | D5/s C5/s D5/s E5/s F5/s E5/s F5/s G5/s F5/s E5/s F5/s D5/s | C5/s Bb4/s C5/s D5/s C5/s D5/s C5/s Bb4/s A4/s Bb4/s C5/s A4/s | Bb4/s A4/s Bb4/s C5/s Bb4/s C5/s Bb4/s A4/s G4/s A4/s Bb4/s C5/s | A4/q. G4/e F4/q | C5/h. | C#5/h. | D5/e. A5/s Bb5/q Bb5/q | Bb5/q. Bb5/e A5/q | A5/q. A5/e G5/q | G5/q. G5/e F5/q | F5/q F5/q. E5/e | F5/h. | A5/q Bb5/h | G5/q A5/h | F5/q G5/h | E5/h F5/q | D5/q. D5/e E5/q | C5/q. C5/e D5/q | Bb4/q Bb4/q. A4/e | A4/h. | A4/e. Bb4/s Bb4/q. Bb4/e | C5/q D5/q E5/q | F5/q E5/q F5/q | E5/q F#5/q. F#5/e | G5/q A5/q Bb5/q | C5/q. Bb5/e A5/q | G5/q G5/q. F5/e | F5/h."
+    }
+  ]
+}

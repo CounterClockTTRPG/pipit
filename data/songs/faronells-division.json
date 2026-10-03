@@ -1,0 +1,38 @@
+{
+  "id": "faronells-division",
+  "title": {
+    "en": "Faronell's Division on a Ground",
+    "nl": "Faronell's Division on a Ground"
+  },
+  "composer": "Michel Farinel",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "3/4",
+  "key": "Dm",
+  "source": "Mutopia Project, division-violin-05 (Public Domain), from Playford's Division Violin; converted with tools/midi2pipit.py. Four low A notes are moved up an octave to fit the soprano; the ground is repeated under each of the eight divisions; the closing bars are left out.",
+  "about": {
+    "en": "Michel Farinel was a French violinist who worked in Spain and England. \"Faronell's Ground\" is the folia, the same old dance bass that Corelli used, and Playford printed these divisions on it in \"The Division Violin\" (1685).",
+    "nl": "Michel Farinel was een Franse violist die in Spanje en Engeland werkte. \"Faronell's Ground\" is de folia, dezelfde oude dansbas die Corelli gebruikte, en Playford drukte deze diminuties erop in \"The Division Violin\" (1685)."
+  },
+  "tip": {
+    "en": "Compare it with Corelli's La Folia: the same bass, other variations. Each variation is fourteen bars, one turn of the ground.",
+    "nl": "Vergelijk het met La Folia van Corelli: dezelfde bas, andere variaties. Elke variatie is veertien maten, één ronde van de grond."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/q D5/q. E5/e | C#5/q C#5/h | D5/q D5/q. C#5/s D5/s | E5/q E5/h | F5/q F5/q. G5/e | E5/q E5/q E5/q | D5/q D5/q. E5/e | C#5/q C#5/q C#5/q | D5/q D5/q. D5/e | C#5/q C#5/q C#5/q | D5/q D5/q. C#5/s D5/s | E5/h E5/q | F5/q F5/q. F5/e | E5/q E5/q F5/e E5/e | F5/e D5/e C#5/q. D5/e | D5/h. | D5/e. C#5/s D5/e. E5/s D5/e. E5/s | C#5/e. B4/s C#5/e. D5/s C#5/e. E5/s | D5/e. C#5/s D5/e. E5/s D5/e. F5/s | E5/e. D5/s E5/e. F5/s E5/e. G5/s | F5/e. E5/s F5/e. G5/s F5/e. G5/s | E5/e. D5/s E5/e. F5/s G5/e. F5/s | D5/e. C#5/s D5/e. E5/s D5/e. E5/s | C#5/e. B4/s C#5/e. D5/s C#5/s A4/s B4/s C#5/s | D5/e. C#5/s D5/e. E5/s D5/e. E5/s | C#5/e. B4/s C#5/e. D5/s C#5/s A4/s B4/s C#5/s | D5/e. C#5/s D5/e. E5/s D5/e. F5/s | E5/e. D5/s E5/e. F5/s E5/s C#5/s D5/s E5/s | F5/e. E5/s F5/e. G5/s F5/e. A5/s | G5/e. F5/s G5/e. A5/s G5/s E5/s F5/s G5/s | F5/e. E5/s E5/q. D5/e | D5/h. | D5/q D4/q D5/q | C#5/q A4/q C#5/e C#5/e | D5/q F4/q D5/e D5/e | E5/q G4/q E5/e E5/e | F5/q F4/e F5/e E5/e D5/e | E5/q G4/e E5/e D5/e C#5/e | D5/q F4/e D5/e C#5/e B4/e | C#5/q A4/e B4/e C#5/e A4/e | D5/q A4/q D4/e D5/e | C#5/q A4/q E4/e C#5/e | D5/q A4/q F4/e D5/e | E5/q C5/q G4/e E5/e | F5/q C5/q A4/e F5/e | G5/q E5/q C5/e G5/e | F5/e E5/e E5/q. D5/e | D5/h. | D5/e A4/e F4/e D4/e A4/e D5/e | C#5/e A4/e E4/e C#4/e A4/e C#5/e | D5/e A4/e F4/e D4/e A4/e D5/e | E5/e C#5/e G4/e E4/e C#4/e E5/e | F5/e C#5/e A4/e F4/e C#5/e F5/e | E5/e C5/e G4/e E4/e C4/e E5/e | D5/e A4/e F4/e D4/e A4/e D5/e | C#5/e A4/e E4/e C#4/e A4/s A4/s B4/s C#5/s | D5/e A4/e F4/e D4/e A4/e D5/e | C#5/e A4/e E4/e C#4/e A4/s A4/s B4/s C#5/s | D5/e A4/e F4/e D4/e A4/e D5/e | E5/e C#5/e G4/e E4/e C4/s C5/s D5/s E5/s | F5/e C5/e A4/e F4/e C5/e F5/e | G5/e E5/e C5/e G4/e E4/s E5/s F5/s G5/s | A5/e E5/e F5/q. D5/e | D5/h. | F5/q F5/q. G5/e | E5/q E5/h | F5/q F5/q. E5/s F5/s | G5/q G5/h | A5/q A5/q. B5/e | G5/q G5/q A5/e G5/e | F5/e E5/e F5/q. G5/e | E5/q E5/h | F5/q F5/q. G5/e | E5/q E5/q E5/q | F5/q F5/q. E5/s F5/s | G5/q G5/q G5/q | A5/q A5/q. Bb5/e | G5/q A5/e G5/e F5/e E5/e | F5/e G5/e E5/q. D5/e | D5/h. | F5/e D5/s E5/s D5/e E5/e F5/e G5/e | E5/e D5/s E5/s C5/e D5/e E5/e G5/e | F5/e E5/s F5/s E5/e A5/e G5/e F5/e | G5/e F5/s G5/s E5/e G5/e F5/e E5/e | F5/e C5/s B4/s A4/e F4/e A4/e Bb4/e | G4/e F4/s G4/s E4/e F4/e G4/e A4/e | F4/e E4/s F4/s D4/e E4/e F4/e G4/e | E4/e D4/s E4/s C#4/q A4/q | F4/e E4/s F4/s D4/e F4/s G4/s A4/e G4/s F4/s | E4/e E5/s D5/s C#5/e B4/s C#5/s A4/e B4/s C#5/s | D5/e A4/s G4/s F4/e E4/s F4/s D4/e E4/s F4/s | G4/e F4/s G4/s E4/e D4/s E4/s C4/e C5/s D5/s | C5/e Bb4/s C5/s A4/e G4/s A4/s F4/e Bb4/s A4/s | G4/e G5/s F5/s E5/e D5/s E5/s C5/e D5/s E5/s | F5/e E5/s F5/s E5/q. D5/e | D5/h. | F5/q D5/q F5/q | E5/q C#5/q E5/q | F5/q D5/q F5/q | G5/q E5/q G5/q | A5/q F5/q A5/q | G5/q E5/q G5/q | F5/q D5/q F5/q | E5/q C#5/q E5/q | F5/e E5/e D5/e A5/e F5/e G5/e | E5/q C#5/e A4/e E5/e C#5/e | D5/e E5/e F5/e D5/e A5/e F5/e | G5/q E5/e C5/e G5/e E5/e | F5/e G5/e A5/e D5/e F5/e G5/e | E5/e C5/e E5/e G5/e E5/e G5/e | F5/e E5/e E5/q. D5/e | D5/h."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "ground",
+      "name": "Ground",
+      "sound": "harpsichord",
+      "music": "D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h. | D3/q D3/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q D2/h | A2/q A2/h | D3/q D3/h | C3/q C3/h | F3/q F2/h | C3/q C3/h | D3/q A2/h | D3/h."
+    }
+  ]
+}

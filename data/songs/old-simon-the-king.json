@@ -1,0 +1,39 @@
+{
+  "id": "old-simon-the-king",
+  "title": {
+    "en": "Old Simon the King",
+    "nl": "Old Simon the King"
+  },
+  "composer": "Anonymous",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 150,
+  "time": "9/4",
+  "key": "F",
+  "pickup": "q",
+  "source": "Mutopia Project, division-violin-04 (Public Domain), from Playford's Division Violin; converted with tools/midi2pipit.py. Ground bass from the same edition, repeated under each division.",
+  "about": {
+    "en": "\"Old Simon the King\" was a popular English drinking song of the 1600s. In \"The Division Violin\" (1685), John Playford printed it with divisions, ever busier variations, over a four-bar ground bass.",
+    "nl": "\"Old Simon the King\" was een populair Engels drinklied uit de 17de eeuw. In \"The Division Violin\" (1685) drukte John Playford het met diminuties, steeds drukkere variaties, boven een grondbas van vier maten."
+  },
+  "tip": {
+    "en": "Nine-four time: three big beats in a bar, each of three quarters. Every four bars the ground starts again, so each variation is four bars long.",
+    "nl": "Negen-vierde maat: drie grote tellen per maat, elk van drie kwarten. Om de vier maten begint de grond opnieuw, dus elke variatie is vier maten lang."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/q | A4/q. Bb4/e C5/q C5/q. D5/e C5/q C5/h A4/q | A4/q. Bb4/e C5/q C5/q. D5/e E5/q F5/h F5/q | A4/q F4/q F4/q F4/h G4/q A4/q. Bb4/e C5/q | D5/h C5/q Bb4/h A4/q G4/h A5/q | G5/h F5/q E5/h D5/q C5/h A5/q | G5/q. A5/e F5/e G5/e E5/q. F5/e D5/e C5/e C5/q D5/q E5/q | F5/q F4/q F4/q A4/e Bb4/e C5/e Bb4/e A4/e G4/e A4/h D4/q | G5/q G4/q G4/q Bb4/e C5/e D5/e C5/e Bb4/e A4/e Bb4/h G4/q | A4/e Bb4/e C5/q E4/q C5/q G4/q E4/q C5/h G4/q | A4/e Bb4/e C5/q E4/q C5/q G4/q E4/q C5/h G4/q | A4/e Bb4/e C5/q G4/q C5/q A4/q F4/q A4/h F4/q | Bb4/e C5/e D5/q G4/q E5/e F5/e G5/q D5/q Bb4/h G4/q | E5/q. F5/e G5/e A5/e G5/q E5/q D5/q C5/q. D5/e E5/e C5/e | E5/q. F5/e G5/e A5/e G5/q E5/q C5/q F5/q. G5/e A5/e G5/e | A5/q Bb5/q C6/q C5/q A4/q F4/q A4/q Bb4/q C5/q | D5/q. E5/e F5/e D5/e Bb4/q. A4/e Bb4/q G4/q. A4/e Bb4/e G4/e | C5/q A4/e Bb4/e C5/e A4/e G4/q E4/e F4/e G4/e E4/e C4/q E4/e F4/e G4/e E4/e | C5/q A4/e Bb4/e C5/e A4/e G4/q E4/e F4/e G4/e E4/e C4/q E4/e F4/e G4/e E4/e | F4/q A4/e Bb4/e C5/e A4/e C5/q A4/e Bb4/e C5/e A4/e F4/q A4/e Bb4/e C5/e A4/e | G4/q Bb4/e C5/e D5/e A4/e D5/q A4/e Bb4/e C5/e A4/e Bb4/q G4/e A4/e Bb4/e G4/e | C5/q E5/e F5/e G5/e E5/e G5/q E5/e F5/e G5/e E5/e C5/q E5/e F5/e G5/e E5/e | C5/q E5/e F5/e G5/e E5/e G5/q E5/e F5/e G5/e E5/e C5/q E5/e F5/e G5/e E5/e | F5/q G5/e F5/e E5/e D5/e C5/q D5/e C5/e Bb4/e A4/e F4/q A4/e Bb4/e C5/e A4/e | G5/q A5/e G5/e F5/e E5/e D5/q Bb4/e C5/e D5/e Bb4/e G4/q Bb4/e C5/e D5/e Bb4/e | A4/e Bb4/e C5/e Bb4/e A4/e G4/e E4/e D4/e E4/e F4/e G4/e E4/e A4/e Bb4/e C5/e Bb4/e A4/e G4/e | A4/e Bb4/e C5/e Bb4/e A4/e G4/e E4/e D4/e E4/e F4/e G4/e E4/e A4/e Bb4/e C5/e Bb4/e A4/e G4/e | F4/e E4/e F4/e G4/e A4/e F4/e A4/e G4/e A4/e Bb4/e C5/e A4/e F4/e E4/e F4/e G4/e A4/e F4/e | G4/e A4/e Bb4/e C5/e D5/e E5/e D5/e C5/e Bb4/e A4/e Bb4/e G4/e Bb4/e A4/e Bb4/e C5/e D5/e C5/e | C5/e Bb4/e C5/e D5/e E5/e C5/e E5/e D5/e E5/e F5/e G5/e E5/e C5/e Bb4/e C5/e D5/e E5/e C5/e | C5/e Bb4/e C5/e D5/e E5/e C5/e E5/e D5/e E5/e F5/e G5/e E5/e C5/e Bb4/e C5/e D5/e E5/e C5/e | F4/e E4/e F4/e G4/e A4/e F4/e A4/e G4/e A4/e Bb4/e C5/e A4/e F4/e E4/e F4/e G4/e A4/e F4/e | G4/e A4/e Bb4/e C5/e D5/e E5/e D5/e C5/e Bb4/e A4/e Bb4/e G4/e Bb4/e A4/e Bb4/e C5/e D5/e Bb4/e | C5/q. G4/e E4/q C4/q D4/q E4/q C5/q. G4/e E4/q | C5/q. G4/e E4/q C4/q D4/q E4/q C5/q. G4/e E4/q | A4/q F4/q A4/q A4/e Bb4/e C5/q G4/q A4/q F4/q A4/q | Bb4/q G4/q Bb4/e G4/e Bb4/e C5/e D5/q G4/q Bb4/q G4/q Bb4/q | C5/e Bb4/e A4/e Bb4/e C5/e A4/e G4/e F4/e E4/e D4/e E4/e C4/e E4/e D4/e E4/e F4/e G4/e E4/e | C5/e Bb4/e A4/e Bb4/e C5/e A4/e G4/e F4/e E4/e D4/e E4/e C4/e E4/e D4/e E4/e F4/e G4/e E4/e | F4/e E4/e F4/e G4/e A4/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e F4/e E4/e F4/e G4/e A4/e F4/e | G4/e F4/e G4/e A4/e Bb4/e G4/e Bb4/e A4/e Bb4/e C5/e D5/e Bb4/e G4/e F4/e G4/e A4/e Bb4/e G4/e | C5/q E4/q C5/q C5/q E4/q C5/q C5/q E4/q C5/q | C5/q E4/q C5/q C5/q E4/q C5/q C5/q E4/q C5/q | A4/q F4/q A4/q A4/q F4/q A4/q A4/q F4/q A4/q | Bb4/q G4/q Bb4/q Bb4/q G4/q Bb4/q Bb4/q G4/q Bb4/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "ground",
+      "name": "Ground",
+      "sound": "cello",
+      "music": "R/q | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h. | C3/h. C3/h. C3/h. | C3/h. C3/h. C3/h. | F2/h. F2/h. F2/h. | G2/h. G2/h. G2/h."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "powlwheels-division",
+  "title": {
+    "en": "Mr. Powlwheel's Division on a Ground",
+    "nl": "Mr. Powlwheel's Division on a Ground"
+  },
+  "composer": "Mr. Powlwheel",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 100,
+  "time": "2/2",
+  "key": "Dm",
+  "source": "Mutopia Project, division-violin-03 (Public Domain), from Playford's Division Violin (1685); converted with tools/midi2pipit.py. 13 notes outside the soprano's range are moved by an octave.",
+  "about": {
+    "en": "John Playford's \"The Division Violin\" (1685) collected divisions, sets of ever busier variations, played over a repeating bass, the ground. Violinists, viol and recorder players all played from it. Nothing is known about Mr. Powlwheel except this piece.",
+    "nl": "John Playfords \"The Division Violin\" (1685) verzamelde diminuties, reeksen van steeds drukkere variaties, gespeeld boven een herhaalde bas, de grond. Violisten, gambisten en blokfluitisten speelden er allemaal uit. Over Mr. Powlwheel is niets bekend behalve dit stuk."
+  },
+  "tip": {
+    "en": "The ground is ten bars long, so each division is ten bars. The fast ones have sixteenths: practise them with the speed dial.",
+    "nl": "De grond is tien maten lang, dus elke diminutie ook. De snelle hebben zestienden: oefen ze met de snelheidsknop."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "F4/q. G4/e A4/q Bb4/q | C5/q A4/q D5/h | E5/h F5/q F5/e. E5/s | E5/q A5/q B5/q G#5/q | A5/w | D4/e. E4/s F4/e G4/e A4/e F4/e D5/e. G4/s | A4/e E5/e F5/e. A4/s Bb4/e C5/e G5/e. B4/s | C5/e E5/e A5/e. C#5/s D5/e E5/e F5/e G5/s F5/s | E5/e A4/s B4/s C5/e D5/s C5/s B4/s E5/s D5/s C5/s B4/e. A4/s | A4/w | A4/e Bb4/e C5/e A4/e Bb4/e C5/e D5/e E5/e | F5/e G5/e A5/e F5/e C5/e A5/e G5/e A5/e | F5/e E5/e F5/e D5/e E5/s A5/s G5/s A5/s F5/s G5/s A5/s F5/s | D5/s F5/s G5/s A5/s Bb5/s A5/s G5/s F5/s E5/s F5/s E5/s D5/s C#5/s D5/s E5/s F5/s | D5/e D4/e F4/e A4/e D5/h | A5/e A4/s B4/s C5/e E5/e G5/e G4/s B4/s C5/e B4/e | A4/e F4/e C5/e D5/e C5/e G#4/e A4/e C#5/e | D5/e D4/s E4/s F4/s G4/s A4/s B4/s C5/e. E4/s F4/e. A4/s | Bb4/s D4/s G4/s D5/s G5/e. F5/s E5/s C#5/s A4/s C#5/s A5/e. C#5/s | D5/e D4/e F4/s G4/s A4/e D5/h | D4/e D5/e D5/e. E4/s F4/e D5/e D5/e. G4/s | A4/e. E5/s F5/s F4/s G4/s A4/s Bb4/e. D5/s G5/s G4/s A4/s B4/s | C5/e. E5/s A5/s A4/s B4/s C#5/s D5/e D4/s E4/s F4/e G4/e | A4/e B4/e C5/e D5/e E5/e B4/s C5/s B4/e G#4/e | A4/e E4/s F4/s E4/e D4/e A4/h | D4/s D5/s D5/s E5/s F5/s E5/s F5/s E4/s F4/s A4/s B4/s C5/s D5/s C5/s D5/s G4/s | A4/s E5/s D5/s E5/s F5/s E5/s F5/s A4/s B4/s D5/s E5/s F5/s G5/s F5/s G5/s B4/s | C5/s E5/s F5/s G5/s A5/s G5/s A5/s C#5/s D5/s F5/s E5/s F5/s D5/s D4/s F4/s G4/s | A4/s C5/s B4/s C5/s A4/s B4/s C5/s D5/s E5/s C5/s B4/s A4/s G#4/s A4/s B4/s G#4/s | A4/e E4/s F4/s E4/e D4/e A4/h | A4/e A5/e C5/s D5/s E5/e B4/e G5/e E4/s G4/s C5/e | F4/e A4/e F4/s A4/s F5/e E4/e E5/e A4/s A4/s C#5/e | D4/e D5/e D4/s D5/s F5/e G4/e C5/e F4/s C5/s F5/e | Bb4/e D5/e G4/s D5/s G5/e A4/e F5/e E5/e. D5/s | D5/w | A4/e. B4/s C5/s D5/s E5/s F#5/s G5/s G4/s A4/s B4/s C5/s C4/s D4/s E4/s | F4/e. G4/s A4/s B4/s C5/s D5/s E5/s E4/s F#4/s G#4/s A4/s A4/s B4/s C#4/s | D4/e. E4/s F4/s G4/s A4/s Bb4/s C5/s G4/s E4/s C5/s A4/s F4/s A4/s F5/s | Bb4/s D4/s Bb4/s D5/s G5/s G4/s D5/s F5/s E5/s C#5/s A4/s F5/s E5/s C#5/s A4/s C#5/s | D5/e A4/s Bb4/s A4/e G4/s A4/s F#4/e D4/e D5/q | D5/e E5/s D5/t E5/t F5/e G5/e A5/e F4/s E4/t F4/t G4/e Bb4/s A4/t Bb4/t | A4/e E5/s D5/t E5/t F5/e A4/s G4/t A4/t Bb4/e D5/s E5/t F5/t G5/e B4/s A4/t B4/t | C5/e E5/s F5/t G5/t A5/e C#5/s B4/t C#5/t D5/e E5/s D5/t E5/t F5/e D4/t E4/t F4/t G4/t | A4/e B4/s A4/t B4/t C5/s. B4/t A4/t B4/t C5/t D5/t E5/e E4/t F4/t G4/t A4/t B4/e A5/t G#5/t F#5/t G#5/t | A5/e C#5/t B4/t A4/t B4/t C#5/s E5/s C#5/s A4/s A4/h | D4/s C5/s D5/s E5/s F5/s E5/s F5/s G5/s A5/s C5/s F4/s A4/s Bb4/s G4/s G4/s Bb5/s | A5/s E5/s A4/s E5/s F5/s C5/s F4/s A5/s Bb4/s D4/s Bb4/s D5/s G5/s D5/s G4/s F5/s | C5/s G4/s E4/s G#5/s A5/s A4/s A4/s C#5/s D5/s A4/s D4/s E4/s F4/s G4/s A4/s B4/s | C5/s B4/s A4/s E5/s B4/s E5/s G#4/s E5/s B4/s G#4/s E4/s G#5/s A5/t G#5/t A5/t G#5/t A5/t G#5/t A5/t G#5/t | A5/q A4/q A4/h | A5/s A4/t Bb4/t C5/s D5/s E5/s C5/s A4/s E5/t F5/t G5/s B4/s G4/s A4/t B4/t C5/s G4/s C4/s D4/t E4/t | F4/e. G4/s A4/t B4/t C5/t B4/t A4/t B4/t C5/t D5/t E5/s E4/t F4/t G4/s B4/s A4/s A4/t B4/t C5/s E5/s | D4/s E4/s F4/t G4/t A4/t Bb4/t C5/t B4/t C5/t B4/t C5/t B4/t A4/t B4/t C5/s C4/t D4/t E4/s G4/s F4/s A4/s G4/s C5/s | A4/s E5/s D5/t E5/t F5/t D5/t G5/s G4/s G4/t A4/t B4/t G4/t A4/s D5/s C#5/s B4/s D5/t C#5/t D5/t C#5/t D5/t C#5/t B4/t C#5/t | D5/q D4/q D5/h | A5/s G5/s A5/s E5/s C#5/s D5/s E5/s F5/s G5/s F5/s G5/s D5/s E5/s D5/s C#5/s B4/s | A4/s C4/s D4/s E4/s F4/s A4/s B4/s A4/s G#4/s E4/s F#4/s G#4/s A4/s C5/s D5/s E5/s | F5/s A4/s Bb4/s C5/s D5/s G4/s A4/s Bb4/s C5/s Bb4/s A4/s G4/s F4/s C5/s A4/s E5/s | F5/s E5/s D5/s C5/s Bb4/s A5/s G5/s A5/s G5/s F5/s E5/s D5/s C#5/s A4/s B4/s C#5/s | D5/e A4/e D4/e A4/e D5/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "ground",
+      "name": "Ground",
+      "sound": "cello",
+      "music": "D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w | D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w | D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w | D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w | D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w | D3/q. E3/e F3/q G3/q | A3/q F3/q Bb3/q G3/q | C4/q A3/q D4/q D3/q | A3/q F3/q E3/h | A2/w | A3/q. A3/e G3/q Bb2/q | F3/q. F3/e E3/q A2/q | D3/q. D3/e C3/q F2/q | Bb2/q G2/q A2/h | D3/w"
+    }
+  ]
+}

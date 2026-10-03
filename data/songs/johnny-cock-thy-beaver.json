@@ -1,0 +1,39 @@
+{
+  "id": "johnny-cock-thy-beaver",
+  "title": {
+    "en": "Johnny Cock thy Beaver",
+    "nl": "Johnny Cock thy Beaver"
+  },
+  "composer": "Anonymous",
+  "period": "baroque",
+  "chapter": 0,
+  "tempo": 160,
+  "time": "6/4",
+  "key": "F",
+  "pickup": "q",
+  "source": "Mutopia Project, division-violin-23 (Public Domain), from Playford's Division Violin; converted with tools/midi2pipit.py. Bass from the same edition.",
+  "about": {
+    "en": "A Scotch tune to a ground from Playford's \"The Division Violin\" (1685). \"Cock thy beaver\" means: tilt your beaver-fur hat at a jaunty angle.",
+    "nl": "Een Schotse melodie op een grond uit Playfords \"The Division Violin\" (1685). \"Cock thy beaver\" betekent: zet je hoed van beverbont schuin en zwierig op."
+  },
+  "tip": {
+    "en": "Six-four time, felt in two: two big beats in a bar. The tune is repeated with divisions, so learn the plain tune first.",
+    "nl": "Zes-vierde maat, gevoeld in twee: twee grote tellen per maat. De melodie wordt herhaald met diminuties, dus leer eerst de eenvoudige melodie."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/q | C5/h F4/q A4/q. G4/e F4/q | G4/q A4/q G4/q Bb4/h D4/q | C5/h F4/q A4/q. G4/e A4/q | F4/q F5/q C5/q A4/q Bb4/q C5/q | D5/q C5/q D5/q F5/q C5/q A4/q | G4/q A4/q G4/q Bb4/h D5/q | C5/h F4/q A4/h G4/q | F4/q F5/q C5/q A4/h F4/q | F4/q F5/q C5/q A4/e Bb4/e C5/q A4/q | G4/q G5/q D5/q Bb4/h G4/q | F4/q F5/q C5/q A4/e Bb4/e C5/q A4/q | F4/q F5/q C5/q A4/q. Bb4/e C5/q | Bb4/e A4/e Bb4/e C5/e D5/e E5/e F5/q. F4/e A4/q | G4/q A4/q G4/q Bb4/h F5/q | C5/h Bb4/q A4/h G4/q | F4/q F5/q C5/q A4/h F4/q | C5/q A4/q F4/q C5/q A4/e Bb4/e C5/e A4/e | D5/q Bb4/q G4/q D5/e C5/e Bb4/e A4/e G4/q | C5/q A4/q F4/q C5/e Bb4/e A4/e Bb4/e C5/e A4/e | C5/e Bb4/e A4/e Bb4/e C5/e A4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | D5/e C5/e Bb4/e C5/e D5/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | G4/e F4/e G4/e A4/e Bb4/e C5/e D5/h F5/q | C5/q. D5/e Bb4/e C5/e A4/q. Bb4/e G4/e A4/e | F4/q F5/q C5/q A4/h F4/q | C5/e Bb4/e A4/e G4/e F4/q C5/e Bb4/e A4/e G4/e F4/q | D5/e C5/e Bb4/e A4/e G4/q D5/e C5/e Bb4/e A4/e G4/q | C5/e Bb4/e A4/e G4/e F4/q C5/e Bb4/e A4/e G4/e F4/q | C5/e Bb4/e A4/e Bb4/e A4/e C5/e C5/e Bb4/e A4/e G4/e A4/e Bb4/e | C5/e D5/e Bb4/e C5/e D5/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | G4/e F4/e G4/e A4/e Bb4/e G4/e Bb4/e A4/e Bb4/e C5/e D5/e F5/e | C5/e Bb4/e C5/e D5/e Bb4/e C5/e A4/e Bb4/e C5/e A4/e Bb4/e G4/e | F4/q F5/q C5/q A4/h F4/q | F4/q F4/q F5/q F4/q F4/q F5/q | G4/q G4/q G5/q F5/q. E5/s F5/s G5/q | F4/q F4/q F5/q A4/q A4/q F5/q | F5/q C5/q D5/q C5/e Bb4/e A4/e Bb4/e C5/e A4/e | Bb4/e A4/e Bb4/e C5/e D5/e E5/e F5/q F4/q A4/q | G4/q G5/q G4/q Bb4/e A4/e Bb4/e C5/e D5/e E5/e | F5/q G5/e F5/e E5/e D5/e C5/q D5/e C5/e Bb4/e A4/e | F4/q F5/q C5/q A4/h G4/q | F4/q. G4/e A4/e Bb4/e C5/q D5/e C5/e Bb4/e A4/e | G4/q A4/q G4/q Bb4/h D4/q | F4/q. G4/e A4/e Bb4/e C5/q D5/e C5/e Bb4/e A4/e | C5/q D5/e C5/e Bb4/e A4/e C5/q D5/e C5/e Bb4/e A4/e | F5/q G5/e F5/e E5/e D5/e C5/q D5/e C5/e Bb4/e A4/e | F4/q A4/e Bb4/e C5/e A4/e D5/q Bb4/e C5/e D5/e Bb4/e | C5/q A4/e Bb4/e C5/e A4/e Bb4/q G4/e A4/e Bb4/e G4/e | F4/q F5/q C5/q A4/h G4/q | F4/e E4/e F4/e G4/e A4/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | G4/e F4/e G4/e A4/e Bb4/e C5/e D5/e C5/e Bb4/e C5/e D5/e Bb4/e | F4/e E4/e F4/e G4/e A4/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | C5/e Bb4/e A4/e Bb4/e C5/e A4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | D5/e C5/e Bb4/e C5/e D5/e Bb4/e C5/e Bb4/e A4/e Bb4/e C5/e A4/e | G4/e F4/e G4/e A4/e Bb4/e C5/e D5/e C5/e Bb4/e C5/e D5/e F5/e | C5/e Bb4/e C5/e D5/e Bb4/e C5/e A4/e Bb4/e C5/e A4/e Bb4/e G4/e | F4/q F5/q C5/q A4/h F4/q | F5/q F5/q F4/q A4/q A4/q F4/q | G5/q G5/q G4/q Bb4/h D5/q | F5/q F5/q C5/q D5/q D5/q G4/q | C5/q C5/q F4/q A4/q A4/q F4/q | Bb4/q Bb4/q G4/q A4/q A4/q F4/q | G4/q. A4/e G4/q Bb4/h E4/q | F5/q F5/q C5/q A4/q A4/q G4/q | F4/q F5/q C5/q A4/h D4/q | F4/h. A4/h. | G4/q. A4/e G4/q Bb4/h D4/q | F4/h. A4/h. | F4/q F5/q C5/q A4/q Bb4/q C5/q | D5/q C5/q D5/q F5/q C5/q A4/q | G4/q. A4/e G4/q Bb4/h D4/q | F4/h. A4/h. | F4/q F5/q C5/q A4/h F4/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | F3/h. F3/h. | C3/h. G3/h. | F3/h. F3/h. | F2/h. F2/h. | C3/h. G2/h D2/q | F2/h. F3/h. | F2/w~ F2/h | F3/h. F3/h. | G3/h. G2/h C3/q | F3/h. F3/h. | F2/h. F2/h. | Bb2/h. F2/h. | C3/h. G2/h D2/q | F2/h. F3/h. | F2/w~ F2/h | F3/h. F3/q. G3/e A3/q | G3/h. G2/h. | F3/h. F3/h. | F2/h. F2/h. | Bb2/h. F2/h. | C3/h. G2/h D2/q | F2/h. F2/h. | F2/w~ F2/h | F3/h. F3/q. G3/e A3/q | G3/h. G2/h. | F2/h. F2/h. | F2/h. F2/h. | Bb2/h. F2/h. | C3/h. G2/h D2/q | F2/h. F2/h. | F2/w~ F2/h | F3/h. F3/q. G3/e A3/q | G3/h. D3/h E3/q | F3/h. F2/h. | F3/h. F3/h. | Bb2/h. F2/h. | G2/h. G2/h. | F2/h. F2/h. | F2/w~ F2/h | F3/h. F3/h. | C3/h. G2/h. | F2/h. F2/h. | F3/h. F3/h. | Bb2/h. F3/h. | F2/h. Bb2/h. | F2/h. G2/h. | F3/h. F2/h. | F3/h. F3/h. | C3/h. G3/h. | F3/h. F3/h. | F2/h. F2/h. | Bb2/h. F2/h. | C3/h. G2/h D2/q | F2/h. F2/h. | F2/w~ F2/h | F2/h. F3/h. | C3/h. G2/h. | F2/h. Bb2/h. | F2/h. F2/h. | G2/h. F2/h. | C3/h. G2/h. | F2/h. F2/h. | F2/w~ F2/h | F3/h. F3/h. | C3/h. G3/h. | F3/h. F3/h. | F2/h. F2/h. | Bb2/h. F2/h. | C3/h. G2/h. | F2/h. F2/h. | F2/w~ F2/h | F2/w."
+    }
+  ]
+}
