@@ -35,14 +35,16 @@ for lesson in si-and-la high-do pinched-thumb; do
     grep -q "PROBE OK" <<<"$log" || probe_status=1
 done
 
-# Speech probe (when the English model is there): a recorded "do re mi fa sol" must come back
-# as those notes, in order, with times.
+# Speech probe (when the English model is there): a recorded "do re mi fa sol", heard in two
+# sessions on one listener, must come back as those notes, in order, timed from the session start.
 speech_status=0
 if [ -f "$PROJECT_DIR/assets/speech/en/am/final.mdl" ] && [ -f "$PROJECT_DIR/tests/fixtures/speech/solfege-en.wav" ]; then
     echo "==> speech probe"
     log="$(timeout 300 "$GODOT" --headless --path "$PROJECT_UNC" -- "--speechprobe=$(to_unc "$PROJECT_DIR/tests/fixtures/speech/solfege-en.wav")" 2>&1)" || speech_status=1
     grep -E "PROBE" <<<"$log"
     grep -q "PROBE letters: 0 1 2 3 4" <<<"$log" || speech_status=1
+    # The second session's times count from its own start ("do" said within the first second).
+    grep -qE "PROBE heard: do@0\.[0-9]+ " <<<"$log" || speech_status=1
 fi
 
 ok() { [ "$1" -eq 0 ] && echo ok || echo FAILED; }

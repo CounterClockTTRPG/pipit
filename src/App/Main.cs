@@ -463,11 +463,18 @@ public partial class Main : Control
             GetTree().Quit(1);
             return;
         }
-        listener.Start();
-        const double start = 100.0;
-        for (var i = 0; i < up.Length; i += 1024)
-            hub.InjectSamples(up[i..Math.Min(up.Length, i + 1024)], start + i / (double)hub.SampleRate);
-        var words = listener.Stop();
+        // Two sessions on one listener, as the Test button and a round do: the second session's
+        // times must count from its own start.
+        var words = new List<(string Word, double Time)>();
+        var start = 100.0;
+        for (var session = 0; session < 2; session++)
+        {
+            listener.Start();
+            start = 100.0 + session * 50;
+            for (var i = 0; i < up.Length; i += 1024)
+                hub.InjectSamples(up[i..Math.Min(up.Length, i + 1024)], start + i / (double)hub.SampleRate);
+            words = listener.Stop();
+        }
         GD.Print("PROBE heard: " + string.Join("  ", words.Select(w => $"{w.Word}@{w.Time - start:0.00}")));
         GD.Print("PROBE letters: " + string.Join(" ", words.Select(w => NoteWords.LetterFor(w.Word, letters)?.ToString() ?? "-")));
         GetTree().Quit();

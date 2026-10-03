@@ -27,7 +27,9 @@ public sealed class SpeechListener : IDisposable
     private static readonly Dictionary<string, Model> Models = new();
 
     private readonly AudioHub _hub;
-    private readonly VoskRecognizer _recognizer;
+    private readonly Model _model;
+    private readonly string _grammar;
+    private VoskRecognizer _recognizer;
     private readonly List<(string Word, double Time)> _words = new();
     private double _streamStart = double.NaN;
     private double _resamplePos;
@@ -50,8 +52,9 @@ public sealed class SpeechListener : IDisposable
     private SpeechListener(AudioHub hub, Model model, string grammar)
     {
         _hub = hub;
-        _recognizer = new VoskRecognizer(model, ModelRate, grammar);
-        _recognizer.SetWords(true);
+        _model = model;
+        _grammar = grammar;
+        _recognizer = NewRecognizer();
     }
 
     private static string ModelFolder(string language) => OS.HasFeature("editor")
@@ -155,13 +158,24 @@ public sealed class SpeechListener : IDisposable
 
     private static readonly Dictionary<string, Task<Model>> Loading = new();
 
+    private VoskRecognizer NewRecognizer()
+    {
+        var recognizer = new VoskRecognizer(_model, ModelRate, _grammar);
+        recognizer.SetWords(true);
+        return recognizer;
+    }
+
     public void Start()
     {
         _words.Clear();
         Partial = "";
         _streamStart = double.NaN;
         _resamplePos = 0;
-        _recognizer.Reset();
+        // A fresh recognizer for every session: word times count from the recognizer's first
+        // sample, and Reset() does not restart them, so a second session's times came out late
+        // by the length of the first (every name then missed its beat).
+        _recognizer.Dispose();
+        _recognizer = NewRecognizer();
         _hub.SamplesCaptured += OnSamples;
     }
 
