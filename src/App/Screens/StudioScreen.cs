@@ -55,6 +55,7 @@ public partial class StudioScreen : Screen
         _delete = Ui.Button("Delete", Delete, 18);
         _star = Ui.Button("☆ Keep", ToggleStar, 18);
         var openFolder = Ui.Button("Open folder", () => OS.ShellOpen(Services.RecordingsDir), 18);
+        openFolder.Visible = !Services.IsAndroid;
 
         var left = Ui.MinSize(Ui.VBox(10,
             _record,

@@ -44,8 +44,12 @@ public static class PipitTheme
 
     private static Font MakeFont(string file, int weight, bool italic = false)
     {
-        // Segoe UI Symbol / Emoji supply ♯ ♭ and the emoji on Windows; DejaVu elsewhere.
-        var fallback = new SystemFont { FontNames = new[] { "Segoe UI Symbol", "Segoe UI Emoji", "Segoe UI", "DejaVu Sans" }, FontWeight = weight, FontItalic = italic };
+        // Segoe UI Symbol / Emoji supply ♯ ♭ and the emoji on Windows, Noto on Android.
+        var fallback = new SystemFont
+        {
+            FontNames = new[] { "Segoe UI Symbol", "Segoe UI Emoji", "Segoe UI", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Color Emoji", "DejaVu Sans", "sans-serif" },
+            FontWeight = weight, FontItalic = italic,
+        };
         var bytes = FileAccess.GetFileAsBytes("res://assets/fonts/" + file);
         if (bytes.Length == 0)
             return fallback;

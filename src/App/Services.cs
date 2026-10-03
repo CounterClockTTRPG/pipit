@@ -33,6 +33,9 @@ public partial class Services : Node
     /// <summary>True until a real player is chosen (smoke tests, a computer with no players yet).</summary>
     public bool IsGuest => Players.All(p => p.Id != Player.Id);
     public AudioHub Audio { get; private set; } = null!;
+
+    /// <summary>Running on an Android tablet (no Windows settings, no folders to open, no F11).</summary>
+    public static bool IsAndroid => OS.GetName() == "Android";
     public ClickPlayer Clicks { get; private set; } = null!;
     private readonly Dictionary<FingeringSystem, FingeringChart> _charts = new();
 

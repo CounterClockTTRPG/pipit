@@ -53,6 +53,27 @@ public partial class AudioHub : Node
         AddChild(_mic);
         Configure(new PitchTrackerOptions(), null);
         _mic.Play();
+
+        // Android asks the player before an app may use the microphone; the stream only
+        // delivers sound after that, so it is restarted once permission is granted.
+        if (Services.IsAndroid && Array.IndexOf(OS.GetGrantedPermissions(), MicPermission) < 0)
+        {
+            GetTree().OnRequestPermissionsResult += (permission, granted) =>
+            {
+                if (granted && permission == MicPermission)
+                    Restart();
+            };
+            OS.RequestPermissions();
+        }
+    }
+
+    private const string MicPermission = "android.permission.RECORD_AUDIO";
+
+    private void Restart()
+    {
+        _mic.Stop();
+        _capture.ClearBuffer();
+        _mic.Play();
     }
 
     public static string[] InputDevices() => AudioServer.GetInputDeviceList();
@@ -67,9 +88,7 @@ public partial class AudioHub : Node
             return;
         AudioServer.InputDevice = name;
         // Restart so the stream picks the new device up; drop what the old one left behind.
-        _mic.Stop();
-        _capture.ClearBuffer();
-        _mic.Play();
+        Restart();
     }
 
     /// <summary>Replaces the tracker (range, reference A); frames restart from the current capture time.</summary>

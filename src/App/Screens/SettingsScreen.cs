@@ -53,14 +53,23 @@ public partial class SettingsScreen : Screen
         _testButton = Ui.Button("Test: record 3 s and play back", StartTest, 18);
         _checkButton = Ui.Button("Check for Windows voice processing", RunCheck, 18);
         _checkStatus = Ui.Text("", 16, PipitTheme.InkSoft);
+        var android = Services.IsAndroid;
+        var checkText = Ui.Text("The check plays a short tone through your speakers (take headphones off) and listens whether the microphone keeps hearing it.", 15, PipitTheme.InkSoft);
+        // The voice-processing check is about Windows' own processing; Android tablets have none to switch off.
+        checkText.Visible = _checkButton.Visible = _checkStatus.Visible = !android;
         var mic = Ui.VBox(10,
             Ui.Heading("Microphone", 26),
-            Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
+            android
+                ? Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the tablet's own microphone.", 15, PipitTheme.InkSoft)
+                : Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
             _devices, _meter, _testButton, _testStatus,
-            Ui.Text("The check plays a short tone through your speakers (take headphones off) and listens whether the microphone keeps hearing it.", 15, PipitTheme.InkSoft),
-            _checkButton, _checkStatus,
+            checkText, _checkButton, _checkStatus,
             Ui.Label("Tips", 20, PipitTheme.Ink),
-            Ui.Text("• No signal at all? Check Windows Settings → Privacy & security → Microphone → \"Let desktop apps access your microphone\".\n" +
+            android
+                ? Ui.Text("• No signal at all? Allow Pipit to use the microphone: Android Settings → Apps → Pipit → Permissions → Microphone.\n" +
+                          "• Put the tablet in front of you, about an arm's length away, with its microphone towards your recorder.\n" +
+                          "• After changing microphone, run Calibrate again.", 15, PipitTheme.InkSoft)
+                : Ui.Text("• No signal at all? Check Windows Settings → Privacy & security → Microphone → \"Let desktop apps access your microphone\".\n" +
                      "• Windows \"audio enhancements\" (noise suppression, automatic gain) can swallow quiet notes and blur the start of notes. " +
                      "Turn them off under Settings → System → Sound → your microphone → Audio enhancements.\n" +
                      "• After changing microphone, run Calibrate again.", 15, PipitTheme.InkSoft));
@@ -86,7 +95,7 @@ public partial class SettingsScreen : Screen
 
     private static CheckBox FullscreenToggle()
     {
-        var box = new CheckBox { Text = Ui.T("Full screen (F11)"), ButtonPressed = S.Machine.Fullscreen };
+        var box = new CheckBox { Text = Ui.T("Full screen (F11)"), ButtonPressed = S.Machine.Fullscreen, Visible = !Services.IsAndroid };
         box.Toggled += S.SetFullscreen;
         return box;
     }
