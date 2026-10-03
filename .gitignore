@@ -17,3 +17,4 @@ Thumbs.db
 .vscode/
 assets/soundfont/*.sf2
 __pycache__/
+assets/speech/
