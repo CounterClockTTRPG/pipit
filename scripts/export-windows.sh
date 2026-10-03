@@ -17,3 +17,15 @@ echo "==> smoke run of the exported build"
 log="$(timeout 120 "$PROJECT_DIR/build/windows/Pipit.console.exe" --headless -- --smoke 2>&1)" || true
 grep -E "^(ERROR|SCRIPT ERROR)" <<<"$log" | head -20 || true
 grep -q "SMOKE OK" <<<"$log" && echo "export: ok" || { printf '%s\n' "$log" | tail -30; echo "export: FAILED"; exit 1; }
+# A zip to hand out: unzip anywhere and run Pipit.exe (the console wrapper is left out).
+python3 - "$PROJECT_DIR/build" <<'PY'
+import os, sys, zipfile
+build = sys.argv[1]; src = os.path.join(build, 'windows')
+with zipfile.ZipFile(os.path.join(build, 'Pipit-windows.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
+    for root, _, files in os.walk(src):
+        for f in files:
+            if f != 'Pipit.console.exe':
+                path = os.path.join(root, f)
+                z.write(path, os.path.join('Pipit', os.path.relpath(path, src)))
+PY
+echo "==> build/Pipit-windows.zip ($(du -h "$PROJECT_DIR/build/Pipit-windows.zip" | cut -f1))"
