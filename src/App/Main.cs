@@ -75,6 +75,7 @@ public partial class Main : Control
             if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--lang=")) is { } lang)
             {
                 Services.Instance.Settings.Language = lang["--lang=".Length..];
+                Services.Instance.Machine.Language = lang["--lang=".Length..];
                 Services.Instance.ApplyLanguage();
                 ShowRoot(new HomeScreen());
             }

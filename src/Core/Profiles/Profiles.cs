@@ -15,6 +15,8 @@ public sealed class MachineSettings
     /// <summary>Someone confirmed headphones are used on this computer, so the band may play.</summary>
     public bool HeadphonesConfirmed { get; set; }
     public string? LastPlayerId { get; set; }
+    /// <summary>The language of the screens before a player is chosen (the start screen, a new player); "" until set.</summary>
+    public string Language { get; set; } = "";
 }
 
 /// <summary>A player: who they are (name, avatar bird) and their own settings and recorders.</summary>

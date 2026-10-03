@@ -96,6 +96,9 @@ public partial class Services : Node
         Players = Store.LoadProfiles();
         // Start as the last player so every screen works; the profile screen lets them change.
         Player = Players.FirstOrDefault(p => p.Id == Machine.LastPlayerId) ?? Players.FirstOrDefault() ?? new PlayerProfile { Name = "Guest" };
+        // Before anyone has made a player, the screens speak the computer's language.
+        if (IsGuest)
+            Player.Settings.Language = StartLanguage;
         ApplyFullscreen();
         Audio = new AudioHub { Name = "AudioHub" };
         AddChild(Audio);
@@ -183,7 +186,7 @@ public partial class Services : Node
 
     public InstrumentProfile AddInstrument(RecorderKind kind, FingeringSystem fingering)
     {
-        var added = Settings.AddInstrument(kind, fingering);
+        var added = Settings.AddInstrument(kind, fingering, RecorderDefaultName(kind));
         ApplyInstrument();
         Save();
         return added;
@@ -236,9 +239,73 @@ public partial class Services : Node
     /// </summary>
     private readonly HashSet<string> _loadedLanguages = new();
 
-    public void ApplyLanguage()
+    public static readonly string[] Languages = { "en", "nl", "fr" };
+
+    /// <summary>"My soprano" in the current language.</summary>
+    public static string RecorderDefaultName(RecorderKind kind) => UI.Ui.T(AppSettings.DefaultName(kind));
+
+    /// <summary>
+    /// The language of the start screen and of a new player: the last one chosen on this computer,
+    /// else the last player's, at first the device's own language when Pipit speaks it.
+    /// </summary>
+    public string StartLanguage =>
+        Languages.Contains(Machine.Language) ? Machine.Language
+        : Players.FirstOrDefault(p => p.Id == Machine.LastPlayerId) is { } last ? last.Settings.Language
+        : Languages.Contains(OS.GetLocaleLanguage()) ? OS.GetLocaleLanguage() : "en";
+
+    /// <summary>The default recorder name in every language Pipit speaks ("My alto", "Mijn alt", "Mon alto").</summary>
+    public static IEnumerable<string> AllDefaultNames(RecorderKind kind)
     {
-        var language = Settings.Language;
+        var english = AppSettings.DefaultName(kind);
+        yield return english;
+        foreach (var language in Languages.Skip(1))
+        {
+            var path = $"res://data/i18n/{language}.json";
+            if (FileAccess.FileExists(path)
+                && System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(FileAccess.GetFileAsString(path)) is { } table
+                && table.TryGetValue(english, out var translated) && translated != "")
+                yield return translated;
+        }
+    }
+
+    /// <summary>A player's language: recorders that still have a default name are renamed into it.</summary>
+    public static void SetLanguage(AppSettings settings, string language)
+    {
+        settings.Language = language;
+        var table = LanguageTable(language);
+        settings.RenameDefaultNames(AllDefaultNames, k => table.GetValueOrDefault(AppSettings.DefaultName(k)) is { Length: > 0 } t ? t : AppSettings.DefaultName(k));
+    }
+
+    private static Dictionary<string, string> LanguageTable(string language)
+    {
+        var path = $"res://data/i18n/{language}.json";
+        return language != "en" && FileAccess.FileExists(path)
+            ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(FileAccess.GetFileAsString(path)) ?? new()
+            : new();
+    }
+
+    /// <summary>The current player's language, applied at once (and remembered for the start screen).</summary>
+    public void SetLanguage(string language)
+    {
+        SetLanguage(Settings, language);
+        Machine.Language = language;
+        ApplyLanguage();
+        Save();
+    }
+
+    /// <summary>The language of the start screen, before a player is chosen (the players keep their own).</summary>
+    public void SetStartLanguage(string language)
+    {
+        Machine.Language = language;
+        Store.SaveMachine(Machine);
+        if (IsGuest)
+            Player.Settings.Language = language;
+        ApplyLanguage(language);
+    }
+
+    public void ApplyLanguage(string? only = null)
+    {
+        var language = only ?? Settings.Language;
         if (language != "en" && _loadedLanguages.Add(language))
         {
             var path = $"res://data/i18n/{language}.json";
@@ -275,6 +342,8 @@ public partial class Services : Node
         var player = Store.Create(name, avatar, language);
         Players = Store.LoadProfiles();
         SelectPlayer(Players.First(p => p.Id == player.Id));
+        // The first recorder is named in the player's language ("Mijn sopraan").
+        SetLanguage(language);
         return Player;
     }
 

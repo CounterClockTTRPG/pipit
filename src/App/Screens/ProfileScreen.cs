@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Pipit.App.UI;
 using Pipit.App.Views;
@@ -15,11 +16,21 @@ public partial class ProfileScreen : Screen
 
     public ProfileScreen()
     {
+        // Before a player is chosen the screens speak the computer's language, which can be changed here.
+        S.ApplyLanguage(S.StartLanguage);
         _cards.AddThemeConstantOverride("h_separation", 20);
         _cards.AddThemeConstantOverride("v_separation", 20);
         var heading = Ui.Heading("Who's playing?", PipitTheme.Display, HorizontalAlignment.Center);
+        var language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Services.Languages, S.StartLanguage)), ix =>
+        {
+            S.SetStartLanguage(Services.Languages[ix]);
+            Main.Instance.ShowRoot(new ProfileScreen());
+        });
+        language.TooltipText = Ui.T("Language");
+        var languageRow = Ui.HBox(8, Ui.Label("🌐", 18, PipitTheme.InkSoft), language);
+        languageRow.Alignment = BoxContainer.AlignmentMode.Center;
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
-        scroll.AddChild(Ui.Expand(Ui.VBox(30, heading, _cards)));
+        scroll.AddChild(Ui.Expand(Ui.VBox(30, heading, _cards, languageRow)));
         AddChild(scroll);
     }
 

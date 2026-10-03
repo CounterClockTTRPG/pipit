@@ -67,6 +67,19 @@ public class SettingsTests
     }
 
     [Fact]
+    public void Default_names_follow_the_language_but_chosen_names_stay()
+    {
+        var s = new AppSettings().Normalize(); // "My soprano"
+        s.AddInstrument(RecorderKind.Soprano, FingeringSystem.Baroque);            // "My soprano 2"
+        s.AddInstrument(RecorderKind.Alto, FingeringSystem.Baroque, "Mijn alt");   // a Dutch player's
+        s.AddInstrument(RecorderKind.Tenor, FingeringSystem.Baroque).Name = "Mollenhauer Canta";
+        static string Dutch(RecorderKind k) => k switch { RecorderKind.Soprano => "Mijn sopraan", RecorderKind.Alto => "Mijn alt", _ => "Mijn tenor" };
+        static string French(RecorderKind k) => k switch { RecorderKind.Soprano => "Ma soprano", RecorderKind.Alto => "Mon alto", _ => "Mon ténor" };
+        s.RenameDefaultNames(k => new[] { AppSettings.DefaultName(k), Dutch(k) }, French);
+        Assert.Equal(new[] { "Ma soprano", "Ma soprano 2", "Mon alto", "Mollenhauer Canta" }, s.Instruments.Select(i => i.Name));
+    }
+
+    [Fact]
     public void Removing_keeps_a_valid_active_recorder_and_never_the_last()
     {
         var s = new AppSettings().Normalize();

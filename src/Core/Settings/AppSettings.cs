@@ -54,10 +54,16 @@ public sealed class AppSettings
         return this;
     }
 
-    /// <summary>Adds a recorder with a name that is not taken yet, and makes it active.</summary>
-    public InstrumentProfile AddInstrument(RecorderKind kind, FingeringSystem fingering)
+    /// <summary>The English default name of a recorder of this kind ("My soprano").</summary>
+    public static string DefaultName(RecorderKind kind) => $"My {kind.ToString().ToLowerInvariant()}";
+
+    /// <summary>
+    /// Adds a recorder with a name that is not taken yet, and makes it active. <paramref name="baseName"/>
+    /// is the default name in the player's language ("Mijn alt"); English when not given.
+    /// </summary>
+    public InstrumentProfile AddInstrument(RecorderKind kind, FingeringSystem fingering, string? baseName = null)
     {
-        var baseName = $"My {kind.ToString().ToLowerInvariant()}";
+        baseName ??= DefaultName(kind);
         var name = baseName;
         for (var n = 2; Instruments.Any(i => i.Name == name); n++)
             name = $"{baseName} {n}";
@@ -65,6 +71,28 @@ public sealed class AppSettings
         Instruments.Add(instrument);
         ActiveInstrumentId = instrument.Id;
         return instrument;
+    }
+
+    /// <summary>
+    /// Renames recorders that still have a default name ("My soprano", "Ma soprano 2", in any of
+    /// <paramref name="defaults"/>' languages) to the default of <paramref name="name"/>; names
+    /// the player chose stay. Used when a player is created or changes language.
+    /// </summary>
+    public void RenameDefaultNames(Func<RecorderKind, IEnumerable<string>> defaults, Func<RecorderKind, string> name)
+    {
+        foreach (var instrument in Instruments)
+        {
+            foreach (var old in defaults(instrument.Kind).Distinct())
+            {
+                if (instrument.Name == old)
+                    instrument.Name = name(instrument.Kind);
+                else if (instrument.Name.StartsWith(old + " ") && int.TryParse(instrument.Name[(old.Length + 1)..], out var n))
+                    instrument.Name = $"{name(instrument.Kind)} {n}";
+                else
+                    continue;
+                break;
+            }
+        }
     }
 
     /// <summary>Removes a recorder; the last one cannot be removed.</summary>

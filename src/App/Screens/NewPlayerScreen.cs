@@ -11,7 +11,7 @@ namespace Pipit.App.Screens;
 /// <summary>Create a player (name, bird, language), or edit or remove an existing one.</summary>
 public partial class NewPlayerScreen : Screen
 {
-    private static readonly string[] Languages = { "en", "nl", "fr" };
+    private static string[] Languages => Services.Languages;
 
     private readonly PlayerProfile? _editing;
     private readonly LineEdit _name = new() { MaxLength = 20, PlaceholderText = "Your name", CustomMinimumSize = new Vector2(360, 0) };
@@ -22,14 +22,25 @@ public partial class NewPlayerScreen : Screen
 
     public override string Title => _editing is null ? "New player" : "Edit player";
 
-    public NewPlayerScreen(PlayerProfile? editing)
+    /// <param name="name">, <paramref name="chosenBird"/>, <paramref name="language"/>: what was entered
+    /// before the screen was rebuilt in another language.</param>
+    public NewPlayerScreen(PlayerProfile? editing, string? name = null, string? chosenBird = null, string? language = null)
     {
         _editing = editing;
-        _avatar = editing?.Avatar ?? Avatars.All[new Random().Next(Avatars.All.Count)];
-        _name.Text = editing?.Name ?? "";
+        _avatar = chosenBird ?? editing?.Avatar ?? Avatars.All[new Random().Next(Avatars.All.Count)];
+        _name.Text = name ?? editing?.Name ?? "";
+        _name.PlaceholderText = Ui.T("Your name");
+        _name.AddThemeColorOverride("font_placeholder_color", PipitTheme.InkSoft);
         _name.AddThemeFontSizeOverride("font_size", 26);
         _name.TextChanged += _ => _save!.Disabled = _name.Text.Trim() == "";
-        _language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, editing?.Settings.Language ?? "en")), _ => { });
+        var chosen = language ?? editing?.Settings.Language ?? S.StartLanguage;
+        // Choosing a language shows this screen (and the start screen behind it) in it at once.
+        _language = Ui.Options(new[] { "English", "Nederlands", "Français" }, Math.Max(0, Array.IndexOf(Languages, chosen)), ix =>
+        {
+            S.SetStartLanguage(Languages[ix]);
+            Main.Instance.ShowRoot(new ProfileScreen());
+            Main.Instance.Show(new NewPlayerScreen(_editing, _name.Text, _avatar, Languages[ix]));
+        });
 
         var birds = new HFlowContainer();
         birds.AddThemeConstantOverride("h_separation", 12);
@@ -88,9 +99,12 @@ public partial class NewPlayerScreen : Screen
         }
         _editing.Name = name;
         _editing.Avatar = _avatar;
-        _editing.Settings.Language = language;
+        if (_editing.Id == S.Player.Id)
+            S.SetLanguage(language);
+        else
+            Services.SetLanguage(_editing.Settings, language);
         S.Store.Save(_editing);
-        Main.Instance.Back();
+        Main.Instance.ShowRoot(new ProfileScreen());
     }
 
     private void ConfirmRemove()
