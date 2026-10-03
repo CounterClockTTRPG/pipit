@@ -239,6 +239,16 @@ public partial class Services : Node
             Store.SaveProgress(Player.Id, Progress);
     }
 
+    /// <summary>A song's survival board for everyone on this computer (on the current recorder size), best first.</summary>
+    public List<ScoreEntry> ComputerBoard(string songId)
+    {
+        var key = PlayerProgress.SongKey(songId, Instrument.Kind.ToString());
+        var boards = Players.Where(p => p.Id != Player.Id)
+            .Select(p => (IEnumerable<ScoreEntry>)(Store.LoadProgress(p.Id).Leaderboards.GetValueOrDefault(key) ?? new()))
+            .Append(Progress.Leaderboards.GetValueOrDefault(key) ?? new());
+        return Leaderboard.Combined(boards);
+    }
+
     // ---- players --------------------------------------------------------------------------
 
     /// <summary>

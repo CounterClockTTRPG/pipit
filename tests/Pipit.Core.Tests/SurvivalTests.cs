@@ -109,3 +109,28 @@ public class SurvivalTests
         Assert.Equal(5000, p.Leaderboards["s|soprano"][0].Score);
     }
 }
+
+public class ComputerBoardTests
+{
+    private static ScoreEntry E(string who, long score, int minute) => new(who, score, 0.9, 1, 10, 1, new DateTime(2026, 10, 3, 12, minute, 0));
+
+    [Fact]
+    public void The_computer_board_merges_every_players_runs_best_first()
+    {
+        var raf = new[] { E("Raf", 900, 1), E("Raf", 400, 2) };
+        var mia = new[] { E("Mia", 1200, 3), E("Mia", 400, 0) };
+        var board = Leaderboard.Combined(new[] { raf, mia });
+        Assert.Equal(new[] { "Mia", "Raf", "Mia", "Raf" }, board.Select(e => e.Player));
+        Assert.Equal(1200, board[0].Score);
+        Assert.Equal(3, Leaderboard.Combined(new[] { raf, mia }, size: 3).Count);
+    }
+
+    [Fact]
+    public void The_crown_goes_to_the_most_xp_when_there_is_someone_to_beat()
+    {
+        Assert.Null(Levels.CrownHolder(new[] { ("a", 500L) }));                       // alone
+        Assert.Equal("b", Levels.CrownHolder(new[] { ("a", 500L), ("b", 900L), ("c", 10L) }));
+        Assert.Null(Levels.CrownHolder(new[] { ("a", 500L), ("b", 500L) }));           // a tie
+        Assert.Null(Levels.CrownHolder(new[] { ("a", 0L), ("b", 0L) }));               // nobody has played
+    }
+}

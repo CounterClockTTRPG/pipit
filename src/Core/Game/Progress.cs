@@ -159,6 +159,18 @@ public sealed class PlayerProgress
 
 public static class Levels
 {
+    /// <summary>
+    /// Who wears the crown on the start screen: the player with the most XP (so the highest
+    /// level), when there are at least two players and no tie at the top.
+    /// </summary>
+    public static string? CrownHolder(IReadOnlyCollection<(string Id, long Xp)> players)
+    {
+        if (players.Count < 2)
+            return null;
+        var top = players.OrderByDescending(p => p.Xp).Take(2).ToList();
+        return top[0].Xp > 0 && top[0].Xp > top[1].Xp ? top[0].Id : null;
+    }
+
     /// <summary>XP needed to go from <paramref name="level"/> to the next: 100, 150, 200, …</summary>
     public static long StepFrom(int level) => 100 + 50L * (level - 1);
 

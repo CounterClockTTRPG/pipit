@@ -242,6 +242,9 @@ public partial class Main : Control
         }
 
         // Players: who is playing, a new player, and the first page of Pip's tour.
+        // A second player (in memory only: --shots writes nothing) so the crown shows.
+        if (Services.Instance.Players.Count == 1)
+            Services.Instance.Players.Add(new Core.Profiles.PlayerProfile { Name = "Mia", Avatar = "robin" });
         foreach (var (make, file) in new (System.Func<Screen>, string)[] { (() => new ProfileScreen(), "players"), (() => new NewPlayerScreen(null), "new-player"), (() => new IntroScreen(), "intro") })
         {
             Show(make());

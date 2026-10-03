@@ -110,6 +110,13 @@ public static class Leaderboard
 {
     public const int Size = 10;
 
+    /// <summary>
+    /// The board of everyone on this computer: the boards of all players merged, best first, so
+    /// players can challenge each other on a song.
+    /// </summary>
+    public static List<ScoreEntry> Combined(IEnumerable<IEnumerable<ScoreEntry>> boards, int size = Size) =>
+        boards.SelectMany(b => b).OrderByDescending(e => e.Score).ThenBy(e => e.When).Take(size).ToList();
+
     /// <summary>Adds an entry to a song's board (best first) and returns its rank, or null if it did not make the board.</summary>
     public static int? Add(PlayerProgress progress, string songKey, ScoreEntry entry)
     {

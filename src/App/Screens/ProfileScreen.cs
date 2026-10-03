@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 using Pipit.App.UI;
 using Pipit.App.Views;
@@ -38,24 +39,41 @@ public partial class ProfileScreen : Screen
     {
         foreach (var child in _cards.GetChildren())
             child.QueueFree();
+        // The player with the most XP wears the crown (when there is someone to beat).
+        var xp = S.Players.ToDictionary(p => p.Id, p => S.Store.LoadProgress(p.Id).Xp);
+        var crown = Levels.CrownHolder(xp.Select(kv => (kv.Key, kv.Value)).ToList());
         foreach (var player in S.Players)
-            _cards.AddChild(Card(player));
+            _cards.AddChild(Card(player, xp[player.Id], player.Id == crown));
         _cards.AddChild(NewCard());
     }
 
-    private Control Card(PlayerProfile player)
+    private Control Card(PlayerProfile player, long xp, bool crowned)
     {
         var bird = new PipView { Avatar = player.Avatar, CustomMinimumSize = new Vector2(150, 150), MouseFilter = MouseFilterEnum.Ignore };
-        var level = Levels.LevelFor(S.Store.LoadProgress(player.Id).Xp);
+        var level = Levels.LevelFor(xp);
         var name = Ui.Label(player.Name, 26, PipitTheme.Ink, HorizontalAlignment.Center);
         name.MouseFilter = MouseFilterEnum.Ignore;
-        var sub = Ui.Label(string.Format(Ui.T("Level {0}"), level), 16, PipitTheme.InkSoft, HorizontalAlignment.Center);
+        var sub = Ui.Label(string.Format(Ui.T("Level {0}"), level), 20, PipitTheme.Accent, HorizontalAlignment.Center);
+        sub.AddThemeFontOverride("font", PipitTheme.BoldFont);
         sub.MouseFilter = MouseFilterEnum.Ignore;
-        var button = new Button { CustomMinimumSize = new Vector2(230, 250) };
-        var content = Ui.VBox(4, bird, name, sub);
+        // How far to the next level.
+        var bar = new ProgressBar { MinValue = 0, MaxValue = 1, Value = Levels.Fraction(xp), ShowPercentage = false, CustomMinimumSize = new Vector2(150, 8), MouseFilter = MouseFilterEnum.Ignore, SizeFlagsHorizontal = SizeFlags.ShrinkCenter };
+        var button = new Button { CustomMinimumSize = new Vector2(230, 270) };
+        var content = Ui.VBox(4, bird, name, sub, bar);
         content.SetAnchorsPreset(LayoutPreset.FullRect);
         content.MouseFilter = MouseFilterEnum.Ignore;
         button.AddChild(content);
+        if (crowned)
+        {
+            var crown = Ui.Label("👑", 40, null, HorizontalAlignment.Center);
+            crown.MouseFilter = MouseFilterEnum.Ignore;
+            crown.TooltipText = Ui.T("Highest level");
+            crown.SetAnchorsAndOffsetsPreset(LayoutPreset.CenterTop);
+            crown.OffsetTop = -14;
+            crown.OffsetBottom = 40;
+            button.AddChild(crown);
+            button.TooltipText = Ui.T("Highest level");
+        }
         button.Pressed += () => Choose(player);
         var edit = Ui.Quiet(Ui.Button("✎ " + Ui.T("Edit"), () => Main.Instance.Show(new NewPlayerScreen(player)), 15));
         return Ui.VBox(6, button, edit);

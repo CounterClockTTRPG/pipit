@@ -55,6 +55,10 @@ public partial class PlayScreen : Screen
     private HBoxContainer _survivalBar = null!;
     private SurvivalState? _survival;
     private int? _rank;
+    // Everyone's survival runs on this song on this computer; loaded when first needed.
+    private List<ScoreEntry>? _board;
+    private ScoreEntry? _lastEntry;
+    private List<ScoreEntry> Board => _board ??= S.ComputerBoard(_song.Id);
     // Survival callouts over the music: the grade of each note, the streak, milestones.
     private readonly Label _gradeLabel = new() { HorizontalAlignment = HorizontalAlignment.Center, MouseFilter = Control.MouseFilterEnum.Ignore };
     private readonly Label _streakLabel = new() { HorizontalAlignment = HorizontalAlignment.Center, MouseFilter = Control.MouseFilterEnum.Ignore };
@@ -273,8 +277,7 @@ public partial class PlayScreen : Screen
         _diagram.Keyed = S.Instrument.Keyed;
         S.Audio.FrameReady += OnFrame;
         S.Audio.SamplesCaptured += OnSamples;
-        var record = S.SongRecord(_song.Id);
-        _best.Text = record.Plays == 0 ? "" : $"{Ui.T("Best")}: {new string('★', record.BestStars)}{new string('☆', 3 - record.BestStars)} {record.BestAccuracy:0}%";
+        ShowBest();
         ShowFingeringAt(_barNotes.Min(n => n.StartBeat));
     }
 
@@ -287,8 +290,21 @@ public partial class PlayScreen : Screen
         _player.Stop();
     }
 
+    /// <summary>Top right: the player's best stars, or in survival the high score to beat on this computer.</summary>
+    private void ShowBest()
+    {
+        var record = S.SongRecord(_song.Id);
+        if (_mode == Mode.Survival)
+            _best.Text = Board.FirstOrDefault() is { } top
+                ? "👑 " + string.Format(Ui.T("High score {0:N0} ({1})"), top.Score, top.Player)
+                : Ui.T("No high score yet: be the first!");
+        else
+            _best.Text = record.Plays == 0 ? "" : $"{Ui.T("Best")}: {new string('★', record.BestStars)}{new string('☆', 3 - record.BestStars)} {record.BestAccuracy:0}%";
+    }
+
     private void UpdateControls()
     {
+        ShowBest();
         _speedLabel.Text = $"{_speed.Value:0}%";
         var busy = _state is State.Running or State.Preview or State.Replay;
         _start.Text = Ui.T(_state == State.Running ? "■ Stop" : _state == State.Results ? "▶ Again" : "▶ Start");
@@ -801,8 +817,12 @@ public partial class PlayScreen : Screen
                 var st = _survival!;
                 var judged = _performance.Notes.OrderBy(n => n.Expected.Start).Take(st.Judged).ToList();
                 var accuracy = judged.Count == 0 ? 0 : judged.Average(n => n.Score);
-                _rank = Leaderboard.Add(S.Progress, PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString()),
-                    new ScoreEntry(S.Player.Name, st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _runTempo, DateTime.Now));
+                _lastEntry = new ScoreEntry(S.Player.Name, st.Score, accuracy, st.Judged / (double)_expected.Count, st.BestCombo, _runTempo, DateTime.Now);
+                Leaderboard.Add(S.Progress, PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString()), _lastEntry);
+                // The rank that counts is on this computer's board, among all players.
+                _board = null;
+                var at = Board.IndexOf(_lastEntry);
+                _rank = at >= 0 ? at + 1 : null;
                 lines = XpRules.SurvivalRun(record, judged.Count(n => n.Result == NoteResult.Hit), st.Score, st.Alive, DateTime.Now);
             }
             else
@@ -838,12 +858,14 @@ public partial class PlayScreen : Screen
                 : string.Format(Ui.T("Out of life after {0:0}% of the song."), 100.0 * st.Judged / _expected.Count), 18, st.Alive ? PipitTheme.Good : PipitTheme.Bad));
             if (Callouts.FullCombo(st, _expected.Count))
                 summary.AddChild(Ui.Label(Ui.T("Full combo! Every note hit."), 20, PipitTheme.Accent));
+            if (_rank == 1 && Board.Count > 1)
+                summary.AddChild(Ui.Label("👑 " + Ui.T("New high score on this computer!"), 20, PipitTheme.Accent));
             summary.AddChild(Ui.Label(string.Format(Ui.T("Best combo {0}"), st.BestCombo) + (_rank is { } r ? "   " + string.Format(Ui.T("Rank {0} on this song's board"), r) : ""), 16));
-            var board = S.Progress.Leaderboards.GetValueOrDefault(PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString())) ?? new List<ScoreEntry>();
-            var rows = Ui.VBox(2);
-            foreach (var (entry, i) in board.Take(5).Select((e, i) => (e, i)))
-                rows.AddChild(Ui.Label($"{i + 1}.  {entry.Score,8:N0}   {entry.Reached:P0}   {Ui.T("combo")} {entry.BestCombo}   {entry.When:d MMM HH:mm}" + (entry.TempoFactor < 0.999 ? $"   ({entry.TempoFactor:P0} {Ui.T("speed")})" : ""),
-                    15, i + 1 == _rank ? PipitTheme.Accent : PipitTheme.Ink));
+            // The board of everyone on this computer, so players can challenge each other.
+            var rows = Ui.VBox(2, Ui.Label(Ui.T("High scores on this computer"), 15, PipitTheme.InkSoft));
+            foreach (var (entry, i) in Board.Take(5).Select((e, i) => (e, i)))
+                rows.AddChild(Ui.Label($"{i + 1}.  {entry.Player}   {entry.Score,8:N0}   {entry.Reached:P0}   {Ui.T("combo")} {entry.BestCombo}   {entry.When:d MMM HH:mm}" + (entry.TempoFactor < 0.999 ? $"   ({entry.TempoFactor:P0} {Ui.T("speed")})" : ""),
+                    15, ReferenceEquals(entry, _lastEntry) ? PipitTheme.Accent : PipitTheme.Ink));
             summary.AddChild(rows);
         }
         else if (Rhythmic && _performance is { } p)
@@ -1004,7 +1026,9 @@ public partial class PlayScreen : Screen
     {
         var notes = _song.Melody.Performance.Take(10)
             .Select(n => new NoteJudgement(new ExpectedNote(n.Index, n.Pitch.Midi, n.StartBeat, n.EndBeat), NoteResult.Hit, null, 0, Timing.Perfect, true, true, 0)).ToList();
+        _mode = Mode.Survival;
         _survivalBar.Visible = true;
+        ShowBest();
         UpdateSurvival(Survival.Evaluate(notes));
         CallOut(notes);
     }
