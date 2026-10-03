@@ -13,6 +13,8 @@ public sealed record AchievementEvent
     public double CasualAccuracy { get; init; }
     public double TempoFactor { get; init; } = 1;
     public SurvivalState? Survival { get; init; }
+    /// <summary>A note-reading round where every note was named right and on the beat.</summary>
+    public bool ReadingPerfect { get; init; }
 }
 
 /// <summary>
@@ -35,6 +37,17 @@ public static class Achievements
         new Achievement("slow-and-steady", "Slow and steady", "Finish a song at 70 % speed or slower. Practising slowly is how musicians learn.", 20, "🐢"),
         new Achievement("chapter-1", "Si La Sol", "Earn at least one star on every song in chapter 1.", 60, "1"),
         new Achievement("chapter-2", "High notes", "Earn at least one star on every song in chapter 2.", 80, "2"),
+        new Achievement("chapter-3", "Down to Re", "Earn at least one star on every song in chapter 3.", 80, "3"),
+        new Achievement("chapter-4", "All the way down", "Earn at least one star on every song in chapter 4.", 90, "4"),
+        new Achievement("chapter-5", "High flyer", "Earn at least one star on every song in chapter 5.", 100, "5"),
+        new Achievement("chapter-6", "Sharp player", "Earn at least one star on every song in chapter 6.", 110, "6"),
+        new Achievement("chapter-7", "Into the flats", "Earn at least one star on every song in chapter 7.", 110, "7"),
+        new Achievement("chapter-8", "Quick fingers", "Earn at least one star on every song in chapter 8.", 120, "8"),
+        new Achievement("chapter-9", "Baroque player", "Earn at least one star on every song in chapter 9.", 140, "9"),
+        new Achievement("chapter-10", "Sonata soloist", "Earn at least one star on every song in chapter 10.", 150, "10"),
+        new Achievement("first-review", "Look back", "Pass a review on the study path.", 25, "↺"),
+        new Achievement("fingerings-10", "Ten fingers, ten notes", "Know 10 fingerings well (see My notes).", 60, "✋"),
+        new Achievement("reading-perfect", "Sight reader", "Name all eight notes right and on the beat in Note reading.", 40, "👁"),
         new Achievement("space-musician", "Space musician", "Play Jingle Bells, the first song played in space.", 25, "🚀"),
         new Achievement("trainer-25", "Nimble fingers", "Find 25 notes in the fingering trainer.", 30, "✋"),
         new Achievement("streak-3", "Three days", "Practise three days in a row.", 30, "3"),
@@ -67,14 +80,17 @@ public static class Achievements
         Check("space-musician", e.SongId == "jingle-bells");
         Check("survivor", e.Survival is { Alive: true });
         Check("combo-30", e.Survival?.BestCombo >= 30);
-        foreach (var (chapter, id) in new[] { (1, "chapter-1"), (2, "chapter-2") })
-            Check(id, songsByChapter.TryGetValue(chapter, out var songs) && songs.Count > 0
+        foreach (var chapter in Enumerable.Range(1, 10))
+            Check($"chapter-{chapter}", songsByChapter.TryGetValue(chapter, out var songs) && songs.Count > 0
                 && songs.All(s => progress.Songs.TryGetValue(PlayerProgress.SongKey(s, recorderKind), out var r) && r.BestStars >= 1));
         Check("trainer-25", progress.TrainerNotes >= 25);
         Check("streak-3", progress.StreakDays >= 3);
         Check("streak-7", progress.StreakDays >= 7);
         Check("practice-30", progress.PracticeMinutes >= 30);
         Check("level-5", progress.Level >= 5);
+        Check("first-review", progress.LessonsDone.Any(l => l.StartsWith("review:") && l != "review:free"));
+        Check("fingerings-10", progress.Notes.Count(n => n.Key.StartsWith(PlayerProgress.Playing + "|" + recorderKind.ToLowerInvariant() + "|") && n.Value.Box >= 4) >= 10);
+        Check("reading-perfect", e.ReadingPerfect);
         return earned;
     }
 

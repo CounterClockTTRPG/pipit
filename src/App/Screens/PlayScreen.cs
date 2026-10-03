@@ -207,7 +207,19 @@ public partial class PlayScreen : Screen
         var options = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
         options.AddThemeConstantOverride("h_separation", 10);
         options.AddThemeConstantOverride("v_separation", 8);
-        foreach (var c in new Control[] { viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", PipitTheme.Small + 1, PipitTheme.InkSoft), _speed, _speedLabel, _difficultyOption, _metronome, _help })
+        // The row holds what changes from run to run; the settings chosen once sit under Options.
+        var more = new PopupPanel();
+        more.AddThemeStyleboxOverride("panel", PipitTheme.Box(Colors.White, PipitTheme.WoodEdge with { A = 0.5f }, 14, radius: 12, line: 1));
+        more.AddChild(Ui.VBox(10, _names, _metronome, _help, Ui.HBox(10, Ui.Label("Strictness", PipitTheme.Small + 2, PipitTheme.InkSoft), _difficultyOption)));
+        var moreButton = Ui.Button("Options ▾", () => { }, PipitTheme.Small + 2);
+        moreButton.Pressed += () =>
+        {
+            // Opens upwards: the button sits at the bottom of the screen.
+            var size = (Vector2I)more.GetContentsMinimumSize() + new Vector2I(28, 28);
+            more.Popup(new Rect2I((Vector2I)moreButton.GlobalPosition - new Vector2I(0, size.Y + 8), size));
+        };
+        AddChild(more);
+        foreach (var c in new Control[] { viewOption, partOption, _band, _modeOption, Ui.Label("Speed", PipitTheme.Small + 1, PipitTheme.InkSoft), _speed, _speedLabel, moreButton })
         {
             if (c is CheckBox or OptionButton)
                 c.AddThemeFontSizeOverride("font_size", PipitTheme.Small + 2);

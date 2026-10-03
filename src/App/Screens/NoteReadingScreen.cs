@@ -231,7 +231,7 @@ public partial class NoteReadingScreen : Screen
         _status.Modulate = good == results.Count ? PipitTheme.Good : good >= results.Count * 3 / 4 ? PipitTheme.Warn : PipitTheme.Bad;
         _pip.SetMood(good == results.Count ? PipMood.Cheering : PipMood.Thinking, 2.0);
         if (good > 0)
-            S.AwardXp(XpRules.Trainer(good));
+            S.AwardXp(XpRules.Trainer(good), new AchievementEvent { ReadingPerfect = good == results.Count });
         S.SaveProgress();
         _start.Disabled = false;
         _start.Text = Ui.T("▶ Again");
