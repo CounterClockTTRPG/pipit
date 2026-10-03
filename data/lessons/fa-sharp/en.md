@@ -10,6 +10,8 @@ Thumb, holes 1, 2 and 3, then **skip hole 4** and cover holes 5 and 6. Hole 7 st
 
 ::try "Play Fa♯" note=F#4 hold=1
 
+::pip "On a recorder with German fingering, Fa♯ is fingered differently. The diagram always shows the fingering for your recorder."
+
 ## Fa♯'
 
 High Fa♯, on the top line, works the same way: **pinched** thumb, holes 1, 2 and 3, and hole 5.

@@ -63,14 +63,15 @@ public class InstrumentTests
         Assert.Equal(code, Chart(FingeringSystem.Baroque).Primary(step).Code);
 
     [Fact]
-    public void German_differs_only_on_fa_and_fa_sharp()
+    public void German_differs_on_fa_fa_sharp_and_the_upper_sol_sharp()
     {
         var baroque = Chart(FingeringSystem.Baroque);
         var german = Chart(FingeringSystem.German);
         var differing = Enumerable.Range(0, RecorderInfo.RangeSemitones + 1)
             .Where(s => baroque.Primary(s) != german.Primary(s)).ToArray();
-        Assert.Equal(new[] { 5, 6, 17, 18 }, differing);
+        Assert.Equal(new[] { 5, 6, 17, 18, 20 }, differing); // as on Mollenhauer's German chart
         Assert.Equal("xxxxxooo", german.Primary(5).Code);
+        Assert.Equal("pxxxoxxx", german.Primary(20).Code);
     }
 
     [Fact]

@@ -34,10 +34,11 @@ public static partial class LessonBlocks
         DirectiveBlock d => d.Name switch
         {
             "pip" => Pip(d.Text ?? "", d.Arg("mood")),
-            "fingering" => Fingering(Pitch.Parse(d.Arg("note"))),
+            "fingering" => Fingering(d),
             "staff" => Staff(d),
             "play" => Listen(d, context),
             "try" => new TryBlock(d, context),
+            "compare" => new CompareBlock(d, context),
             "exercise" => new ExerciseBlock(d, context),
             "quiz" => new QuizBlock(d),
             _ => Ui.Label($"[{d.Name}]", 14, PipitTheme.Bad),
@@ -89,11 +90,20 @@ public static partial class LessonBlocks
         return panel;
     }
 
-    private static Control Fingering(Pitch pitch)
+    /// <summary>The fingering of a note on the player's recorder, or in a named system (system=german).</summary>
+    private static Control Fingering(DirectiveBlock d)
     {
-        var diagram = new FingeringDiagram { Fingering = S.FingeringFor(pitch.Midi), Keyed = S.Instrument.Keyed, CustomMinimumSize = new Vector2(220, 340) };
-        return Ui.HBox(30, diagram, Ui.VBox(4, Ui.Spacer(), Ui.Label(S.NoteName(pitch), 64, PipitTheme.Ink), Ui.Spacer()));
+        var pitch = Pitch.Parse(d.Arg("note"));
+        var fingering = d.Arg("system") is { Length: > 0 } system
+            ? FingeringIn(Enum.Parse<Pipit.Core.Instruments.FingeringSystem>(system, ignoreCase: true), pitch.Midi)
+            : S.FingeringFor(pitch.Midi);
+        var diagram = new FingeringDiagram { Fingering = fingering, Keyed = S.Instrument.Keyed, CustomMinimumSize = new Vector2(220, 340) };
+        return Ui.HBox(30, diagram, Ui.VBox(4, Ui.Spacer(), Ui.Label(S.NoteName(pitch), 64, PipitTheme.Ink),
+            d.Text is { } caption ? Ui.Label(caption, 20, PipitTheme.InkSoft) : new Control(), Ui.Spacer()));
     }
+
+    public static Pipit.Core.Instruments.Fingering? FingeringIn(Pipit.Core.Instruments.FingeringSystem system, int writtenMidi) =>
+        S.Recorder.StepOf(writtenMidi) is { } step ? S.ChartFor(system).Primary(step) : null;
 
     private static Control Staff(DirectiveBlock d)
     {
@@ -168,6 +178,105 @@ public partial class TryBlock : PanelContainer, ITaskBlock
             var name = s.NoteName(s.Recorder.SoundingToWritten(played));
             _status.Text = string.Format(Ui.T("That was {0}. Check the fingering above and try again."), name);
             _status.Modulate = PipitTheme.Bad;
+        }
+    }
+}
+
+/// <summary>
+/// Baroque or German? The player holds the same note with the baroque and then the German
+/// fingering; the block shows how far each is from in tune and which system the recorder is
+/// built for (the better-tuned one).
+/// </summary>
+public partial class CompareBlock : PanelContainer, ITaskBlock
+{
+    private readonly int _target;
+    private readonly HeldNoteDetector _detector;
+    private readonly Label _status;
+    private readonly double?[] _cents = new double?[2];
+    private int _step;
+    private readonly Pipit.Core.Instruments.FingeringSystem[] _systems =
+        { Pipit.Core.Instruments.FingeringSystem.Baroque, Pipit.Core.Instruments.FingeringSystem.German };
+    private readonly Label[] _results = { Ui.Label("", 18, PipitTheme.Ink), Ui.Label("", 18, PipitTheme.Ink) };
+    public bool Done { get; private set; }
+    public event Action? Completed;
+
+    public CompareBlock(DirectiveBlock d, LessonContext context)
+    {
+        var s = Services.Instance;
+        var pitch = Pitch.Parse(d.Arg("note"));
+        _target = s.Recorder.WrittenToSounding(pitch.Midi);
+        _detector = new HeldNoteDetector(d.Number("hold", 1.5), settleSeconds: 0.25);
+        AddThemeStyleboxOverride("panel", PipitTheme.Box(Colors.White, PipitTheme.WoodEdge, 12));
+        var columns = Ui.HBox(40);
+        for (var i = 0; i < 2; i++)
+        {
+            var diagram = new FingeringDiagram { Fingering = LessonBlocks.FingeringIn(_systems[i], pitch.Midi), Keyed = s.Instrument.Keyed, CustomMinimumSize = new Vector2(190, 300) };
+            columns.AddChild(Ui.VBox(6, Ui.Label(i == 0 ? Ui.T("1. Forked (baroque)") : Ui.T("2. Simple (German)"), 20, PipitTheme.Accent), diagram, _results[i]));
+        }
+        _status = Ui.Label("", 18, PipitTheme.InkSoft);
+        _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+        var again = Ui.Button(Ui.T("Start again"), Restart, 16);
+        AddChild(Ui.VBox(12, Ui.Label(d.Text ?? Ui.T("Compare the two fingerings"), 21, PipitTheme.Ink), columns, _status, Ui.HBox(8, again, Ui.Spacer())));
+        Prompt();
+        context.Frame += OnFrame;
+        TreeExiting += () => context.Frame -= OnFrame;
+    }
+
+    private void Restart()
+    {
+        _step = 0;
+        _cents[0] = _cents[1] = null;
+        foreach (var r in _results)
+            r.Text = "";
+        Prompt();
+    }
+
+    private void Prompt()
+    {
+        _status.Modulate = Colors.White;
+        _status.Text = _step == 0
+            ? Ui.T("Play the note with the forked fingering (1) and hold it steady.")
+            : Ui.T("Now play it with the simple fingering (2) and hold it steady.");
+    }
+
+    private static string Describe(double cents) => Math.Abs(cents) < 5
+        ? Ui.T("in tune")
+        : string.Format(Ui.T(cents > 0 ? "{0:0} cents high" : "{0:0} cents low"), Math.Abs(cents));
+
+    private void OnFrame(PitchFrame frame)
+    {
+        if (_step > 1 || _detector.Push(frame) is not { } held)
+            return;
+        var s = Services.Instance;
+        var cents = (held.MedianMidi - s.Instrument.MeasuredOffsetCents / 100 - _target) * 100;
+        if (Math.Abs(cents) > 70)
+        {
+            _status.Text = string.Format(Ui.T("That was {0}. Check the fingering and try again."), s.NoteName(s.Recorder.SoundingToWritten((int)Math.Round(held.MedianMidi))));
+            _status.Modulate = PipitTheme.Bad;
+            return;
+        }
+        _cents[_step] = cents;
+        _results[_step].Text = Describe(cents);
+        _step++;
+        if (_step < 2)
+        {
+            Prompt();
+            return;
+        }
+        var baroque = Math.Abs(_cents[0]!.Value);
+        var german = Math.Abs(_cents[1]!.Value);
+        _status.Modulate = PipitTheme.Good;
+        _status.Text = string.Format(Ui.T("The two are {0:0} cents apart."), Math.Abs(_cents[0]!.Value - _cents[1]!.Value)) + " "
+            + (Math.Abs(baroque - german) < 8
+                ? Ui.T("Both are close: play each a few times, or ask your teacher which system your recorder has.")
+                : baroque < german
+                    ? Ui.T("The forked fingering is better in tune: your recorder is built for baroque fingering.")
+                    : Ui.T("The simple fingering is better in tune: your recorder is built for German fingering."))
+            + " " + Ui.T("You can set this in Settings, for each of your recorders.");
+        if (!Done)
+        {
+            Done = true;
+            Completed?.Invoke();
         }
     }
 }

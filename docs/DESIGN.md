@@ -639,7 +639,7 @@ Still to do, roughly in the order agreed:
 | A natural (sampled) recorder sound next to the simple one | with MeltySynth, M7 |
 | Accompaniment through headphones | M7, in progress (see docs/HANDOVER.md) |
 | ~~UI translation: EN/NL~~; FR | done for Dutch (342+ texts, tested); French to do |
-| Baroque vs German fingering | supported per recorder; comparison lesson still to write |
+| Baroque vs German fingering | done: per recorder, chart checked against Mollenhauer's, comparison lesson with a live measurement (chapter 4) |
 | Android APK for tablets | after M9; see docs/HANDOVER.md for what it needs |
 | More lessons, spaced out along the path | done: 10 chapters, 25 lessons |
 | Van Eyck, *Der Fluyten Lust-hof* | 21 songs from a MuseScore transcription (MusicXML, `tools/musicxml2pipit.py`), personal use; pieces with triplets or 32nd notes wait for those in the song format |

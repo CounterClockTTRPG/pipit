@@ -24,6 +24,8 @@ Hoge La♭ is dezelfde noot als **Sol♯'**: één toon, twee namen. Geknepen du
 
 ::fingering note=Ab5
 
+Op een Duitse blokfluit is de greep voor La♭' anders; volg de tekening.
+
 ## Do''
 
 Heel hoge Do staat op de **tweede hulplijn** boven de notenbalk: geknepen duim, gaatje 1, en gaatjes 4 en 5. Blaas snel maar zacht, en knijp iets strakker.

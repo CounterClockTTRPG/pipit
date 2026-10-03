@@ -10,6 +10,8 @@ Duim, gaatjes 1, 2 en 3, dan **sla je gaatje 4 over** en sluit je gaatjes 5 en 6
 
 ::try "Speel Fa♯" note=F#4 hold=1
 
+::pip "Op een blokfluit met Duitse greep is de greep voor Fa♯ anders. De tekening toont altijd de greep voor jouw blokfluit."
+
 ## Fa♯'
 
 Hoge Fa♯, op de bovenste lijn, werkt net zo: **geknepen** duim, gaatjes 1, 2 en 3, en gaatje 5.

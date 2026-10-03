@@ -1,11 +1,12 @@
 {
   "system": "german",
-  "source": "Differences from baroque per https://aswltd.com/finger.htm (fourth and raised fourth in both octaves)",
+  "source": "Differences from baroque per Mollenhauer's German-fingering soprano chart (Canta/Student/Fipple, mollenhauer.com/service/fingering-charts, checked 2026-10-03) and aswltd.com/finger.htm: the fourth and raised fourth in both octaves, and the upper G sharp",
   "base": "baroque",
   "overrides": [
     { "semitone": 5,  "fingerings": ["xxxxxooo"] },
     { "semitone": 6,  "fingerings": ["xxxxoxxx"] },
     { "semitone": 17, "fingerings": ["pxxxxooo"] },
-    { "semitone": 18, "fingerings": ["pxxxoxox"] }
+    { "semitone": 18, "fingerings": ["pxxxoxox", "pxxxoxho"] },
+    { "semitone": 20, "fingerings": ["pxxxoxxx"] }
   ]
 }

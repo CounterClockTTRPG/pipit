@@ -14,7 +14,7 @@ public sealed record ListBlock(IReadOnlyList<string> Items) : LessonBlock;
 
 /// <summary>
 /// An interactive or illustrated block: <c>::name "positional text" key=value key="quoted value"</c>.
-/// Known names: fingering, staff, play, try, exercise, quiz, pip, image.
+/// Known names: fingering, staff, play, try, compare, exercise, quiz, pip, image.
 /// </summary>
 public sealed record DirectiveBlock(string Name, string? Text, IReadOnlyDictionary<string, string> Args) : LessonBlock
 {
@@ -23,7 +23,7 @@ public sealed record DirectiveBlock(string Name, string? Text, IReadOnlyDictiona
         Args.TryGetValue(key, out var v) && double.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var d) ? d : fallback;
 
     /// <summary>Blocks the player must complete before the lesson counts as done.</summary>
-    public bool IsTask => Name is "try" or "exercise" or "quiz";
+    public bool IsTask => Name is "try" or "compare" or "exercise" or "quiz";
 }
 
 public sealed class Lesson

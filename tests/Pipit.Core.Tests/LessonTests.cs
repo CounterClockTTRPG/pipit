@@ -119,8 +119,10 @@ public class LessonContentTests
             {
                 switch (b.Name)
                 {
-                    case "fingering" or "try":
+                    case "fingering" or "try" or "compare":
                         Assert.True(soprano.InRange(Pipit.Core.Music.Pitch.Parse(b.Arg("note")).Midi), $"{id}: {b.Arg("note")}");
+                        if (b.Arg("system") is { Length: > 0 } system)
+                            Assert.True(Enum.TryParse<Pipit.Core.Instruments.FingeringSystem>(system, ignoreCase: true, out _), $"{id}: system {system}");
                         break;
                     case "staff" or "play" or "exercise":
                         var (bars, played) = Pipit.Core.Music.SongParser.ParseMusic(b.Arg("music"), Pipit.Core.Music.TimeSignature.Parse(b.Arg("time", "4/4")), 0, $"{id}/{language}");

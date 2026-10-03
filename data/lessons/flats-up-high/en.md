@@ -24,6 +24,8 @@ High La♭ is the same note as **Sol♯'**: one key, two names. Pinched thumb, h
 
 ::fingering note=Ab5
 
+On a German recorder La♭' is fingered differently; follow the diagram.
+
 ## Do''
 
 Very high Do sits on the **second ledger line** above the staff: pinched thumb, hole 1, and holes 4 and 5. Blow fast but gently, and pinch a little tighter.
