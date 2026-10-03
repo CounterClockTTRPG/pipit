@@ -6,6 +6,7 @@ using Pipit.App.Lessons;
 using Pipit.App.Screens;
 using Pipit.App.UI;
 using Pipit.Core.Analysis;
+using Pipit.Core.Practice;
 
 namespace Pipit.App;
 
@@ -61,7 +62,7 @@ public partial class Main : Control
         // Normally the app starts by asking who is playing; the test and screenshot runs go
         // straight to Home as the last player.
         var args = OS.GetCmdlineUserArgs();
-        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback" || a.StartsWith("--lessonprobe="));
+        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback" || a.StartsWith("--lessonprobe=") || a.StartsWith("--speechprobe="));
         Show(diagnostic ? new HomeScreen() : new ProfileScreen());
 
         if (OS.GetCmdlineUserArgs().Contains("--smoke"))
@@ -83,6 +84,8 @@ public partial class Main : Control
             MicCheckAndQuit();
         if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--lessonprobe=")) is { } probe)
             LessonProbe(probe["--lessonprobe=".Length..]);
+        if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--speechprobe=")) is { } speech)
+            SpeechProbe(speech["--speechprobe=".Length..]);
         if (OS.GetCmdlineUserArgs().Contains("--loopback"))
         {
             var d = new Diagnostics();
@@ -381,6 +384,50 @@ public partial class Main : Control
         }
         GD.Print(ok ? $"PROBE OK ({blocks.Count} tries)" : $"PROBE FAILED ({blocks.Count} tries)");
         GetTree().Quit(ok ? 0 : 1);
+    }
+
+    // ---- speech probe: `-- --speechprobe=file.wav[,letters]` plays a recording (16-bit mono)
+    // into the speech listener as if from the microphone and prints the words and times heard.
+
+    private async void SpeechProbe(string arg)
+    {
+        try
+        {
+            await SpeechProbeRun(arg);
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr("PROBE failed: " + e.Message);
+            GetTree().Quit(1);
+        }
+    }
+
+    private async System.Threading.Tasks.Task SpeechProbeRun(string arg)
+    {
+        var parts = arg.Split(',');
+        var letters = parts.Length > 1 && parts[1] == "letters";
+        var (samples, rate) = Core.Recording.WavFile.Read(parts[0]);
+        var hub = Services.Instance.Audio;
+        // Up to the hub's rate, so the listener's resampling is exercised too.
+        var factor = hub.SampleRate / (double)rate;
+        var up = new float[(int)(samples.Length * factor)];
+        for (var i = 0; i < up.Length; i++)
+            up[i] = samples[Math.Min(samples.Length - 1, (int)(i / factor))];
+        var listener = await Audio.SpeechListener.Create(hub, "en", NoteWords.Grammar(letters));
+        if (listener is null)
+        {
+            GD.PrintErr("PROBE: no English speech model (run scripts/fetch-speech-models.sh)");
+            GetTree().Quit(1);
+            return;
+        }
+        listener.Start();
+        const double start = 100.0;
+        for (var i = 0; i < up.Length; i += 1024)
+            hub.InjectSamples(up[i..Math.Min(up.Length, i + 1024)], start + i / (double)hub.SampleRate);
+        var words = listener.Stop();
+        GD.Print("PROBE heard: " + string.Join("  ", words.Select(w => $"{w.Word}@{w.Time - start:0.00}")));
+        GD.Print("PROBE letters: " + string.Join(" ", words.Select(w => NoteWords.LetterFor(w.Word, letters)?.ToString() ?? "-")));
+        GetTree().Quit();
     }
 
     // ---- smoke test: `-- --smoke` visits every screen and quits (scripts/test.sh) ----------

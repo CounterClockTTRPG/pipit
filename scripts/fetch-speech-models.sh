@@ -5,6 +5,8 @@
 set -euo pipefail
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/assets/speech"
 mkdir -p "$dir"
+# Godot must not scan or import the model files (that made start-up take minutes).
+touch "$dir/.gdignore"
 declare -A models=([en]=vosk-model-small-en-us-0.15 [nl]=vosk-model-small-nl-0.22 [fr]=vosk-model-small-fr-0.22)
 for lang in "${!models[@]}"; do
     [ -f "$dir/$lang/am/final.mdl" ] && continue

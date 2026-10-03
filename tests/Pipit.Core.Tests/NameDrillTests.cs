@@ -44,3 +44,26 @@ public class NameDrillTests
         Assert.Equal(NameResult.Missed, j[1].Result);
     }
 }
+
+public class NoteWordsTests
+{
+    [Theory]
+    [InlineData("do", false, 0)]
+    [InlineData("far", false, 3)]
+    [InlineData("Sol", false, 4)]
+    [InlineData("see", false, 6)]
+    [InlineData("si", false, 6)]
+    [InlineData("si", true, 0)]  // "C" spoken in English
+    [InlineData("gee", true, 4)]
+    [InlineData("bee", true, 6)]
+    public void Words_map_to_letters(string word, bool letters, int letter) => Assert.Equal(letter, NoteWords.LetterFor(word, letters));
+
+    [Fact]
+    public void Other_words_are_ignored_and_the_grammar_is_ascii()
+    {
+        Assert.Null(NoteWords.LetterFor("[unk]", false));
+        Assert.Null(NoteWords.LetterFor("hello", true));
+        Assert.All(new[] { NoteWords.Grammar(false), NoteWords.Grammar(true) }, g => Assert.True(g.All(c => c < 128)));
+        Assert.Contains("\"[unk]\"", NoteWords.Grammar(false));
+    }
+}

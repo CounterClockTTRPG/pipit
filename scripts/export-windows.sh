@@ -12,6 +12,11 @@ mkdir -p "$PROJECT_DIR/build/windows"
 echo "==> exporting"
 "$GODOT" --headless --path "$PROJECT_UNC" --export-release "Windows Desktop" "$(to_unc "$PROJECT_DIR/build/windows/Pipit.exe")" 2>&1 | grep -E "ERROR|WARNING|DONE" | tail -20
 ls -la "$PROJECT_DIR/build/windows"
+# Speech models (Note reading) live next to the program, not in the pack (see SpeechListener).
+if [ -d "$PROJECT_DIR/assets/speech" ]; then
+    mkdir -p "$PROJECT_DIR/build/windows/speech"
+    for lang in "$PROJECT_DIR"/assets/speech/*/; do cp -r "$lang" "$PROJECT_DIR/build/windows/speech/"; done
+fi
 chmod +x "$PROJECT_DIR"/build/windows/*.exe
 echo "==> smoke run of the exported build"
 log="$(timeout 120 "$PROJECT_DIR/build/windows/Pipit.console.exe" --headless -- --smoke 2>&1)" || true

@@ -15,5 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="src/Core/Pipit.Core.csproj" />
+    <!-- Offline speech recognition for Note reading (Windows, Linux, macOS; not Android). -->
+    <PackageReference Include="Vosk" Version="0.3.38" />
   </ItemGroup>
 </Project>

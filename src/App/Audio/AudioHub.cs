@@ -76,6 +76,9 @@ public partial class AudioHub : Node
         _mic.Play();
     }
 
+    /// <summary>Diagnostics (`--speechprobe`): hands samples to everyone listening for sound, as if captured.</summary>
+    public void InjectSamples(float[] samples, double time) => SamplesCaptured?.Invoke(samples, time);
+
     /// <summary>Diagnostics (`--lessonprobe`): hands a made-up frame to everyone listening, as if heard.</summary>
     public void InjectFrame(PitchFrame frame) => FrameReady?.Invoke(frame);
 
