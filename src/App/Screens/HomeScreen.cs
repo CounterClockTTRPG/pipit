@@ -58,8 +58,8 @@ public partial class HomeScreen : Screen
         void Tile(string text, string sub, System.Func<Screen> make) => tiles.AddChild(Ui.Tile(text, sub, () => Main.Instance.Show(make()), 206, 104));
         Tile("Study path", "Learn step by step, with Pip", () => new StudyScreen());
         Tile("Songs", "Play along, or at your own pace", () => new LibraryScreen());
-        Tile("Tuner", "What note am I playing?", () => new TunerScreen());
         Tile("Fingering trainer", "Show me a note, I play it", () => new TrainerScreen());
+        Tile("Note reading", "Read the notes, name them on the beat", () => new NoteReadingScreen());
         tiles.AddChild(Ui.Tile("Review", "Practise what you have learned", () =>
         {
             if (Lessons.ReviewLessons.Make(null) is { } review)
@@ -70,7 +70,7 @@ public partial class HomeScreen : Screen
         var more = Ui.HBox(4);
         foreach (var (text, make) in new (string, System.Func<Screen>)[]
                  {
-                     ("Studio", () => new StudioScreen()), ("Achievements", () => new AchievementsScreen()),
+                     ("Tuner", () => new TunerScreen()), ("Studio", () => new StudioScreen()), ("Achievements", () => new AchievementsScreen()),
                      ("Calibrate", () => new CalibrationScreen()), ("Settings", () => new SettingsScreen()),
                  })
             more.AddChild(Ui.Quiet(Ui.Button(text, () => Main.Instance.Show(make()), PipitTheme.Body)));

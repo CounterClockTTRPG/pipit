@@ -96,7 +96,7 @@ public partial class Main : Control
     {
         var dir = System.IO.Path.Combine(Services.UserDir, "shots");
         System.IO.Directory.CreateDirectory(dir);
-        var screens = new (string, System.Func<Screen>?)[] { ("home", null), ("tuner", () => new TunerScreen()), ("trainer", () => new TrainerScreen()), ("my-notes", () => new NoteStatsScreen()), ("review", () => new LessonScreen(Lessons.ReviewLessons.Make(new Core.Lessons.PathStep(Core.Lessons.StepKind.Review, "4"))!)),
+        var screens = new (string, System.Func<Screen>?)[] { ("home", null), ("tuner", () => new TunerScreen()), ("trainer", () => new TrainerScreen()), ("my-notes", () => new NoteStatsScreen()), ("note-reading", () => new NoteReadingScreen()), ("review", () => new LessonScreen(Lessons.ReviewLessons.Make(new Core.Lessons.PathStep(Core.Lessons.StepKind.Review, "4"))!)),
             ("calibrate", () => new CalibrationScreen()), ("studio", () => new StudioScreen()), ("settings", () => new SettingsScreen()) };
         foreach (var (name, make) in screens)
         {
@@ -387,7 +387,7 @@ public partial class Main : Control
 
     private void StartSmoke()
     {
-        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen(), () => new ProfileScreen(), () => new NewPlayerScreen(null), () => new IntroScreen(), () => new StudyScreen(), () => new LessonScreen(Services.Instance.LoadLesson("meet-the-recorder")!), () => new LessonScreen(Services.Instance.LoadLesson("si-and-la")!), () => new NoteStatsScreen(),
+        foreach (var make in new System.Func<Screen>[] { () => new TunerScreen(), () => new TrainerScreen(), () => new CalibrationScreen(), () => new StudioScreen(), () => new SettingsScreen(), () => new LibraryScreen(), () => new PlayScreen(Services.Instance.Songs.Songs[0]), () => new AchievementsScreen(), () => new ProfileScreen(), () => new NewPlayerScreen(null), () => new IntroScreen(), () => new StudyScreen(), () => new LessonScreen(Services.Instance.LoadLesson("meet-the-recorder")!), () => new LessonScreen(Services.Instance.LoadLesson("si-and-la")!), () => new NoteStatsScreen(), () => new NoteReadingScreen(),
                      () => new LessonScreen(Lessons.ReviewLessons.Make(new Core.Lessons.PathStep(Core.Lessons.StepKind.Review, "4"))!) })
             _smokeScreens.Enqueue(make);
         _smokeFrame = 0;
