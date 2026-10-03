@@ -664,6 +664,9 @@ Still to do, roughly in the order agreed:
 | More lessons, spaced out along the path | done: 10 chapters, 25 lessons |
 | Van Eyck, *Der Fluyten Lust-hof* | 21 songs from a MuseScore transcription (MusicXML, `tools/musicxml2pipit.py`), personal use; pieces with triplets or 32nd notes wait for those in the song format |
 | Dowland *Flow my tears*, SATB | done from an OMR MusicXML, band plays alto/tenor/bass, personal use |
+| Review steps based on progress | done: a review at the end of every chapter and a Review tile on Home; `Review.Write` makes a 4-bar exercise from the notes and rhythms taught so far, weak notes more often (per-note records, `NoteStat`) |
+| Fingering trainer: repetitive learning mode, progress and statistics | done: learning mode (Leitner boxes, `LearningDeck`: starts with Si La Sol, adds a note once the others are found reliably, hides known fingerings), every answer recorded per note; My notes shows a bar per note and "you know N of 27" |
+| Note-reading trainer (say or tap the note names in rhythm) | next: tap version first, speech recognition after |
 | Band switch and speed dial work during a song | done: the band fades in/out (rendered on the fly if it was off), a speed change applies from the current beat (`TempoMap`); results count the slowest speed used |
 
 Song sources: anything longer than a folk tune is converted from a Public Domain edition (the

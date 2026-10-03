@@ -6,6 +6,7 @@ using Godot;
 using Pipit.App.Audio;
 using Pipit.Core.Analysis;
 using Pipit.Core.Game;
+using Pipit.Core.Scoring;
 using Pipit.Core.Instruments;
 using Pipit.Core.Lessons;
 using Pipit.Core.Music;
@@ -209,6 +210,17 @@ public partial class Services : Node
     }
 
     public SongRecord SongRecord(string songId) => Progress.Song(songId, Instrument.Kind.ToString());
+
+    /// <summary>Adds each judged note of a run to the player's per-note record (My notes, reviews).</summary>
+    public void RecordNotes(Song song, GradedRun run)
+    {
+        var kind = Instrument.Kind.ToString();
+        var now = DateTime.Now;
+        foreach (var j in run.Notes)
+            if (j.Expected.Index >= 0 && j.Expected.Index < song.Melody.Performance.Count)
+                Progress.Note(PlayerProgress.Playing, kind, song.Melody.Performance[j.Expected.Index].Pitch.Midi).Record(j.Result == NoteResult.Hit, 0, now);
+        SaveProgress();
+    }
 
     public void SaveProgress()
     {

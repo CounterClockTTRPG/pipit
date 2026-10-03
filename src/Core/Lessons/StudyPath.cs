@@ -3,7 +3,8 @@ using Pipit.Core.Game;
 
 namespace Pipit.Core.Lessons;
 
-public enum StepKind { Lesson, Song }
+/// <summary>A lesson page, a song, or a review: an exercise written from what came before.</summary>
+public enum StepKind { Lesson, Song, Review }
 
 public sealed record PathStep(StepKind Kind, string Id)
 {
@@ -42,8 +43,10 @@ public sealed class StudyPath
                     steps.Add(new PathStep(StepKind.Lesson, l.GetString()!));
                 else if (s.TryGetProperty("song", out var song))
                     steps.Add(new PathStep(StepKind.Song, song.GetString()!));
+                else if (s.TryGetProperty("review", out var review))
+                    steps.Add(new PathStep(StepKind.Review, review.GetString()!));
                 else
-                    throw new InvalidDataException("A path step needs \"lesson\" or \"song\"");
+                    throw new InvalidDataException("A path step needs \"lesson\", \"song\" or \"review\"");
             }
             chapters.Add(new PathChapter(c.GetProperty("chapter").GetInt32(),
                 c.GetProperty("title").EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString() ?? ""), steps));
@@ -53,9 +56,13 @@ public sealed class StudyPath
 
     public static bool SongDone(SongRecord? record) => record is not null && (record.BestStars >= 1 || record.BestCasualAccuracy >= 80);
 
+    /// <summary>A passed review is kept with the lessons, under this name.</summary>
+    public static string ReviewDoneKey(string id) => "review:" + id;
+
     public bool IsDone(PathStep step, PlayerProgress progress, string recorderKind) => step.Kind switch
     {
         StepKind.Lesson => progress.LessonsDone.Contains(step.Id),
+        StepKind.Review => progress.LessonsDone.Contains(ReviewDoneKey(step.Id)),
         _ => SongDone(progress.Songs.GetValueOrDefault(PlayerProgress.SongKey(step.Id, recorderKind))),
     };
 

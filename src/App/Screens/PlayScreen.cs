@@ -708,6 +708,7 @@ public partial class PlayScreen : Screen
             if (_segmenter.Flush() is { } last)
                 _detected.Add(last);
             _performance = Grader.Grade(_expected, _detected, _tolerances, _latency, S.Instrument.MeasuredOffsetCents, _runTempo);
+            S.RecordNotes(_song, _performance);
             ApplyMarks(_performance, live: false);
             if (_mode == Mode.Survival)
             {

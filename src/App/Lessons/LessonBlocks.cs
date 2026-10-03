@@ -9,6 +9,7 @@ using Pipit.App.Views;
 using Pipit.Core.Analysis;
 using Pipit.Core.Lessons;
 using Pipit.Core.Music;
+using Pipit.Core.Game;
 using Pipit.Core.Scoring;
 using Pipit.Core.Synthesis;
 
@@ -168,6 +169,7 @@ public partial class TryBlock : PanelContainer, ITaskBlock
         var s = Services.Instance;
         // Allow for the recorder's calibrated tuning, as the grader does.
         var played = (int)Math.Round(held.MedianMidi - s.Instrument.MeasuredOffsetCents / 100);
+        s.Progress.Note(PlayerProgress.Playing, s.Instrument.Kind.ToString(), s.Recorder.SoundingToWritten(_target)).Record(played == _target, 0, DateTime.Now);
         if (played == _target)
         {
             Done = true;
@@ -358,6 +360,7 @@ public partial class ExerciseBlock : PanelContainer, ITaskBlock
         _start.Text = Ui.T("↻ Again");
         var verdict = ExerciseVerdict.Of(result);
         var passed = verdict.Passed;
+        Services.Instance.RecordNotes(_song, result);
         var tips = new List<string>();
         if (verdict.TuningTip != 0)
             tips.Add(Ui.T(verdict.TuningTip > 0 ? "A little high: blow a bit more gently." : "A little low: blow a bit more firmly."));

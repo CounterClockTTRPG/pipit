@@ -151,7 +151,14 @@ public class LessonContentTests
         var songs = Pipit.Core.Music.SongLibrary.Load(n => File.ReadAllText(Repo.Data("songs", n)));
         var lessons = LessonIds().Select(o => (string)o[0]).ToHashSet();
         foreach (var step in Path.Steps)
-            Assert.True(step.Kind == StepKind.Lesson ? lessons.Contains(step.Id) : songs.Get(step.Id) is not null, step.Key);
+            Assert.True(step.Kind switch
+            {
+                StepKind.Lesson => lessons.Contains(step.Id),
+                StepKind.Song => songs.Get(step.Id) is not null,
+                _ => true, // reviews are written on the spot
+            }, step.Key);
+        // One review at the end of every chapter.
+        Assert.All(Path.Chapters, c => Assert.Equal(StepKind.Review, c.Steps[^1].Kind));
         Assert.Equal(lessons.OrderBy(x => x), Path.Steps.Where(s => s.Kind == StepKind.Lesson).Select(s => s.Id).OrderBy(x => x));
     }
 
@@ -169,7 +176,7 @@ public class LessonContentTests
                 foreach (var b in lesson.Page("en").OfType<DirectiveBlock>().Where(b => b.Name is "fingering" or "try"))
                     met.Add(Pipit.Core.Music.Pitch.Parse(b.Arg("note")).Midi);
             }
-            else
+            else if (step.Kind == StepKind.Song)
                 Assert.All(songs.Get(step.Id)!.Melody.Performance, n =>
                     Assert.True(met.Contains(n.Pitch.Midi), $"{step.Id} uses {n.Pitch} before a lesson teaches it"));
         }

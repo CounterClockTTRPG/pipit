@@ -38,6 +38,9 @@
       },
       {
         "song": "mary-had-a-little-lamb"
+      },
+      {
+        "review": "1"
       }
     ]
   },
@@ -71,6 +74,9 @@
       },
       {
         "lesson": "playing-together"
+      },
+      {
+        "review": "2"
       }
     ]
   },
@@ -86,6 +92,9 @@
       },
       {
         "song": "ode-to-joy-full"
+      },
+      {
+        "review": "3"
       }
     ]
   },
@@ -113,6 +122,9 @@
       },
       {
         "song": "brahms-lullaby"
+      },
+      {
+        "review": "4"
       }
     ]
   },
@@ -134,6 +146,9 @@
       },
       {
         "song": "auld-lang-syne"
+      },
+      {
+        "review": "5"
       }
     ]
   },
@@ -155,6 +170,9 @@
       },
       {
         "song": "minuet-in-g"
+      },
+      {
+        "review": "6"
       }
     ]
   },
@@ -170,6 +188,9 @@
       },
       {
         "song": "japart-tmeiskin"
+      },
+      {
+        "review": "7"
       }
     ]
   },
@@ -188,6 +209,9 @@
       },
       {
         "song": "greensleeves"
+      },
+      {
+        "review": "8"
       }
     ]
   },
@@ -212,6 +236,9 @@
       },
       {
         "song": "bach-prelude-opening"
+      },
+      {
+        "review": "9"
       }
     ]
   },
@@ -230,6 +257,9 @@
       },
       {
         "song": "telemann-twv40-107-3"
+      },
+      {
+        "review": "10"
       }
     ]
   }

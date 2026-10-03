@@ -55,11 +55,18 @@ public partial class HomeScreen : Screen
         var tiles = new HFlowContainer();
         tiles.AddThemeConstantOverride("h_separation", 14);
         tiles.AddThemeConstantOverride("v_separation", 14);
-        void Tile(string text, string sub, System.Func<Screen> make) => tiles.AddChild(Ui.Tile(text, sub, () => Main.Instance.Show(make()), 268, 96));
+        void Tile(string text, string sub, System.Func<Screen> make) => tiles.AddChild(Ui.Tile(text, sub, () => Main.Instance.Show(make()), 206, 104));
         Tile("Study path", "Learn step by step, with Pip", () => new StudyScreen());
         Tile("Songs", "Play along, or at your own pace", () => new LibraryScreen());
         Tile("Tuner", "What note am I playing?", () => new TunerScreen());
         Tile("Fingering trainer", "Show me a note, I play it", () => new TrainerScreen());
+        tiles.AddChild(Ui.Tile("Review", "Practise what you have learned", () =>
+        {
+            if (Lessons.ReviewLessons.Make(null) is { } review)
+                Main.Instance.Show(new LessonScreen(review, null, () => Lessons.ReviewLessons.Make(null)));
+            else
+                _hint.Text = Ui.T("Learn your first notes on the study path, then come back to review them.");
+        }, 206, 104));
         var more = Ui.HBox(4);
         foreach (var (text, make) in new (string, System.Func<Screen>)[]
                  {

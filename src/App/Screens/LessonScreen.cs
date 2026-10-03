@@ -19,12 +19,17 @@ public partial class LessonScreen : Screen
     private readonly Button _finish, _next;
     private readonly AudioStreamPlayer _player = new();
     private readonly ScrollContainer _scroll;
+    // The path step this page belongs to (a review's step), and how to make another one.
+    private readonly PathStep _step;
+    private readonly System.Func<Lesson?>? _another;
 
     public override string Title => _lesson.Title(S.Settings.Language);
 
-    public LessonScreen(Lesson lesson)
+    public LessonScreen(Lesson lesson, PathStep? step = null, System.Func<Lesson?>? another = null)
     {
         _lesson = lesson;
+        _step = step ?? new PathStep(StepKind.Lesson, lesson.Id);
+        _another = another;
         _context = new LessonContext { Play = Play };
         var page = Ui.VBox(18);
         foreach (var block in lesson.Page(S.Settings.Language))
@@ -49,7 +54,15 @@ public partial class LessonScreen : Screen
         _finish = Ui.Primary(Ui.Button("✓ Finish lesson", Finish, 20));
         _next = Ui.Primary(Ui.Button("Next step →", Next, 20));
         _next.Visible = false;
-        page.AddChild(Ui.HBox(16, _progress, Ui.Spacer(), _finish, _next));
+        var anotherButton = Ui.Quiet(Ui.Button("Another exercise", () =>
+        {
+            if (_another?.Invoke() is not { } fresh)
+                return;
+            Main.Instance.Back();
+            Main.Instance.Show(new LessonScreen(fresh, step, _another));
+        }, 18));
+        anotherButton.Visible = another is not null;
+        page.AddChild(Ui.HBox(16, _progress, Ui.Spacer(), anotherButton, _finish, _next));
 
         var margin = new MarginContainer();
         foreach (var side in new[] { "left", "right" })
@@ -100,12 +113,12 @@ public partial class LessonScreen : Screen
             string.Concat(award.Unlocked.Select(a => $"   {a.Icon} {Ui.T(a.Title)}"));
         _progress.Modulate = PipitTheme.Good;
         _finish.Visible = false;
-        _next.Visible = S.Study.After(new PathStep(StepKind.Lesson, _lesson.Id)) is not null;
+        _next.Visible = S.Study.After(_step) is not null;
     }
 
     private void Next()
     {
-        var next = S.Study.After(new PathStep(StepKind.Lesson, _lesson.Id));
+        var next = S.Study.After(_step);
         Main.Instance.Back();
         if (next is not null)
             StudyScreen.Open(next);

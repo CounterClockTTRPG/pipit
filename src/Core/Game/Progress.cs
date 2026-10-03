@@ -13,6 +13,43 @@ public sealed class SongRecord
     public DateOnly? PlaysDay { get; set; }
 }
 
+/// <summary>
+/// How well one note is known, for one skill (playing it from its name or fingering, or reading
+/// it) and one recorder size. <see cref="Box"/> is a Leitner box: right answers move a note up
+/// (0-5), a miss sends it back to 1, so the notes in low boxes are the ones to practise.
+/// </summary>
+public sealed class NoteStat
+{
+    public const int TopBox = 5;
+    public int Played { get; set; }
+    public int Missed { get; set; }
+    public int Box { get; set; }
+    public DateTime? LastSeen { get; set; }
+    /// <summary>Average time to find the note when right (seconds), 0 until known.</summary>
+    public double AverageSeconds { get; set; }
+
+    /// <summary>0 (known well) to 1 (often missed), with a mild prior so one miss is not 100 %.</summary>
+    public double Weakness => (Missed + 1.0) / (Played + 2.0);
+
+    public void Record(bool right, double seconds, DateTime now)
+    {
+        Played++;
+        LastSeen = now;
+        if (right)
+        {
+            Box = Math.Min(TopBox, Box + 1);
+            // Only timed answers (the trainer) count towards the average; songs pass 0.
+            if (seconds > 0)
+                AverageSeconds = AverageSeconds == 0 ? seconds : AverageSeconds * 0.7 + seconds * 0.3;
+        }
+        else
+        {
+            Missed++;
+            Box = Math.Min(Box, 1);
+        }
+    }
+}
+
 public sealed record XpLine(string Reason, int Amount);
 
 public sealed record XpAward(IReadOnlyList<XpLine> Lines, int LevelBefore, int LevelAfter)
@@ -45,6 +82,27 @@ public sealed class PlayerProgress
     public Dictionary<string, DateTime> Achievements { get; set; } = new();
     /// <summary>Keyed by "songId|recorderKind".</summary>
     public Dictionary<string, SongRecord> Songs { get; set; } = new();
+    /// <summary>Per-note learning records, keyed by "skill|recorderKind|writtenMidi" (see <see cref="NoteKey"/>).</summary>
+    public Dictionary<string, NoteStat> Notes { get; set; } = new();
+    /// <summary>How many notes the fingering trainer's learning mode has brought in, per "skill|recorderKind".</summary>
+    public Dictionary<string, int> NotesIntroduced { get; set; } = new();
+
+    /// <summary>Skills that keep per-note records.</summary>
+    public const string Playing = "play", Reading = "read";
+
+    public static string NoteKey(string skill, string recorderKind, int writtenMidi) => $"{skill}|{recorderKind.ToLowerInvariant()}|{writtenMidi}";
+
+    public NoteStat Note(string skill, string recorderKind, int writtenMidi)
+    {
+        var key = NoteKey(skill, recorderKind, writtenMidi);
+        if (!Notes.TryGetValue(key, out var stat))
+            Notes[key] = stat = new NoteStat();
+        return stat;
+    }
+
+    /// <summary>The record if there is one (without creating it).</summary>
+    public NoteStat? FindNote(string skill, string recorderKind, int writtenMidi) =>
+        Notes.GetValueOrDefault(NoteKey(skill, recorderKind, writtenMidi));
 
     public int Level => Levels.LevelFor(Xp);
 

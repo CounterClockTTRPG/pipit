@@ -33,13 +33,21 @@ public partial class StudyScreen : Screen
             if (S.LoadLesson(step.Id) is { } lesson)
                 Main.Instance.Show(new LessonScreen(lesson));
         }
+        else if (step.Kind == StepKind.Review)
+        {
+            if (Lessons.ReviewLessons.Make(step) is { } review)
+                Main.Instance.Show(new LessonScreen(review, step, () => Lessons.ReviewLessons.Make(step)));
+        }
         else if (S.Songs.Get(step.Id) is { } song)
             Main.Instance.Show(new PlayScreen(song, fromPath: true));
     }
 
-    public static string StepTitle(PathStep step) => step.Kind == StepKind.Lesson
-        ? S.LoadLesson(step.Id)?.Title(S.Settings.Language) ?? step.Id
-        : S.Songs.Get(step.Id)?.Title(S.Settings.Language) ?? step.Id;
+    public static string StepTitle(PathStep step) => step.Kind switch
+    {
+        StepKind.Lesson => S.LoadLesson(step.Id)?.Title(S.Settings.Language) ?? step.Id,
+        StepKind.Review => string.Format(Ui.T("Review of chapter {0}"), step.Id),
+        _ => S.Songs.Get(step.Id)?.Title(S.Settings.Language) ?? step.Id,
+    };
 
     public override void Enter()
     {
@@ -67,7 +75,7 @@ public partial class StudyScreen : Screen
                 {
                     StepState.Done => Ui.TileState.Done, StepState.Current => Ui.TileState.Current, _ => Ui.TileState.Locked,
                 };
-                var kind = step.Kind == StepKind.Lesson ? Ui.T("Lesson") : Ui.T("Song");
+                var kind = step.Kind switch { StepKind.Lesson => Ui.T("Lesson"), StepKind.Review => Ui.T("Review: what you have learned"), _ => Ui.T("Song") };
                 var s = step;
                 grid.AddChild(Ui.Tile(StepTitle(step), (state == Ui.TileState.Locked ? "🔒 " : "") + kind, () => Open(s), 262, 80, state, translate: false));
             }
