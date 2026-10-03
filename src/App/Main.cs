@@ -183,6 +183,23 @@ public partial class Main : Control
         for (var i = 0; i < 10; i++)
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-end.png"));
+        library.DebugScrollToRepertoire();
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-repertoire.png"));
+        // Coming back from a song with a search on keeps the view (the box is reused, not rebuilt).
+        library.DebugSearch("ultima");
+        Show(new PlayScreen(Services.Instance.Songs.Get("ultima5-stones")!));
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        Back();
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        library.DebugScrollToRepertoire();
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-return.png"));
+        library.DebugSearch("");
         Back();
         var play = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
         Show(play);

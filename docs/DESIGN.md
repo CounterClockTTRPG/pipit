@@ -146,6 +146,7 @@ with the app itself.
   "id": "frere-jacques",
   "title": { "fr": "Frère Jacques", "nl": "Vader Jacob", "en": "Brother John" },
   "composer": "Traditional",
+  "period": "traditional",
   "chapter": 2,
   "tempo": 100,
   "time": "4/4",
@@ -667,6 +668,8 @@ Still to do, roughly in the order agreed:
 | Review steps based on progress | done: a review at the end of every chapter and a Review tile on Home; `Review.Write` makes a 4-bar exercise from the notes and rhythms taught so far, weak notes more often (per-note records, `NoteStat`) |
 | Fingering trainer: repetitive learning mode, progress and statistics | done: learning mode (Leitner boxes, `LearningDeck`: starts with Si La Sol, adds a note once the others are found reliably, hides known fingerings), every answer recorded per note; My notes shows a bar per note and "you know N of 27" |
 | Note-reading trainer (say or tap the note names in rhythm) | next: tap version first, speech recognition after |
+| Repertoire too long to browse | done: search (titles in every language, composer, style), Show all / By type / By composer, and a heart per piece that moves it to a Favourites group at the top (per player); every song has a `period` |
+| More songs (2026-10-03) | done: C64 game music (Ultima III-V, Lazy Jones, Bruce Lee, Blood Valley, Uridium, Master of Magic, Druid II) with the other SID voices as the band, personal use; Rule Britannia; Corelli's *La Folia* (theme and 12 variations, personal use); *Greensleeves to a Ground* (Mutopia, with the ground added as the band) |
 | Band switch and speed dial work during a song | done: the band fades in/out (rendered on the fly if it was off), a speed change applies from the current beat (`TempoMap`); results count the slowest speed used |
 
 Song sources: anything longer than a folk tune is converted from a Public Domain edition (the

@@ -82,6 +82,8 @@ public sealed class PlayerProgress
     public Dictionary<string, DateTime> Achievements { get; set; } = new();
     /// <summary>Keyed by "songId|recorderKind".</summary>
     public Dictionary<string, SongRecord> Songs { get; set; } = new();
+    /// <summary>Repertoire songs the player marked with a heart (shown first on the Songs screen).</summary>
+    public HashSet<string> Favourites { get; set; } = new();
     /// <summary>Per-note learning records, keyed by "skill|recorderKind|writtenMidi" (see <see cref="NoteKey"/>).</summary>
     public Dictionary<string, NoteStat> Notes { get; set; } = new();
     /// <summary>How many notes the fingering trainer's learning mode has brought in, per "skill|recorderKind".</summary>

@@ -96,6 +96,7 @@ public static class SongParser
             Id = id,
             Titles = titles,
             Composer = Str("composer", ""),
+            Period = Str("period", ""),
             Chapter = root.TryGetProperty("chapter", out var ch) ? ch.GetInt32() : 0,
             Level = root.TryGetProperty("level", out var lv) ? lv.GetInt32() : null,
             Source = Str("source", ""),

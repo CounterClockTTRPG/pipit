@@ -69,6 +69,12 @@ calibration keeps its audio in `user://diagnostics/` for inspection.
 - Anything longer than a folk tune comes from a Public Domain edition (Mutopia) via
   `tools/midi2pipit.py` (top line, inner voices skipped; check for grace notes, which LilyPond
   writes into MIDI). Record the edition in the song's `source`.
+- C64 game tunes (SID rips, e.g. from VGMusic) are timed in screen frames: put them on a grid
+  with `tools/retime-midi.py` first (`--voice` retimes the other SID voices for the band,
+  `--insert` repairs a slip), then convert with `midi2pipit.py`.
+- Every song has a `period` (`Repertoire.Periods`: medieval ... traditional, game); the Songs
+  screen groups and searches the repertoire with `Repertoire` (Core). Unlicensed and game music
+  goes in `data/songs/personal/`; clean that folder up only if the app is ever shared.
 - `StaffLayout` (Core) engraves in staff spaces and is unit-tested; `StaffView` draws it with
   Bravura (SMuFL code points, metrics from `Bravura.json`). `--shots` renders several songs'
   scores; look at them after any engraving change.

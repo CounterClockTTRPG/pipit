@@ -72,6 +72,8 @@ public sealed class Song
     public required string Id { get; init; }
     public required IReadOnlyDictionary<string, string> Titles { get; init; }
     public string Composer { get; init; } = "";
+    /// <summary>Style or age, one of <see cref="Repertoire.Periods"/> ("baroque", "traditional", "game"...).</summary>
+    public string Period { get; init; } = "";
     /// <summary>Learning-path chapter; 0 for repertoire (outside the path, sorted by difficulty).</summary>
     public int Chapter { get; init; }
     /// <summary>Manual difficulty (1-5) overriding the estimate, or null.</summary>
@@ -107,7 +109,7 @@ public sealed class Song
         parts.Insert(0, chosen);
         return new Song
         {
-            Id = Id, Titles = Titles, Composer = Composer, Chapter = Chapter, Level = Level, Source = Source, Tempo = Tempo,
+            Id = Id, Titles = Titles, Composer = Composer, Period = Period, Chapter = Chapter, Level = Level, Source = Source, Tempo = Tempo,
             Time = Time, Key = Key, Pickup = Pickup, Parts = parts, Accompaniment = Accompaniment, About = About, Tip = Tip,
         };
     }
