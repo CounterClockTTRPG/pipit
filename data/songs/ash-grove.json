@@ -1,0 +1,51 @@
+{
+  "id": "ash-grove",
+  "title": {
+    "en": "The Ash Grove",
+    "nl": "The Ash Grove"
+  },
+  "composer": "Traditional (Wales)",
+  "period": "traditional",
+  "chapter": 6,
+  "tempo": 110,
+  "time": "3/4",
+  "key": "C",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved up 5 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A Welsh harp tune, \"Llwyn Onn\" in Welsh, first printed in 1802. Many sets of words have been sung to it, in Welsh and in English.",
+    "nl": "Een Welse harpmelodie, \"Llwyn Onn\" in het Welsh, voor het eerst gedrukt in 1802. Er zijn vele teksten op gezongen, in het Welsh en in het Engels."
+  },
+  "tip": {
+    "en": "Three beats in a bar, gently swaying. The pickup note comes before the first bar line: count \"three\" and start.",
+    "nl": "Drie tellen per maat, zacht wiegend. De opmaatnoot komt voor de eerste maatstreep: tel \"drie\" en begin."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/q | C5/q E5/q G5/e F5/e | E5/q C5/q C5/q | D5/q F5/e E5/e D5/e C5/e | B4/q G4/q G4/q | C5/q E5/e D5/e C5/e B4/e | A4/q F4/q A4/q | G4/q C5/q B4/q | C5/h :| E5/e F5/e | G5/q E5/e F5/e G5/e A5/e | G5/q F5/q E5/q | F5/q D5/e E5/e F5/e G5/e | F5/q E5/q D5/q | E5/q C5/e D5/e E5/e F5/e | E5/q D5/q C5/q | B4/q G5/q F#5/q | G5/h G4/q | C5/q E5/q G5/e F5/e | E5/q C5/q C5/q | D5/q F5/e E5/e D5/e C5/e | B4/q G4/q G4/q | C5/q E5/e D5/e C5/e B4/e | A4/q F4/q A4/q | G4/q C5/q B4/q | C5/h"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "G2/q | C3/h.~ | C3/h. | D3/h. | G2/h. | C3/h. | F2/h. | C3/h G2/q | C3/h G2/q | C3/h.~ | C3/h. | D3/h. | G2/h. | C3/h. | F2/h. | C3/h G2/q | C3/h. | C3/h.~ | C3/h. | G2/h.~ | G2/h. | C3/h. | A2/h. | G2/h D3/q | G2/h. | C3/h.~ | C3/h. | D3/h. | G2/h. | C3/h. | F2/h. | C3/h G2/q | C3/h"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "B3/q | E4/h.~ | E4/h. | F4/h. | B3/h. | E4/h. | A3/h. | E4/h B3/q | E4/h B3/q | E4/h.~ | E4/h. | F4/h. | B3/h. | E4/h. | A3/h. | E4/h B3/q | E4/h. | E4/h.~ | E4/h. | B3/h.~ | B3/h. | E4/h. | C4/h. | B3/h F#4/q | B3/h. | E4/h.~ | E4/h. | F4/h. | B3/h. | E4/h. | A3/h. | E4/h B3/q | E4/h"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "D4/q | G3/h.~ | G3/h. | A3/h. | D4/h. | G3/h. | C4/h. | G3/h D4/q | G3/h D4/q | G3/h.~ | G3/h. | A3/h. | D4/h. | G3/h. | C4/h. | G3/h D4/q | G3/h. | G3/h.~ | G3/h. | F4/h.~ | F4/h. | G3/h. | E4/h. | D4/h A3/q | D4/h. | G3/h.~ | G3/h. | A3/h. | D4/h. | G3/h. | C4/h. | G3/h D4/q | G3/h"
+    }
+  ]
+}

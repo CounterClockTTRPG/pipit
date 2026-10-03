@@ -1,0 +1,50 @@
+{
+  "id": "drunken-sailor",
+  "title": {
+    "en": "What Shall We Do with the Drunken Sailor?",
+    "nl": "What Shall We Do with the Drunken Sailor?"
+  },
+  "composer": "Traditional (sea shanty)",
+  "period": "traditional",
+  "chapter": 4,
+  "tempo": 120,
+  "time": "4/4",
+  "key": "Dm",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved down 2 semitones to Dm; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A sea shanty, a work song that sailors sang while hauling ropes together, known since the early 1800s. The strong beats are where everyone pulled.",
+    "nl": "Een shanty, een werklied dat zeelui zongen terwijl ze samen aan de touwen trokken, bekend sinds het begin van de 19de eeuw. Op de sterke tellen trok iedereen tegelijk."
+  },
+  "tip": {
+    "en": "Stamp out the beat in your head: the first note of each bar is the pull. It is in a minor key, so it sounds a bit rough.",
+    "nl": "Stamp de maat mee in je hoofd: de eerste noot van elke maat is de trek. Het staat in mineur, dus het klinkt wat ruw."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "A4/q A4/e A4/e A4/q A4/e A4/e | A4/q D4/q F4/q A4/q | G4/q G4/e G4/e G4/q G4/e G4/e | G4/q C4/q E4/q G4/q | A4/q A4/e A4/e A4/q A4/e A4/e | A4/q B4/q C5/q D5/q | C5/q A4/q G4/q E4/q | D4/h D4/q R/q || A4/h A4/q. A4/e | A4/q D4/q F4/q A4/q | G4/h G4/q. G4/e | G4/q C4/q E4/q G4/q | A4/h A4/q. A4/e | A4/q B4/q C5/q D5/q | C5/q A4/q G4/q E4/q | D4/h D4/q R/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "D3/w~ | D3/w | C3/w~ | C3/w | D3/w~ | D3/w | C3/w | D3/w | D3/w~ | D3/w | C3/w~ | C3/w | D3/w~ | D3/w | C3/w | D3/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "F4/w~ | F4/w | E4/w~ | E4/w | F4/w~ | F4/w | E4/w | F4/w | F4/w~ | F4/w | E4/w~ | E4/w | F4/w~ | F4/w | E4/w | F4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "A3/w~ | A3/w | G3/w~ | G3/w | A3/w~ | A3/w | G3/w | A3/w | A3/w~ | A3/w | G3/w~ | G3/w | A3/w~ | A3/w | G3/w | A3/h."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "shalom-chaverim",
+  "title": {
+    "en": "Shalom chaverim",
+    "nl": "Shalom chaverim"
+  },
+  "composer": "Traditional (Israel)",
+  "period": "traditional",
+  "chapter": 6,
+  "tempo": 90,
+  "time": "4/4",
+  "key": "Am",
+  "pickup": "q",
+  "source": "ABC from alijc.github.io/music, Friendly House senior choir, moved up 7 semitones to Am; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A Hebrew farewell round: \"Peace, friends, until we meet again\". Each voice enters one bar after the other.",
+    "nl": "Een Hebreeuwse afscheidscanon: \"Vrede, vrienden, tot we elkaar weerzien\". Elke stem komt één maat na de vorige binnen."
+  },
+  "tip": {
+    "en": "It is in a minor key. With the band on, the other voices follow you one bar apart: keep a steady beat.",
+    "nl": "Het staat in mineur. Met de band aan volgen de andere stemmen jou op één maat afstand: hou de maat gelijk."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "E4/q | A4/q A4/e B4/e C5/q A4/q | C5/q C5/e D5/e E5/q E5/q | A5/h. G5/q | E5/h. E5/q | A5/q E5/e D5/e C5/q D5/q | E5/q C5/e B4/e A4/q E4/q | A4/h. B4/e C5/e | A4/h."
+    }
+  ],
+  "round": {
+    "entries": 4,
+    "everyBars": 1
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "keel-row",
+  "title": {
+    "en": "The Keel Row",
+    "nl": "The Keel Row"
+  },
+  "composer": "Traditional (England)",
+  "period": "traditional",
+  "chapter": 8,
+  "tempo": 100,
+  "time": "2/4",
+  "key": "G",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA); converted with tools/abc2pipit.py. A missing bar line in the last line is added.",
+  "about": {
+    "en": "A song from Newcastle upon Tyne, printed around 1770. Keels were the flat boats that carried coal down the river Tyne to the ships.",
+    "nl": "Een lied uit Newcastle upon Tyne, gedrukt rond 1770. Keels waren de platte boten die steenkool over de rivier de Tyne naar de schepen brachten."
+  },
+  "tip": {
+    "en": "A quick dance in two: feel two beats per bar and let the dotted rhythms skip.",
+    "nl": "Een snelle dans in twee: voel twee tellen per maat en laat de gepunteerde ritmes huppelen."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D5/e. C5/s | B4/q G4/e. B4/s | C5/q A4/e. C5/s | B4/q G4/e. B4/s | A4/e. F#4/s D4/e. A4/s | B4/q G4/e. B4/s | C5/q A4/e. C5/s | B4/e. G4/s A4/e. F#4/s | G4/q :| |: D5/e. C5/s | B4/s D5/e. D5/e. G5/s | E5/q D5/e. C5/s | B4/q G4/e. B4/s | A4/e. F#4/s D4/e. C5/s | B4/s D5/e. D5/e. G5/s | E5/q D5/e. C5/s | B4/e. G4/s A4/e. F#4/s | G4/q :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | G2/h | A2/h | G2/h | D3/h | G2/h | A2/h | G2/q D3/q | G2/h | G2/h | A2/h | G2/h | D3/h | G2/h | A2/h | G2/q D3/q | G2/h | G2/h | E2/h | G2/h | D3/h | G2/h | E2/h | G2/q D3/q | G2/h | G2/h | E2/h | G2/h | D3/h | G2/h | E2/h | G2/q D3/q | G2/q"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | B3/h | C4/h | B3/h | F#4/h | B3/h | C4/h | B3/q F#4/q | B3/h | B3/h | C4/h | B3/h | F#4/h | B3/h | C4/h | B3/q F#4/q | B3/h | B3/h | G3/h | B3/h | F#4/h | B3/h | G3/h | B3/q F#4/q | B3/h | B3/h | G3/h | B3/h | F#4/h | B3/h | G3/h | B3/q F#4/q | B3/q"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | D4/h | E4/h | D4/h | A3/h | D4/h | E4/h | D4/q A3/q | D4/h | D4/h | E4/h | D4/h | A3/h | D4/h | E4/h | D4/q A3/q | D4/h | D4/h | B3/h | D4/h | A3/h | D4/h | B3/h | D4/q A3/q | D4/h | D4/h | B3/h | D4/h | A3/h | D4/h | B3/h | D4/q A3/q | D4/q"
+    }
+  ]
+}

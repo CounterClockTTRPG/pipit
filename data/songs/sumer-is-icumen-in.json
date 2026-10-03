@@ -1,0 +1,42 @@
+{
+  "id": "sumer-is-icumen-in",
+  "title": {
+    "en": "Sumer is icumen in",
+    "nl": "Sumer is icumen in"
+  },
+  "composer": "Anonymous (13th century)",
+  "period": "medieval",
+  "chapter": 8,
+  "tempo": 100,
+  "time": "6/8",
+  "key": "F",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved up 3 semitones to F; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "\"Summer has come in, loudly sing cuckoo!\" Written down in England around 1260, it is the oldest known round: four voices sing the tune one after another, over two more voices repeating a short ground, the \"pes\".",
+    "nl": "\"De zomer is gekomen, zing luid koekoek!\" Rond 1260 in Engeland opgeschreven, is dit de oudste bekende canon: vier stemmen zingen de melodie na elkaar, boven nog twee stemmen die een korte grond herhalen, de \"pes\"."
+  },
+  "tip": {
+    "en": "With the band on, the other voices enter every two bars and the low ground repeats underneath. Hold your own line!",
+    "nl": "Met de band aan komen de andere stemmen om de twee maten binnen en herhaalt de lage grond zich eronder. Hou je eigen stem vast!"
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "F5/q E5/e D5/q E5/e | F5/q F5/e E5/e. D5/s C5/e | A4/q A4/e Bb4/q G4/e | A4/q. R/q. | F4/q A4/e G4/q Bb4/e | A4/q A4/e G4/q F4/e | A4/q C5/e D5/q D5/e | C5/q. R/q. | F5/q. D5/q. | F5/q. R/q. | C5/q A4/e Bb4/q G4/e | A4/q C5/e Bb4/q A4/e | F4/q A4/e G4/q E4/e | F4/q. R/q. | A4/q A4/e G4/q Bb4/e | C5/q C5/e D5/q E5/e | F5/q E5/e D5/q E5/e | F5/q. R/q. | C5/q. D5/q. | C5/q. Bb4/q A4/e | F4/q A4/e Bb4/q G4/e | A4/q. Bb4/q C5/e | A4/q C5/e G4/q E4/e | F4/q. R/q."
+    }
+  ],
+  "round": {
+    "entries": 4,
+    "everyBars": 2
+  },
+  "accompaniment": [
+    {
+      "id": "pes",
+      "name": "Pes",
+      "sound": "cello",
+      "music": "C5/q. Bb3/q. | C5/q. R/q. | F3/q. G3/q. | F3/q. G3/q A3/e | F3/q. G3/q. | F3/q. G3/q A3/e | C5/q. Bb3/q. | C5/q. R/q. | C5/q. Bb3/q. | C5/q. R/q. | F3/q. G3/q. | F3/q. G3/q A3/e | F3/q. G3/q. | F3/q. G3/q A3/e | C5/q. Bb3/q. | C5/q. R/q. | C5/q. Bb3/q. | C5/q. R/q. | F3/q. G3/q. | F3/q. G3/q A3/e | F3/q. G3/q. | F3/q. G3/q A3/e | C5/q. Bb3/q. | C5/q. R/q."
+    }
+  ]
+}

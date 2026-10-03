@@ -1,0 +1,51 @@
+{
+  "id": "simple-gifts",
+  "title": {
+    "en": "Simple Gifts",
+    "nl": "Simple Gifts"
+  },
+  "composer": "Joseph Brackett",
+  "period": "traditional",
+  "chapter": 5,
+  "tempo": 100,
+  "time": "4/4",
+  "key": "C",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved down 2 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "Joseph Brackett wrote this dancing song for the Shakers, a religious community in New England, in 1848. Aaron Copland used it in his ballet \"Appalachian Spring\" (1944), and Sydney Carter's hymn \"Lord of the Dance\" is sung to it.",
+    "nl": "Joseph Brackett schreef dit danslied in 1848 voor de Shakers, een religieuze gemeenschap in New England. Aaron Copland gebruikte het in zijn ballet \"Appalachian Spring\" (1944), en op de melodie wordt de hymne \"Lord of the Dance\" van Sydney Carter gezongen."
+  },
+  "tip": {
+    "en": "Light and bouncy: tongue each note with a soft \"du\" and keep the eighth notes even.",
+    "nl": "Licht en huppelend: tong elke noot met een zachte \"du\" en speel de achtsten gelijk."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/q | C5/q C5/e C5/e E5/e D5/e E5/e F5/e | G5/q G5/e G5/e E5/q E5/e E5/e | D5/q D5/q D5/q D5/e E5/e | F5/e E5/e D5/e C5/e B4/q G4/e G4/e | C5/q C5/e C5/e E5/e D5/e E5/e F5/e | G5/q G5/e G5/e E5/q E5/e E5/e | D5/q D5/q E5/q E5/e D5/e | C5/q C5/q C5/h | G5/h E5/q. D5/e | E5/e F5/e E5/e D5/e C5/h | E5/q E5/e F5/e G5/q F5/e E5/e | D5/q D5/q D5/q G4/e G4/e | C5/q C5/q C5/q. D5/e | E5/e D5/e E5/e F5/e G5/q F5/e E5/e | D5/q D5/q E5/q E5/e D5/e | C5/q C5/q C5/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "G2/q | C3/h A2/h | E2/h A2/h | D3/w | D3/h G2/h | C3/h A2/h | E2/h A2/h | D3/h G2/h | C3/q F2/q C3/h | C3/h A2/h | E2/h A2/h | C3/w | D3/h G2/h | C3/h F2/h | C3/q G2/q C3/h | D3/h G2/h | C3/q F2/q C3/q"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "B3/q | E4/h C4/h | G3/h C4/h | F4/w | F4/h B3/h | E4/h C4/h | G3/h C4/h | F4/h B3/h | E4/q A3/q E4/h | E4/h C4/h | G3/h C4/h | E4/w | F4/h B3/h | E4/h A3/h | E4/q B3/q E4/h | F4/h B3/h | E4/q A3/q E4/q"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "F4/q | G3/h E4/h | B3/h E4/h | A3/w | A3/h F4/h | G3/h E4/h | B3/h E4/h | A3/h F4/h | G3/q C4/q G3/h | G3/h E4/h | B3/h E4/h | G3/w | A3/h F4/h | G3/h C4/h | G3/q F4/q G3/h | A3/h F4/h | G3/q C4/q G3/q"
+    }
+  ]
+}

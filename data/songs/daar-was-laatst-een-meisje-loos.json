@@ -1,0 +1,50 @@
+{
+  "id": "daar-was-laatst-een-meisje-loos",
+  "title": {
+    "en": "Daar was laatst een meisje loos (There once was a clever girl)",
+    "nl": "Daar was laatst een meisje loos"
+  },
+  "composer": "Traditional (Netherlands)",
+  "period": "traditional",
+  "chapter": 8,
+  "tempo": 100,
+  "time": "3/8",
+  "key": "C",
+  "source": "ABC from trillian.mit.edu/~jc/music/abc/demo/Tunes/KZagTweeBeren.abc (Samenspel Kinderdagverblijf VUB), moved up 5 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "An old Dutch song about a girl who dresses as a boy and goes to sea as a sailor. It was already sung in the 1600s.",
+    "nl": "Een oud Nederlands lied over een meisje dat zich als jongen verkleedt en als matroos naar zee gaat. Het werd al in de 17de eeuw gezongen."
+  },
+  "tip": {
+    "en": "Three-eight time: three quick beats in a bar, felt as one big swing.",
+    "nl": "Drie-achtste maat: drie snelle tellen per maat, gevoeld als één grote zwaai."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "E5/q D5/e | C5/q G4/e | E5/q D5/e | C5/q. | E5/e D5/e E5/e | G5/q G5/e | F5/e E5/e D5/e | E5/q C5/e | E5/q D5/e | C5/q G4/e | E5/q D5/e | C5/q. | E5/e D5/e E5/e | G5/e A5/e G5/e | F5/e E5/e D5/e | C5/q."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "C3/q. | C3/q. | C3/q. | C3/q. | C3/q. | G2/q. | G2/q. | C3/q. | C3/q. | C3/q. | C3/q. | C3/q. | C3/q. | C3/q. | G2/q. | C3/q."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "E4/q. | E4/q. | E4/q. | E4/q. | E4/q. | B3/q. | B3/q. | E4/q. | E4/q. | E4/q. | E4/q. | E4/q. | E4/q. | E4/q. | B3/q. | E4/q."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "G3/q. | G3/q. | G3/q. | G3/q. | G3/q. | D4/q. | D4/q. | G3/q. | G3/q. | G3/q. | G3/q. | G3/q. | G3/q. | G3/q. | D4/q. | G3/q."
+    }
+  ]
+}

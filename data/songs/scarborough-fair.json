@@ -1,0 +1,50 @@
+{
+  "id": "scarborough-fair",
+  "title": {
+    "en": "Scarborough Fair",
+    "nl": "Scarborough Fair"
+  },
+  "composer": "Traditional (England)",
+  "period": "traditional",
+  "chapter": 4,
+  "tempo": 100,
+  "time": "3/4",
+  "key": "Am",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA); converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "An English ballad from the Middle Ages: a singer asks for impossible tasks, a shirt without a seam, an acre of land between the sea and the shore. The refrain \"parsley, sage, rosemary and thyme\" became world-famous through Simon & Garfunkel in 1966.",
+    "nl": "Een Engelse ballade uit de middeleeuwen: een zanger vraagt onmogelijke dingen, een hemd zonder naad, een akker tussen de zee en het strand. Het refrein \"parsley, sage, rosemary and thyme\" werd wereldberoemd door Simon & Garfunkel in 1966."
+  },
+  "tip": {
+    "en": "It is in the Dorian mode: no sharps or flats, but it sounds sad. Let the long notes at the end of each line ring for their full length.",
+    "nl": "Het staat in de dorische toonladder: geen kruisen of mollen, toch klinkt het droevig. Laat de lange noten aan het eind van elke regel hun volle lengte klinken."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "D4/h D4/q | A4/h A4/q | E4/q. F4/e E4/q | D4/h.~ | D4/q A4/q C5/q | D5/h C5/q | A4/q B4/q G4/q | A4/h.~ | A4/h D5/q | D5/h D5/q | C5/h A4/q | A4/q G4/q F4/q | E4/q C4/h~ | C4/h. | D4/h A4/q | G4/h F4/q | E4/q D4/q C4/q | D4/h.~ | D4/h. :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "D3/h.~ | D3/h. | C3/h. | D3/h.~ | D3/h.~ | D3/h. | G2/h. | D3/h.~ | D3/h.~ | D3/h. | F2/h.~ | F2/h. | C3/h.~ | C3/h. | D3/h. | C3/h F2/q | C3/h. | D3/h.~ | D3/h. | D3/h.~ | D3/h. | C3/h. | D3/h.~ | D3/h.~ | D3/h. | G2/h. | D3/h.~ | D3/h.~ | D3/h. | F2/h.~ | F2/h. | C3/h.~ | C3/h. | D3/h. | C3/h F2/q | C3/h. | D3/h.~ | D3/h."
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "F4/h.~ | F4/h. | E4/h. | F4/h.~ | F4/h.~ | F4/h. | B3/h. | F4/h.~ | F4/h.~ | F4/h. | A3/h.~ | A3/h. | E4/h.~ | E4/h. | F4/h. | E4/h A3/q | E4/h. | F4/h.~ | F4/h. | F4/h.~ | F4/h. | E4/h. | F4/h.~ | F4/h.~ | F4/h. | B3/h. | F4/h.~ | F4/h.~ | F4/h. | A3/h.~ | A3/h. | E4/h.~ | E4/h. | F4/h. | E4/h A3/q | E4/h. | F4/h.~ | F4/h."
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "A3/h.~ | A3/h. | G3/h. | A3/h.~ | A3/h.~ | A3/h. | D4/h. | A3/h.~ | A3/h.~ | A3/h. | C4/h.~ | C4/h. | G3/h.~ | G3/h. | A3/h. | G3/h C4/q | G3/h. | A3/h.~ | A3/h. | A3/h.~ | A3/h. | G3/h. | A3/h.~ | A3/h.~ | A3/h. | D4/h. | A3/h.~ | A3/h.~ | A3/h. | C4/h.~ | C4/h. | G3/h.~ | G3/h. | A3/h. | G3/h C4/q | G3/h. | A3/h.~ | A3/h."
+    }
+  ]
+}

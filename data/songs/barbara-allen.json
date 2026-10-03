@@ -1,0 +1,51 @@
+{
+  "id": "barbara-allen",
+  "title": {
+    "en": "Barbara Allen",
+    "nl": "Barbara Allen"
+  },
+  "composer": "Traditional (Scotland)",
+  "period": "traditional",
+  "chapter": 4,
+  "tempo": 90,
+  "time": "3/4",
+  "key": "C",
+  "pickup": "q",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved down 2 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "One of the oldest ballads in English: Samuel Pepys wrote in his diary in 1666 that he had heard it sung. It tells of a young man who dies of love for the proud Barbara Allen.",
+    "nl": "Een van de oudste Engelstalige balladen: Samuel Pepys schreef in 1666 in zijn dagboek dat hij het had horen zingen. Het vertelt over een jonge man die sterft van liefde voor de trotse Barbara Allen."
+  },
+  "tip": {
+    "en": "Tell the story: play it like a singer, a little slower at the end of each line.",
+    "nl": "Vertel het verhaal: speel het als een zanger, aan het eind van elke regel een beetje trager."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C4/q | E4/e F4/e G4/q. F4/e | E4/e D4/e C4/q. D4/e | E4/e G4/e C5/q C5/q | B4/e G4/q. B4/q | C5/e A4/e F4/q G4/e A4/e | G4/e E4/e C4/q. D4/e | E4/e G4/e A4/q G4/q | E4/e C4/q."
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "R/q | C3/h. | A2/h. | C3/h D3/q | G2/h. | F2/h. | C3/h. | C3/q F2/q G2/q | C3/h"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "R/q | E4/h. | C4/h. | E4/h F#4/q | B3/h. | A3/h. | E4/h. | E4/q A3/q B3/q | E4/h"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "R/q | G3/h. | E4/h. | G3/h A3/q | D4/h. | C4/h. | G3/h. | G3/q C4/q D4/q | G3/h"
+    }
+  ]
+}

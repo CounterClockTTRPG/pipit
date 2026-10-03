@@ -1,0 +1,50 @@
+{
+  "id": "hoedje-van-papier",
+  "title": {
+    "en": "Hoedje van papier (A paper hat)",
+    "nl": "Hoedje van papier"
+  },
+  "composer": "Traditional (Netherlands)",
+  "period": "traditional",
+  "chapter": 3,
+  "tempo": 110,
+  "time": "4/4",
+  "key": "G",
+  "source": "ABC from trillian.mit.edu/~jc/music/abc/demo/Tunes/KZagTweeBeren.abc (Samenspel Kinderdagverblijf VUB); converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A Dutch children's song: \"a little hat of, a little hat of paper\". Children fold a paper hat while singing it.",
+    "nl": "Een Nederlands kinderliedje: \"een hoedje van, een hoedje van papier\". Kinderen vouwen er een papieren hoedje bij."
+  },
+  "tip": {
+    "en": "Only a few notes, so listen to the rhythm: the words \"een hoedje van\" come back again and again.",
+    "nl": "Maar een paar noten, dus luister naar het ritme: \"een hoedje van\" komt telkens terug."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/q B4/q D5/q B4/q | C5/e C5/e A4/q B4/e B4/e G4/q | G4/q B4/q D5/q B4/q | C5/e C5/e A4/e A4/e G4/q R/q | A4/e A4/e A4/e A4/e A4/e B4/e C5/q | B4/e B4/e B4/e B4/e B4/e C5/e D5/q | G4/q B4/q D5/q B4/q | C5/e C5/e A4/e A4/e G4/q R/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "G2/h G2/h | D3/h G2/h | G2/h G2/h | D3/h G2/h | D3/h D3/h | G2/h G2/h | G2/h G2/h | D3/h G2/q"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "B3/h B3/h | F#4/h B3/h | B3/h B3/h | F#4/h B3/h | F#4/h F#4/h | B3/h B3/h | B3/h B3/h | F#4/h B3/q"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "D4/h D4/h | A3/h D4/h | D4/h D4/h | A3/h D4/h | A3/h A3/h | D4/h D4/h | D4/h D4/h | A3/h D4/q"
+    }
+  ]
+}

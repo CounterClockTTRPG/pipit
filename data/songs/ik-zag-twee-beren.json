@@ -1,0 +1,50 @@
+{
+  "id": "ik-zag-twee-beren",
+  "title": {
+    "en": "Ik zag twee beren (I saw two bears)",
+    "nl": "Ik zag twee beren"
+  },
+  "composer": "Traditional (Netherlands)",
+  "period": "traditional",
+  "chapter": 8,
+  "tempo": 100,
+  "time": "2/4",
+  "key": "C",
+  "source": "ABC from trillian.mit.edu/~jc/music/abc/demo/Tunes/KZagTweeBeren.abc (Samenspel Kinderdagverblijf VUB), moved down 4 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A Dutch nonsense song: \"I saw two bears buttering sandwiches, oh, that was a wonder\". Children sing it with ever sillier animals.",
+    "nl": "Een Nederlands onzinliedje: \"Ik zag twee beren broodjes smeren, o, dat was een wonder\". Kinderen zingen het met steeds gekkere dieren."
+  },
+  "tip": {
+    "en": "Short and quick, two beats in a bar. Play it a few times and speed up with the dial.",
+    "nl": "Kort en vlot, twee tellen per maat. Speel het een paar keer en ga sneller met de knop."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/e G4/e G4/e C5/e | E4/e E4/e E4/e G4/e | C4/e C4/e C4/e E4/e | G4/q D4/q | A4/e F4/e F4/e F4/e | G4/e E4/e E4/e E4/e | F4/e D4/e D4/e D4/e | C4/e E4/e G4/e G4/e | G4/e G4/e G4/q | A4/e A4/e A4/q | G4/e G4/e G4/e G4/s G4/s | G4/e G4/e C4/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "D#3/q D#3/q | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h~ | D#3/h"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "G3/q G3/q | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h~ | G3/h"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "Bb3/q Bb3/q | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h~ | Bb3/h"
+    }
+  ]
+}

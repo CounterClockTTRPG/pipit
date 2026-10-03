@@ -1,0 +1,34 @@
+{
+  "id": "dona-nobis-pacem",
+  "title": {
+    "en": "Dona nobis pacem",
+    "nl": "Dona nobis pacem"
+  },
+  "composer": "Anonymous",
+  "period": "traditional",
+  "chapter": 6,
+  "tempo": 90,
+  "time": "3/4",
+  "key": "G",
+  "source": "ABC from alijc.github.io/music, Friendly House senior choir, moved up 5 semitones to G; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "\"Grant us peace\": a round for three voices on the last words of the Latin mass. Its composer is unknown; it is often wrongly said to be by Mozart.",
+    "nl": "\"Geef ons vrede\": een canon voor drie stemmen op de laatste woorden van de Latijnse mis. De componist is onbekend; vaak wordt het ten onrechte aan Mozart toegeschreven."
+  },
+  "tip": {
+    "en": "Three parts of eight bars each. With the band on, a new voice enters every eight bars, so all three parts sound together.",
+    "nl": "Drie delen van acht maten. Met de band aan komt er om de acht maten een nieuwe stem bij, zodat de drie delen samen klinken."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/e D4/e B4/h | A4/e D4/e C5/h | B4/q A4/q G4/q | G4/q F#4/h | E5/q D5/e C5/e B4/e A4/e | D5/q. C5/e B4/q | B4/e A4/e G4/q F#4/q | G4/h. | D5/h. | D5/h. | D5/q C5/q B4/q | B4/q A4/h | E5/q E5/h | D5/q D5/h | D5/e C5/e B4/q A4/q | G4/h. | G4/h. | F#4/h. | G4/q. A4/e B4/e C5/e | D5/q D4/h | C5/q C5/h | B4/q B4/h | F#4/e A4/e D5/q D4/q | G4/h."
+    }
+  ],
+  "round": {
+    "entries": 3,
+    "everyBars": 8
+  }
+}

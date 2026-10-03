@@ -18,8 +18,9 @@ public sealed class SongFormatException(string message) : Exception(message);
 /// <item>A trailing <c>~</c> ties a note to the next one (same pitch); a trailing <c>,</c> marks a breath.</item>
 /// <item><c>|</c> bar line, <c>||</c> double bar, <c>|:</c> and <c>:|</c> repeats, <c>[1</c> and <c>[2</c> first and second endings.</item>
 /// </list>
-/// Every bar must add up to the time signature, except a pickup bar (declared with "pickup")
-/// and a final bar that completes it.
+/// Every bar must add up to the time signature, except a pickup bar (declared with "pickup"),
+/// a final bar that completes it, and a short bar that ends a section (it completes the pickup
+/// at a repeat sign, or makes a full bar with the next section's pickup).
 /// </summary>
 public static class SongParser
 {
@@ -224,9 +225,21 @@ public static class SongParser
                 expected = pickup;
             else if (i == bars.Count - 1 && pickup > 0 && Math.Abs(bars[i].Beats - (time.BarBeats - pickup)) < 1e-9)
                 expected = time.BarBeats - pickup; // the last bar completes the pickup
-            if (Math.Abs(bars[i].Beats - expected) > 1e-9)
-                throw new SongFormatException(string.Create(CultureInfo.InvariantCulture,
-                    $"{context}: bar {bars[i].Number} has {bars[i].Beats} beats, expected {expected}"));
+            if (Math.Abs(bars[i].Beats - expected) <= 1e-9)
+                continue;
+            // A section may end on a short bar, as in printed music: at a repeat sign it completes
+            // the opening pickup, or with the next section's pickup bar it makes one full bar.
+            var sectionEnd = bars[i].EndRepeat || bars[i].DoubleBarAfter
+                || (i + 1 < bars.Count && (bars[i + 1].StartRepeat || bars[i + 1].Ending != bars[i].Ending));
+            if (sectionEnd && i + 1 < bars.Count && Math.Abs(bars[i].Beats + bars[i + 1].Beats - time.BarBeats) < 1e-9)
+            {
+                i++;
+                continue;
+            }
+            if (sectionEnd && pickup > 0 && Math.Abs(bars[i].Beats - (time.BarBeats - pickup)) < 1e-9)
+                continue;
+            throw new SongFormatException(string.Create(CultureInfo.InvariantCulture,
+                $"{context}: bar {bars[i].Number} has {bars[i].Beats} beats, expected {expected}"));
         }
     }
 

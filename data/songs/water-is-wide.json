@@ -1,0 +1,51 @@
+{
+  "id": "water-is-wide",
+  "title": {
+    "en": "The Water Is Wide",
+    "nl": "The Water Is Wide"
+  },
+  "composer": "Traditional (Scotland)",
+  "period": "traditional",
+  "chapter": 5,
+  "tempo": 80,
+  "time": "4/4",
+  "key": "C",
+  "pickup": "h.",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved up 5 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A Scottish and English folk song (\"O Waly, Waly\") built from verses of ballads from the 1600s. Cecil Sharp collected the tune in Somerset and published it in 1906.",
+    "nl": "Een Schots en Engels volkslied (\"O Waly, Waly\") dat bestaat uit strofen van balladen uit de 17de eeuw. Cecil Sharp tekende de melodie op in Somerset en gaf ze uit in 1906."
+  },
+  "tip": {
+    "en": "Slow and singing. The song starts with a long pickup: count the bar in before you begin.",
+    "nl": "Traag en zingend. Het lied begint met een lange opmaat: tel de maat af voor je begint."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "G4/q C5/e C5/e D5/q | E5/w~ | E5/q D5/e D5/e C5/q A4/q | G4/w~ | G4/q R/e G4/e C5/e C5/e B4/q | C5/w~ | C5/q C5/e D5/e E5/q F5/e E5/e | D5/w~ | D5/q R/e D5/e E5/q F5/q | G5/w~ | G5/q F5/e E5/e D5/q C5/q | E5/w~ | E5/q D5/q C5/q A4/q | G4/w~ | G4/q R/e G4/e A4/q C5/q | C5/w~ | C5/q"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "G2/h. | C3/w | F2/w | C3/w~ | C3/w | A2/w~ | A2/w | G2/w | G2/w | E2/w~ | E2/w | A2/w | F2/w | G2/w~ | G2/h F2/h | C3/w~ | C3/q"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "B3/h. | E4/w | A3/w | E4/w~ | E4/w | C4/w~ | C4/w | B3/w | B3/w | G3/w~ | G3/w | C4/w | A3/w | B3/w~ | B3/h A3/h | E4/w~ | E4/q"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "D4/h. | G3/w | C4/w | G3/w~ | G3/w | E4/w~ | E4/w | D4/w | D4/w | B3/w~ | B3/w | E4/w | C4/w | F4/w~ | F4/h C4/h | G3/w~ | G3/q"
+    }
+  ]
+}

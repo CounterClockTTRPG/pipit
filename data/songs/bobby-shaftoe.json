@@ -1,0 +1,50 @@
+{
+  "id": "bobby-shaftoe",
+  "title": {
+    "en": "Bobby Shaftoe",
+    "nl": "Bobby Shaftoe"
+  },
+  "composer": "Traditional (England)",
+  "period": "traditional",
+  "chapter": 5,
+  "tempo": 110,
+  "time": "4/4",
+  "key": "C",
+  "source": "ABC from Paul Hardy's tunebooks (pghardy.net, CC BY-NC-SA), moved up 5 semitones to C; converted with tools/abc2pipit.py.",
+  "about": {
+    "en": "A song from the north-east of England about Bobby Shaftoe, who went to sea with silver buckles on his knee. It is said to be about Robert Shafto, a member of parliament for Durham in the 1700s.",
+    "nl": "Een lied uit het noordoosten van Engeland over Bobby Shaftoe, die naar zee ging met zilveren gespen aan zijn knie. Het zou gaan over Robert Shafto, een parlementslid voor Durham in de 18de eeuw."
+  },
+  "tip": {
+    "en": "A cheerful march: keep the beat steady and make the short notes really short.",
+    "nl": "Een vrolijke mars: hou de maat gelijk en maak de korte noten echt kort."
+  },
+  "parts": [
+    {
+      "id": "melody",
+      "name": "Melody",
+      "instrument": "soprano",
+      "music": "C5/q C5/e C5/e C5/q F5/q | E5/q G5/q E5/q C5/q | G4/q G4/e G4/e G4/q C5/q | B4/q D5/q B4/q G4/q | C5/q C5/e C5/e C5/q F5/q | E5/q G5/q E5/q C5/q | D5/q F5/q D5/q B4/q | C5/h C5/h :| |: E5/q G5/q E5/q C5/q | E5/q G5/q E5/h | D5/q F5/q D5/q B4/q | D5/q F5/q D5/h | E5/q G5/q E5/q C5/q | E5/q G5/q E5/h | D5/q F5/q D5/q B4/q | C5/h C5/h :|"
+    }
+  ],
+  "accompaniment": [
+    {
+      "id": "bass",
+      "name": "Bass",
+      "sound": "cello",
+      "music": "C3/w~ | C3/w | G2/w~ | G2/w | C3/w~ | C3/w | F2/h G2/h | C3/w | C3/w~ | C3/w | G2/w~ | G2/w | C3/w~ | C3/w | F2/h G2/h | C3/w | C3/w~ | C3/w | G2/w~ | G2/w | C3/w~ | C3/w | F2/h G2/h | C3/w | C3/w~ | C3/w | G2/w~ | G2/w | C3/w~ | C3/w | F2/h G2/h | C3/w"
+    },
+    {
+      "id": "chord1",
+      "name": "Chords",
+      "sound": "strings",
+      "music": "E4/w~ | E4/w | B3/w~ | B3/w | E4/w~ | E4/w | A3/h B3/h | E4/w | E4/w~ | E4/w | B3/w~ | B3/w | E4/w~ | E4/w | A3/h B3/h | E4/w | E4/w~ | E4/w | B3/w~ | B3/w | E4/w~ | E4/w | A3/h B3/h | E4/w | E4/w~ | E4/w | B3/w~ | B3/w | E4/w~ | E4/w | A3/h B3/h | E4/w"
+    },
+    {
+      "id": "chord2",
+      "name": "Chords 2",
+      "sound": "strings",
+      "music": "G3/w~ | G3/w | D4/w~ | D4/w | G3/w~ | G3/w | C4/h D4/h | G3/w | G3/w~ | G3/w | D4/w~ | D4/w | G3/w~ | G3/w | C4/h D4/h | G3/w | G3/w~ | G3/w | F4/w~ | F4/w | G3/w~ | G3/w | C4/h D4/h | G3/w | G3/w~ | G3/w | F4/w~ | F4/w | G3/w~ | G3/w | C4/h D4/h | G3/w"
+    }
+  ]
+}

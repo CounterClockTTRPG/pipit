@@ -83,6 +83,18 @@ public class SongParserTests
         Assert.Contains("3 beats", e.Message);
     }
 
+    [Fact]
+    public void A_section_may_end_on_a_short_bar()
+    {
+        // 3/4 with a quarter pickup: the A part ends on a two-beat bar at its repeat sign (completing
+        // the pickup), then the B part has its own pickup, together a full bar with the bar before.
+        var notes = Perform("D4/q |: G4/h. | A4/h :| B4/h B4/q | C5/h D5/q | B4/h", "3/4", pickup: 1);
+        Assert.Equal(new[] { -1.0, 0, 3, 5, 8, 10, 12, 13, 15, 16 }, notes.Select(n => n.StartBeat));
+        Assert.Equal(18, notes[^1].EndBeat);
+        // A short bar in the middle of a section is still an error.
+        Assert.Throws<SongFormatException>(() => Perform("G4/q G4 G4 A4 | B4/h | G4/w | G4/w"));
+    }
+
     [Theory]
     [InlineData("G4/x")]
     [InlineData("H4/q")]
