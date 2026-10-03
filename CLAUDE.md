@@ -75,6 +75,9 @@ calibration keeps its audio in `user://diagnostics/` for inspection.
 - Every song has a `period` (`Repertoire.Periods`: medieval ... traditional, game); the Songs
   screen groups and searches the repertoire with `Repertoire` (Core). Unlicensed and game music
   goes in `data/songs/personal/`; clean that folder up only if the app is ever shared.
+- Players can add their own MusicXML (`.musicxml`/`.mxl`) on the Songs screen: `MusicXmlImporter`
+  (Core) writes a song file into `user://songs` (period `own`, "My songs"); the first part's top
+  line is the player's, other staves and parts the band; one song per time-signature section.
 - `StaffLayout` (Core) engraves in staff spaces and is unit-tested; `StaffView` draws it with
   Bravura (SMuFL code points, metrics from `Bravura.json`). `--shots` renders several songs'
   scores; look at them after any engraving change.

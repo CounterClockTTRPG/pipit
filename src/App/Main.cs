@@ -211,6 +211,15 @@ public partial class Main : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-return.png"));
         library.DebugSearch("");
+        // Adding a MusicXML song: the report after the import.
+        var sample = System.Environment.GetEnvironmentVariable("USERPROFILE") is { } home ? System.IO.Path.Combine(home, "Downloads", "druid-ii-enlightenment-david-hanlon.mxl") : "";
+        if (System.IO.File.Exists(sample))
+        {
+            library.DebugImport(sample);
+            for (var i = 0; i < 10; i++)
+                await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "library-import.png"));
+        }
         Back();
         var play = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
         Show(play);

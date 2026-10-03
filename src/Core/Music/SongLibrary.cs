@@ -17,14 +17,15 @@ public sealed class SongLibrary
     }
 
     /// <param name="readFile">Reads a file in the songs folder by name.</param>
-    public static SongLibrary Load(Func<string, string> readFile)
+    /// <param name="own">The player's own songs (imported MusicXML), as (file name, JSON).</param>
+    public static SongLibrary Load(Func<string, string> readFile, IEnumerable<(string Name, string Json)>? own = null)
     {
         var index = System.Text.Json.JsonSerializer.Deserialize<List<string>>(readFile("index.json")) ?? new();
         var songs = new List<Song>();
         var errors = new List<string>();
-        foreach (var file in index)
+        foreach (var (file, json) in index.Select(f => (f, (string?)null)).Concat((own ?? Array.Empty<(string, string)>()).Select(o => (o.Item1, (string?)o.Item2))))
         {
-            try { songs.Add(SongParser.ParseJson(readFile(file))); }
+            try { songs.Add(SongParser.ParseJson(json ?? readFile(file))); }
             catch (Exception e) when (e is SongFormatException or System.Text.Json.JsonException or IOException or KeyNotFoundException)
             {
                 errors.Add($"{file}: {e.Message}");

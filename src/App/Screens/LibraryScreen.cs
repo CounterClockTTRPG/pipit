@@ -40,6 +40,9 @@ public partial class LibraryScreen : Screen
     /// <summary>For `--shots`: scroll to the repertoire's search and grouping controls.</summary>
     public void DebugScrollToRepertoire() => _scroll.ScrollVertical = (int)(_repertoire.Position.Y - 160);
 
+    /// <summary>For `--shots`: an import as if the file was picked (nothing is saved in a screenshot run).</summary>
+    public void DebugImport(string path) => Import(new[] { path });
+
     /// <summary>For `--shots`: search as if typed.</summary>
     public void DebugSearch(string query) { _query = query; FillRepertoire(); }
 
@@ -91,7 +94,49 @@ public partial class LibraryScreen : Screen
         row.AddChild(Toggles(new[] { (RepertoireGrouping.Difficulty, "Show all"), (RepertoireGrouping.Period, "By type"), (RepertoireGrouping.Composer, "By composer") },
             _grouping, g => _grouping = g));
         row.AddChild(Toggles(new[] { (RepertoireSort.Difficulty, "Easiest first"), (RepertoireSort.Name, "A–Z") }, _sort, o => _sort = o));
+        row.AddChild(new Control { CustomMinimumSize = new Vector2(10, 0) });
+        row.AddChild(Ui.Button("＋ " + Ui.T("Add a song (MusicXML)"), PickMusicXml, 18));
         return row;
+    }
+
+    /// <summary>Choose MusicXML files (exported from MuseScore, Finale, Sibelius...) and add them as songs.</summary>
+    private void PickMusicXml()
+    {
+        var dialog = new FileDialog
+        {
+            FileMode = FileDialog.FileModeEnum.OpenFiles,
+            Access = FileDialog.AccessEnum.Filesystem,
+            Filters = new[] { "*.musicxml, *.mxl, *.xml ; MusicXML" },
+            UseNativeDialog = true,
+            Title = Ui.T("Add a song (MusicXML)"),
+        };
+        dialog.FilesSelected += paths => { dialog.QueueFree(); Import(paths); };
+        dialog.FileSelected += path => { dialog.QueueFree(); Import(new[] { path }); };
+        dialog.Canceled += dialog.QueueFree;
+        AddChild(dialog);
+        dialog.PopupCentered(new Vector2I(900, 600));
+    }
+
+    private void Import(IEnumerable<string> paths)
+    {
+        var results = S.ImportSongs(paths);
+        var added = results.Where(r => r.Ok).ToList();
+        var lines = new List<string>();
+        if (added.Count > 0)
+            lines.Add(string.Format(Ui.T("Added to \"My songs\": {0}."), string.Join(", ", added.Select(r => r.Title))));
+        foreach (var failed in results.Where(r => !r.Ok))
+            lines.Add(string.Format(Ui.T("Not added: {0}. {1}"), failed.Title, failed.Error));
+        var report = new AcceptDialog { Title = Ui.T("Add a song (MusicXML)"), DialogText = string.Join("\n\n", lines), DialogAutowrap = true };
+        report.Confirmed += report.QueueFree;
+        report.Canceled += report.QueueFree;
+        AddChild(report);
+        report.PopupCentered(new Vector2I(640, 0));
+        if (added.Count > 0)
+        {
+            _grouping = RepertoireGrouping.Period; // "My songs" comes first by type
+            _query = "";
+        }
+        Callable.From(Enter).CallDeferred();
     }
 
     /// <summary>A row of toggle buttons of which one is pressed.</summary>
@@ -171,7 +216,31 @@ public partial class LibraryScreen : Screen
             : fit is { Semitones: not 0 } f ? PlayScreen.TransposedText(f.Semitones) : Ui.Composer(song.Composer);
         if (repertoire)
             AddHeart(button, song);
+        if (repertoire && Services.IsOwnSong(song))
+            AddRemove(button, song);
         return button;
+    }
+
+    /// <summary>A bin under the heart for the player's own (imported) songs.</summary>
+    private void AddRemove(Button tile, Song song)
+    {
+        var bin = Ui.Quiet(new Button { Text = "🗑", TooltipText = Ui.T("Remove this song"), CustomMinimumSize = new Vector2(40, 36), FocusMode = FocusModeEnum.None });
+        bin.AddThemeFontSizeOverride("font_size", PipitTheme.Small + 2);
+        bin.SetAnchorsAndOffsetsPreset(LayoutPreset.TopRight);
+        bin.OffsetLeft = -44; bin.OffsetTop = 44; bin.OffsetRight = -4; bin.OffsetBottom = 80;
+        bin.Pressed += () =>
+        {
+            var confirm = new ConfirmationDialog
+            {
+                DialogText = string.Format(Ui.T("Remove \"{0}\" from My songs? Its scores are kept."), song.Title(S.Settings.Language)),
+                OkButtonText = Ui.T("Remove"),
+            };
+            confirm.Confirmed += () => { confirm.QueueFree(); S.RemoveOwnSong(song.Id); Callable.From(Enter).CallDeferred(); };
+            confirm.Canceled += confirm.QueueFree;
+            AddChild(confirm);
+            confirm.PopupCentered();
+        };
+        tile.AddChild(bin);
     }
 
     /// <summary>A heart in the tile's corner: favourites move to the top of the repertoire.</summary>

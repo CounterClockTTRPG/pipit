@@ -670,6 +670,7 @@ Still to do, roughly in the order agreed:
 | Note-reading trainer (say or tap the note names in rhythm) | next: tap version first, speech recognition after |
 | Repertoire too long to browse | done: search (titles in every language, composer, style), Show all / By type / By composer, and a heart per piece that moves it to a Favourites group at the top (per player); every song has a `period` |
 | More songs (2026-10-03) | done: C64 game music (Ultima III-V, Lazy Jones, Bruce Lee, Blood Valley, Uridium, Master of Magic, Druid II) with the other SID voices as the band, personal use; Rule Britannia; Corelli's *La Folia* (theme and 12 variations, personal use); *Greensleeves to a Ground* (Mutopia, with the ground added as the band) |
+| Players add their own songs | done: "+ Add a song (MusicXML)" on the Songs screen imports .musicxml/.mxl into "My songs" on this computer (the first part's top line is theirs, moved by octaves to fit; other parts are the band; split where the time signature changes); a bin removes them |
 | Band switch and speed dial work during a song | done: the band fades in/out (rendered on the fly if it was off), a speed change applies from the current beat (`TempoMap`); results count the slowest speed used |
 
 Song sources: anything longer than a folk tune is converted from a Public Domain edition (the

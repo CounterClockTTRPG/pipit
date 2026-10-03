@@ -107,9 +107,7 @@ public partial class Services : Node
         AddChild(Clicks);
         Audio.SelectDevice(Machine.InputDevice);
         ApplyInstrument();
-        Songs = SongLibrary.Load(name => FileAccess.GetFileAsString("res://data/songs/" + name));
-        foreach (var error in Songs.Errors)
-            GD.PushError("Song: " + error);
+        ReloadSongs();
         Progress = IsGuest ? new PlayerProgress() : Store.LoadProgress(Player.Id);
         ApplyLanguage();
         MusicFont = LoadMusicFont();
@@ -237,6 +235,59 @@ public partial class Services : Node
     {
         if (!IsGuest && !ReadOnly)
             Store.SaveProgress(Player.Id, Progress);
+    }
+
+    // ---- the player's own songs (imported MusicXML) ------------------------------------------
+
+    /// <summary>Where imported songs are kept: on this computer, for every player.</summary>
+    public const string OwnSongsDir = "user://songs";
+
+    /// <summary>Loads the built-in songs and the ones imported on this computer.</summary>
+    public void ReloadSongs()
+    {
+        DirAccess.MakeDirRecursiveAbsolute(OwnSongsDir);
+        var own = DirAccess.GetFilesAt(OwnSongsDir).Where(f => f.EndsWith(".json"))
+            .Select(f => ("own/" + f, FileAccess.GetFileAsString($"{OwnSongsDir}/{f}"))).ToList();
+        Songs = SongLibrary.Load(name => FileAccess.GetFileAsString("res://data/songs/" + name), own);
+        foreach (var error in Songs.Errors)
+            GD.PushError("Song: " + error);
+    }
+
+    /// <summary>Imports MusicXML files as songs (one per section when the time signature changes); returns what happened per song.</summary>
+    public List<ImportResult> ImportSongs(IEnumerable<string> paths)
+    {
+        var results = new List<ImportResult>();
+        foreach (var path in paths)
+        {
+            // Godot's FileAccess also opens what the Android file picker hands back.
+            var bytes = FileAccess.FileExists(path) ? FileAccess.GetFileAsBytes(path) : File.Exists(path) ? File.ReadAllBytes(path) : Array.Empty<byte>();
+            if (bytes.Length == 0)
+            {
+                results.Add(new ImportResult(null, "", System.IO.Path.GetFileName(path), "The file could not be read.", Array.Empty<string>()));
+                continue;
+            }
+            foreach (var result in MusicXmlImporter.Import(bytes, System.IO.Path.GetFileName(path)))
+            {
+                results.Add(result);
+                if (result.Ok && !ReadOnly)
+                {
+                    using var file = FileAccess.Open($"{OwnSongsDir}/{result.Id}.json", FileAccess.ModeFlags.Write);
+                    file.StoreString(result.Json);
+                }
+            }
+        }
+        ReloadSongs();
+        return results;
+    }
+
+    public static bool IsOwnSong(Song song) => song.Period == "own" && FileAccess.FileExists($"{OwnSongsDir}/{song.Id}.json");
+
+    public void RemoveOwnSong(string id)
+    {
+        DirAccess.RemoveAbsolute($"{OwnSongsDir}/{id}.json");
+        Progress.Favourites.Remove(id);
+        SaveProgress();
+        ReloadSongs();
     }
 
     /// <summary>A song's survival board for everyone on this computer (on the current recorder size), best first.</summary>

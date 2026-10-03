@@ -152,6 +152,17 @@ public static class PipitTheme
         theme.SetStylebox("fill", "ProgressBar", Bar(Good, 8));
         theme.SetStylebox("panel", "TooltipPanel", Box(Ink, Ink, 8, radius: 8, line: 0));
         theme.SetColor("font_color", "TooltipLabel", Paper);
+        // Dialogs (confirmations, reports, the file picker): paper like the screens, not Godot's grey.
+        var frame = Box(Paper, WoodEdge, 16, radius: 12, line: 2);
+        // Around the window: room for the title bar on top, the edge just outside the content.
+        frame.ExpandMarginTop = 34;
+        frame.ExpandMarginLeft = frame.ExpandMarginRight = frame.ExpandMarginBottom = 3;
+        theme.SetStylebox("embedded_border", "Window", frame);
+        theme.SetStylebox("embedded_unfocused_border", "Window", frame);
+        theme.SetColor("title_color", "Window", Ink);
+        theme.SetFont("title_font", "Window", BoldFont);
+        theme.SetFontSize("title_font_size", "Window", 18);
+        theme.SetStylebox("panel", "AcceptDialog", Box(Paper, Paper, 12, radius: 0, line: 0));
         return theme;
     }
 

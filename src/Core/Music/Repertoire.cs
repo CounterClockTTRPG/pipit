@@ -20,13 +20,13 @@ public static class Repertoire
 {
     public const string FavouritesKey = "favourites";
 
-    /// <summary>Periods in display order: oldest first, then folk and game music.</summary>
-    public static readonly IReadOnlyList<string> Periods = new[] { "medieval", "renaissance", "baroque", "classical", "romantic", "traditional", "game" };
+    /// <summary>Periods in display order: the player's own songs, then oldest first, then folk and game music.</summary>
+    public static readonly IReadOnlyList<string> Periods = new[] { "own", "medieval", "renaissance", "baroque", "classical", "romantic", "traditional", "game" };
 
     /// <summary>English names of the periods (the app translates them).</summary>
     public static readonly IReadOnlyDictionary<string, string> PeriodNames = new Dictionary<string, string>
     {
-        ["medieval"] = "Medieval", ["renaissance"] = "Renaissance", ["baroque"] = "Baroque", ["classical"] = "Classical",
+        ["own"] = "My songs", ["medieval"] = "Medieval", ["renaissance"] = "Renaissance", ["baroque"] = "Baroque", ["classical"] = "Classical",
         ["romantic"] = "Romantic", ["traditional"] = "Folk and traditional", ["game"] = "Game music",
     };
 
