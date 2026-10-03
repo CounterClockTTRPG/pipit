@@ -8,7 +8,7 @@ public sealed record NameAnswer(int Letter, double Time);
 public enum NameResult { Right, WrongName, Missed }
 
 /// <summary>How one note of a reading drill was named.</summary>
-public sealed record NameJudgement(int Index, int WrittenMidi, NameResult Result, double? ErrorMs, Timing? Timing)
+public sealed record NameJudgement(int Index, int WrittenMidi, NameResult Result, double? ErrorMs, Timing? Timing, int? Said = null)
 {
     /// <summary>The right name, on the beat (Perfect, Great or Good).</summary>
     public bool RightOnTime => Result == NameResult.Right && Timing is Scoring.Timing.Perfect or Scoring.Timing.Great or Scoring.Timing.Good;
@@ -61,7 +61,7 @@ public static class NameDrill
                 _ => errorMs < 0 ? Timing.Early : Timing.Late,
             };
             var right = answers[match].Letter == LetterOf(midi);
-            result.Add(new NameJudgement(i, midi, right ? NameResult.Right : NameResult.WrongName, errorMs, timing));
+            result.Add(new NameJudgement(i, midi, right ? NameResult.Right : NameResult.WrongName, errorMs, timing, answers[match].Letter));
         }
         return result;
     }

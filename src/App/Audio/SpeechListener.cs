@@ -36,6 +36,17 @@ public sealed class SpeechListener : IDisposable
     /// <summary>What is being heard right now (not final), for the screen.</summary>
     public string Partial { get; private set; } = "";
 
+    /// <summary>Every word so far, finished ones and the ones still being heard, in order.</summary>
+    public List<string> WordsSoFar
+    {
+        get
+        {
+            var words = _words.ConvertAll(w => w.Word);
+            words.AddRange(Partial.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            return words;
+        }
+    }
+
     private SpeechListener(AudioHub hub, Model model, string grammar)
     {
         _hub = hub;
@@ -82,6 +93,8 @@ public sealed class SpeechListener : IDisposable
                     vosk = handle;
             }
         NativeLibrary.SetDllImportResolver(typeof(Model).Assembly, (library, _, _) => library == "libvosk" ? vosk : IntPtr.Zero);
+        // Only now: this is the first call into the library.
+        Vosk.Vosk.SetLogLevel(-1);
     }
 
     /// <summary>Loads (once) the model for a language, in the background: a second or two.</summary>
@@ -91,14 +104,56 @@ public sealed class SpeechListener : IDisposable
             return null;
         if (!Models.TryGetValue(language, out var model))
         {
-            LoadNativeLibraries();
-            var folder = ModelFolder(language);
-            Vosk.Vosk.SetLogLevel(-1);
-            model = await Task.Run(() => new Model(folder));
+            Preload(language);
+            try
+            {
+                model = await Loading[language];
+            }
+            finally
+            {
+                Loading.Remove(language); // a failed load is tried afresh next time
+            }
             Models[language] = model;
         }
         return new SpeechListener(hub, model, grammar);
     }
+
+    /// <summary>
+    /// Running from the project, the model sits on the WSL share, where Vosk takes ~17 s to read
+    /// it (under 1 s from a local disk): copy it once to user://speech-cache and use that.
+    /// </summary>
+    private static string LocalCopy(string folder, string language)
+    {
+        if (!folder.StartsWith(@"\\") && !folder.StartsWith("//"))
+            return folder;
+        var local = Path.Combine(ProjectSettings.GlobalizePath("user://speech-cache"), language);
+        var marker = Path.Combine(local, ".complete");
+        if (!File.Exists(marker))
+        {
+            if (Directory.Exists(local))
+                Directory.Delete(local, true);
+            foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
+            {
+                var target = Path.Combine(local, Path.GetRelativePath(folder, file));
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                File.Copy(file, target);
+            }
+            File.WriteAllText(marker, "");
+        }
+        return local;
+    }
+
+    /// <summary>Starts loading a language's model in the background, so it is ready by Start.</summary>
+    public static void Preload(string language)
+    {
+        if (!Available(language) || Models.ContainsKey(language) || Loading.ContainsKey(language))
+            return;
+        LoadNativeLibraries();
+        var folder = ModelFolder(language);
+        Loading[language] = Task.Run(() => new Model(LocalCopy(folder, language)));
+    }
+
+    private static readonly Dictionary<string, Task<Model>> Loading = new();
 
     public void Start()
     {

@@ -33,6 +33,7 @@ public class NameDrillTests
         var answers = new[] { new NameAnswer(5, 1.0), new NameAnswer(4, 3.0), new NameAnswer(4, 3.1) };
         var j = NameDrill.Grade(Notes, answers, 1.0);
         Assert.Equal(new[] { NameResult.WrongName, NameResult.Missed, NameResult.Right, NameResult.Missed }, j.Select(x => x.Result));
+        Assert.Equal(new int?[] { 5, null, 4, null }, j.Select(x => x.Said)); // what was said, for the caption
     }
 
     [Fact]

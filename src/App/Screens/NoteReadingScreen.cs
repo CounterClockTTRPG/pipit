@@ -43,7 +43,10 @@ public partial class NoteReadingScreen : Screen
     private double _t0 = double.NaN, _spb = 1;
     private Core.Music.Song? _song;
 
-    private static readonly int[] Tempos = { 50, 70, 90 };
+    private static readonly int[] Tempos = { 35, 50, 70, 90 };
+    private int _seenWords;
+    private readonly Button _test;
+    private bool _testing;
 
     public override string Title => "Note reading";
 
@@ -52,10 +55,21 @@ public partial class NoteReadingScreen : Screen
         _status = Ui.Text("", PipitTheme.Lead, PipitTheme.InkSoft, HorizontalAlignment.Center);
         _start = Ui.Primary(Ui.Button("▶ Start", Start, PipitTheme.Lead));
         _start.CustomMinimumSize = new Vector2(160, 56);
-        _speed = Ui.Options(new[] { "Slow", "Medium", "Fast" }, 0, _ => { });
-        _answerBy = Ui.Options(new[] { "Tap the names", "Say the names" }, 0, _ => { });
+        _speed = Ui.Options(new[] { "Very slow", "Slow", "Medium", "Fast" }, 1, _ => { });
+        _test = Ui.Button("🎤 Test", ToggleTest, PipitTheme.Small + 2);
+        _test.TooltipText = Ui.T("Say a note name and see what Pipit hears.");
+        _test.Visible = false;
+        _answerBy = Ui.Options(new[] { "Tap the names", "Say the names" }, 0, ix =>
+        {
+            _test.Visible = ix == 1;
+            // Start loading the speech model now, so it is ready by the time Start is pressed.
+            if (ix == 1)
+                Audio.SpeechListener.Preload(S.Settings.Language);
+            else if (_testing)
+                ToggleTest();
+        });
         _names.Alignment = BoxContainer.AlignmentMode.Center;
-        var top = Ui.HBox(14, Ui.Label("Speed", PipitTheme.Body, PipitTheme.InkSoft), _speed, _answerBy, Ui.Spacer(),
+        var top = Ui.HBox(14, Ui.Label("Speed", PipitTheme.Body, PipitTheme.InkSoft), _speed, _answerBy, _test, Ui.Spacer(),
             Ui.Quiet(Ui.Button("My notes", () => Main.Instance.Show(new NoteStatsScreen()), 18)));
         AddChild(Ui.VBox(18, top,
             Ui.Text("Name each note on its beat: tap its name, or press its letter. The count-in gives four clicks first.", PipitTheme.Body, PipitTheme.InkSoft),
@@ -90,6 +104,7 @@ public partial class NoteReadingScreen : Screen
 
     public override void Exit()
     {
+        _testing = false;
         _speech?.Stop();
         _speech?.Dispose();
         _speech = null;
@@ -121,15 +136,10 @@ public partial class NoteReadingScreen : Screen
     {
         if (!double.IsNaN(_t0))
             return;
-        if (Speaking && _speech is null)
-        {
-            _start.Disabled = true;
-            _status.Text = Ui.T("Getting ready to listen…");
-            _speech = await Audio.SpeechListener.Create(S.Audio, S.Settings.Language, Core.Practice.NoteWords.Grammar(Letters));
-            _start.Disabled = false;
-            if (!IsInsideTree())
-                return;
-        }
+        if (_testing)
+            ToggleTest();
+        if (Speaking && !await EnsureSpeech())
+            return;
         if (_played)
             NewNotes();
         _played = false;
@@ -141,13 +151,73 @@ public partial class NoteReadingScreen : Screen
         S.Clicks.Schedule(Enumerable.Range(0, CountIn + Notes).Select(i => (_t0 + i * _spb, i % 4 == 0)));
         _start.Disabled = true;
         _heard.Text = "";
+        _seenWords = 0;
         if (Speaking)
             _speech?.Start();
         _status.Text = Ui.T(Speaking ? "Listen to the count-in, then say each name on its click…" : "Listen to the count-in…");
         _status.Modulate = Colors.White;
     }
 
+    /// <summary>Loads the speech model if needed; false (with a message) when it cannot listen.</summary>
+    private async System.Threading.Tasks.Task<bool> EnsureSpeech()
+    {
+        if (_speech is not null)
+            return true;
+        _start.Disabled = _test.Disabled = true;
+        _status.Text = Ui.T("Getting ready to listen… (the first time takes a little while)");
+        try
+        {
+            _speech = await Audio.SpeechListener.Create(S.Audio, S.Settings.Language, Core.Practice.NoteWords.Grammar(Letters));
+        }
+        catch (Exception e)
+        {
+            GD.PushError($"Speech: {e}");
+            _status.Text = string.Format(Ui.T("Pipit could not start listening ({0}). Tap the names instead."), e.Message);
+        }
+        _start.Disabled = _test.Disabled = false;
+        if (_speech is null || !IsInsideTree())
+            return false;
+        _status.Text = "";
+        return true;
+    }
+
+    /// <summary>The Test button: listens until pressed again, showing every name it hears.</summary>
+    private async void ToggleTest()
+    {
+        if (_testing)
+        {
+            _testing = false;
+            _speech?.Stop();
+            _test.Text = Ui.T("🎤 Test");
+            return;
+        }
+        if (!double.IsNaN(_t0) || !await EnsureSpeech())
+            return;
+        _testing = true;
+        _speech!.Start();
+        _test.Text = Ui.T("■ Stop test");
+        _status.Text = Ui.T("Say a note name…");
+        _status.Modulate = Colors.White;
+    }
+
     private double NoteTime(int i) => _t0 + (CountIn + i) * _spb;
+
+    private static string LetterName(int letter) => S.NoteName(60 + NaturalOffsets[letter]);
+
+    /// <summary>Marks the note being named around <paramref name="time"/> and writes the name under it.</summary>
+    private void ShowNamed(int letter, double time)
+    {
+        for (var i = 0; i < _notes.Count; i++)
+        {
+            if (_marked.Contains(i) || Math.Abs(time - NoteTime(i)) > _spb * 0.75)
+                continue;
+            _marked.Add(i);
+            var right = letter == NameDrill.LetterOf(_notes[i]);
+            _staff.SetMark(i, right ? NoteMark.Perfect : NoteMark.Wrong);
+            _staff.SetCaption(i, LetterName(letter), right ? PipitTheme.Good : PipitTheme.Bad);
+            return;
+        }
+    }
 
     private void Answer(int letter)
     {
@@ -155,16 +225,7 @@ public partial class NoteReadingScreen : Screen
             return;
         var now = S.Audio.Now;
         _answers.Add(new NameAnswer(letter, now));
-        // Mark the note being named straight away.
-        for (var i = 0; i < _notes.Count; i++)
-        {
-            if (_marked.Contains(i) || Math.Abs(now - NoteTime(i)) > _spb / 2)
-                continue;
-            _marked.Add(i);
-            var right = letter == NameDrill.LetterOf(_notes[i]);
-            _staff.SetMark(i, right ? NoteMark.Perfect : NoteMark.Wrong);
-            break;
-        }
+        ShowNamed(letter, now); // straight away; the grading at the end has the last word
     }
 
     public override void _UnhandledInput(InputEvent e)
@@ -184,6 +245,13 @@ public partial class NoteReadingScreen : Screen
 
     public override void _Process(double delta)
     {
+        if (_testing && _speech is not null)
+        {
+            // The last few words heard, as note names ("?" for a word that is not one).
+            var words = _speech.WordsSoFar.Where(w => w != "[unk]").TakeLast(8)
+                .Select(w => Core.Practice.NoteWords.LetterFor(w, Letters) is { } l ? LetterName(l) : "?");
+            _heard.Text = string.Format(Ui.T("I hear: {0}"), string.Join("  ", words));
+        }
         if (double.IsNaN(_t0))
             return;
         var now = S.Audio.Now;
@@ -193,7 +261,17 @@ public partial class NoteReadingScreen : Screen
         if (beat >= 0 && now < NoteTime(Notes - 1) + _spb / 2)
             _status.Text = "";
         if (Speaking && _speech is not null)
+        {
             _heard.Text = _speech.Partial;
+            // Words appear a moment after they are said: put each new one under the note it was
+            // probably meant for. The exact times come with the final result.
+            var words = _speech.WordsSoFar;
+            if (words.Count < _seenWords)
+                _seenWords = words.Count;
+            for (; _seenWords < words.Count; _seenWords++)
+                if (Core.Practice.NoteWords.LetterFor(words[_seenWords], Letters) is { } letter)
+                    ShowNamed(letter, now - 0.4);
+        }
         if (now > NoteTime(Notes - 1) + _spb * 0.6)
             Finish();
     }
@@ -217,6 +295,9 @@ public partial class NoteReadingScreen : Screen
         foreach (var r in results)
         {
             _staff.SetMark(r.Index, r.RightOnTime ? NoteMark.Perfect : r.Result == NameResult.Missed ? NoteMark.Missed : r.Result == NameResult.Right ? NoteMark.Good : NoteMark.Wrong);
+            // Under each note: what was said or tapped (right on the beat, late, wrong, or nothing).
+            _staff.SetCaption(r.Index, r.Said is { } said ? LetterName(said) : "–",
+                r.RightOnTime ? PipitTheme.Good : r.Result == NameResult.Right ? PipitTheme.Warn : r.Result == NameResult.Missed ? PipitTheme.InkSoft : PipitTheme.Bad);
             S.Progress.Note(PlayerProgress.Reading, Kind, r.WrittenMidi).Record(r.RightOnTime, 0, now);
         }
         var good = results.Count(r => r.RightOnTime);
