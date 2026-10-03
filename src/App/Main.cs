@@ -62,7 +62,7 @@ public partial class Main : Control
         // Normally the app starts by asking who is playing; the test and screenshot runs go
         // straight to Home as the last player.
         var args = OS.GetCmdlineUserArgs();
-        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback" || a.StartsWith("--lessonprobe=") || a.StartsWith("--speechprobe="));
+        var diagnostic = args.Any(a => a is "--smoke" or "--shots" or "--micprobe" or "--miccheck" or "--loopback" || a.StartsWith("--lessonprobe=") || a.StartsWith("--speechprobe=") || a == "--icon");
         Show(diagnostic ? new HomeScreen() : new ProfileScreen());
 
         if (OS.GetCmdlineUserArgs().Contains("--smoke"))
@@ -86,6 +86,8 @@ public partial class Main : Control
             LessonProbe(probe["--lessonprobe=".Length..]);
         if (OS.GetCmdlineUserArgs().FirstOrDefault(a => a.StartsWith("--speechprobe=")) is { } speech)
             SpeechProbe(speech["--speechprobe=".Length..]);
+        if (OS.GetCmdlineUserArgs().Contains("--icon"))
+            RenderIcon();
         if (OS.GetCmdlineUserArgs().Contains("--loopback"))
         {
             var d = new Diagnostics();
@@ -384,6 +386,30 @@ public partial class Main : Control
         }
         GD.Print(ok ? $"PROBE OK ({blocks.Count} tries)" : $"PROBE FAILED ({blocks.Count} tries)");
         GetTree().Quit(ok ? 0 : 1);
+    }
+
+    // ---- `-- --icon`: draws Pip on a round paper badge into user://icon.png (needs a window) ----
+
+    private async void RenderIcon()
+    {
+        const int size = 512;
+        var viewport = new SubViewport { Size = new Vector2I(size, size), TransparentBg = true, RenderTargetUpdateMode = SubViewport.UpdateMode.Always };
+        var badge = new Panel { Size = new Vector2(size, size) };
+        var round = new StyleBoxFlat { BgColor = PipitTheme.Paper, BorderColor = PipitTheme.Accent, AntiAliasing = true };
+        round.SetCornerRadiusAll(size / 2);
+        round.SetBorderWidthAll(18);
+        badge.AddThemeStyleboxOverride("panel", round);
+        viewport.AddChild(badge);
+        var pip = new Views.PipView { Position = new Vector2(size * 0.1f, size * 0.12f), Size = new Vector2(size * 0.8f, size * 0.8f) };
+        viewport.AddChild(pip);
+        AddChild(viewport);
+        pip.SetMood(Views.PipMood.Singing, 0);
+        for (var i = 0; i < 20; i++)
+            await ToSignal(RenderingServer.Singleton, RenderingServer.SignalName.FramePostDraw);
+        var path = ProjectSettings.GlobalizePath("user://icon.png");
+        viewport.GetTexture().GetImage().SavePng(path);
+        GD.Print("ICON " + path);
+        GetTree().Quit();
     }
 
     // ---- speech probe: `-- --speechprobe=file.wav[,letters]` plays a recording (16-bit mono)
