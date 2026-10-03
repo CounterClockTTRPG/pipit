@@ -13,6 +13,43 @@ public class SurvivalTests
         Enumerable.Range(from, count).Select(i => J(i, NoteResult.Hit));
 
     [Fact]
+    public void Each_note_is_graded_for_the_callout()
+    {
+        var notes = new[] { J(0, NoteResult.Hit, Timing.Perfect), J(1, NoteResult.Hit, Timing.Great), J(2, NoteResult.Hit, Timing.Good),
+            J(3, NoteResult.Hit, Timing.Early), J(4, NoteResult.Hit, Timing.Late), J(5, NoteResult.Missed), J(6, NoteResult.WrongNote) };
+        Assert.Equal(new[] { Grade.Perfect, Grade.Great, Grade.Good, Grade.Early, Grade.Late, Grade.Miss, Grade.Wrong },
+            Callouts.From(notes, 0).Select(c => c.Grade));
+    }
+
+    [Fact]
+    public void Streaks_call_out_milestones_and_a_long_streak_that_breaks()
+    {
+        var run = Perfects(25).Append(J(25, NoteResult.Missed)).Concat(Perfects(3, 26)).ToList();
+        var all = Callouts.From(run, 0);
+        Assert.Equal(new int?[] { 10, 20 }, all.Where(c => c.Milestone is not null).Select(c => c.Milestone));
+        Assert.Equal(2, all[9].Multiplier);
+        Assert.Equal(25, all[25].StreakLost);
+        Assert.Equal(0, all[25].Streak);
+        Assert.Equal(3, all[^1].Streak);
+        // Only the new ones are returned, but the streak counts from the start.
+        var tail = Callouts.From(run, 20);
+        Assert.Equal(9, tail.Count);
+        Assert.Equal(21, tail[0].Streak);
+        // A short streak that breaks is not worth a callout.
+        Assert.Null(Callouts.From(Perfects(3).Append(J(3, NoteResult.Missed)), 3).Single().StreakLost);
+        Assert.True(Callouts.IsMilestone(50));
+        Assert.False(Callouts.IsMilestone(40));
+    }
+
+    [Fact]
+    public void A_full_combo_is_every_note_hit()
+    {
+        Assert.True(Callouts.FullCombo(Survival.Evaluate(Perfects(12)), 12));
+        Assert.False(Callouts.FullCombo(Survival.Evaluate(Perfects(11)), 12));
+        Assert.False(Callouts.FullCombo(Survival.Evaluate(Perfects(5).Append(J(5, NoteResult.Missed)).Concat(Perfects(6, 6))), 12));
+    }
+
+    [Fact]
     public void Combo_raises_the_multiplier_every_ten_notes_up_to_four()
     {
         Assert.Equal(1, Survival.MultiplierFor(9));

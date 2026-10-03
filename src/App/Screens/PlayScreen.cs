@@ -55,6 +55,12 @@ public partial class PlayScreen : Screen
     private HBoxContainer _survivalBar = null!;
     private SurvivalState? _survival;
     private int? _rank;
+    // Survival callouts over the music: the grade of each note, the streak, milestones.
+    private readonly Label _gradeLabel = new() { HorizontalAlignment = HorizontalAlignment.Center, MouseFilter = Control.MouseFilterEnum.Ignore };
+    private readonly Label _streakLabel = new() { HorizontalAlignment = HorizontalAlignment.Center, MouseFilter = Control.MouseFilterEnum.Ignore };
+    private readonly Label _calloutLabel = new() { HorizontalAlignment = HorizontalAlignment.Center, MouseFilter = Control.MouseFilterEnum.Ignore };
+    private Tween? _gradeTween, _calloutTween;
+    private int _calledOut;
     private Tolerances _tolerances = Tolerances.Normal;
     private double _tempoFactor = 1;
 
@@ -149,7 +155,25 @@ public partial class PlayScreen : Screen
         _survivalLabel.AddThemeFontSizeOverride("font_size", 20);
         _survivalBar = Ui.HBox(12, Ui.Label("❤", 20, PipitTheme.Bad), _life, _survivalLabel);
         _survivalBar.Visible = false;
-        var views = Ui.Expand(Ui.VBox(4, _survivalBar, _bars, _staff, _highway, _progress), true, true);
+        var views = Ui.VBox(4, _survivalBar, _bars, _staff, _highway, _progress);
+        views.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        // The callouts float over the music, a third of the way down, and never take a click.
+        foreach (var (label, size) in new[] { (_gradeLabel, 46), (_streakLabel, 22), (_calloutLabel, 30) })
+        {
+            label.AddThemeFontOverride("font", PipitTheme.BoldFont);
+            label.AddThemeFontSizeOverride("font_size", size);
+            label.AddThemeConstantOverride("outline_size", 8);
+            label.AddThemeColorOverride("font_outline_color", PipitTheme.Paper);
+        }
+        var callouts = Ui.VBox(0, _gradeLabel, _streakLabel, _calloutLabel);
+        callouts.MouseFilter = Control.MouseFilterEnum.Ignore;
+        callouts.SetAnchorsPreset(Control.LayoutPreset.CenterTop);
+        callouts.AnchorTop = callouts.AnchorBottom = 0.22f;
+        callouts.GrowHorizontal = Control.GrowDirection.Both;
+        var stage = Ui.Expand(new Control { MouseFilter = Control.MouseFilterEnum.Ignore }, true, true);
+        stage.AddChild(views);
+        stage.AddChild(callouts);
+        views.MinimumSizeChanged += () => stage.CustomMinimumSize = views.GetCombinedMinimumSize();
         _nextLabel = Ui.Label("", 18, PipitTheme.InkSoft, HorizontalAlignment.Center);
         var side = Ui.VBox(4, Ui.MinSize(_diagram, 200, 330), _nextLabel);
         _feedback = Ui.Text("", 20, PipitTheme.Ink, HorizontalAlignment.Center);
@@ -236,7 +260,7 @@ public partial class PlayScreen : Screen
         _results.SizeFlagsStretchRatio = 0.9f;
         _results.Visible = false;
 
-        AddChild(Ui.VBox(10, header, _intro, Ui.Expand(Ui.HBox(16, views, side), true, true), _feedback, _results, controls));
+        AddChild(Ui.VBox(10, header, _intro, Ui.Expand(Ui.HBox(16, stage, side), true, true), _feedback, _results, controls));
         AddChild(_player);
         _player.Finished += OnPlayerFinished;
         UpdateControls();
@@ -481,6 +505,8 @@ public partial class PlayScreen : Screen
         _life.Value = Survival.MaxLife;
         _survivalLabel.Text = "";
         _highway.Hud = "";
+        _calledOut = 0;
+        _gradeLabel.Text = _streakLabel.Text = _calloutLabel.Text = "";
         SetState(State.Running);
     }
 
@@ -624,6 +650,7 @@ public partial class PlayScreen : Screen
                     if (_mode == Mode.Survival)
                     {
                         UpdateSurvival(Survival.Evaluate(live.Notes));
+                        CallOut(live.Notes);
                         if (_survival is { Alive: false })
                         {
                             Finish(aborted: false);
@@ -650,6 +677,52 @@ public partial class PlayScreen : Screen
                 ShowFingeringAt(_beat);
                 break;
         }
+    }
+
+    /// <summary>The grade of each newly judged note, the streak, and milestones or a lost streak.</summary>
+    private void CallOut(IReadOnlyList<NoteJudgement> judgements)
+    {
+        var fresh = Callouts.From(judgements, _calledOut);
+        _calledOut = judgements.Count;
+        if (fresh.Count == 0)
+            return;
+        var last = fresh[^1];
+        var (text, colour) = last.Grade switch
+        {
+            Grade.Perfect => (Ui.T("Perfect!"), PipitTheme.Accent),
+            Grade.Great => (Ui.T("Great!"), PipitTheme.Good),
+            Grade.Good => (Ui.T("Good"), PipitTheme.Good),
+            Grade.Early => (Ui.T("Early"), PipitTheme.Warn),
+            Grade.Late => (Ui.T("Late"), PipitTheme.Warn),
+            Grade.Miss => (Ui.T("Miss"), PipitTheme.Bad),
+            _ => (Ui.T("Wrong note"), PipitTheme.Bad),
+        };
+        _gradeTween = Pop(_gradeLabel, text, colour, _gradeTween, hold: 0.35, grow: last.Grade == Grade.Perfect ? 1.35f : 1.15f);
+        _streakLabel.Text = last.Streak >= 3 ? string.Format(Ui.T("{0} in a row"), last.Streak) + (last.Multiplier > 1 ? $"   ×{last.Multiplier}" : "") : "";
+        _streakLabel.AddThemeColorOverride("font_color", last.Multiplier > 1 ? PipitTheme.Accent : PipitTheme.Ink);
+        // A milestone or a lost streak among the new notes gets the big line.
+        if (fresh.LastOrDefault(c => c.Milestone is not null) is { Milestone: { } m } milestone)
+            _calloutTween = Pop(_calloutLabel, m <= 30 ? string.Format(Ui.T("Streak bonus: points ×{0}!"), milestone.Multiplier) : string.Format(Ui.T("{0} in a row!"), m),
+                PipitTheme.Accent, _calloutTween, hold: 1.2, grow: 1.4f);
+        else if (fresh.LastOrDefault(c => c.StreakLost is not null) is { StreakLost: { } lost })
+            _calloutTween = Pop(_calloutLabel, string.Format(Ui.T("Streak of {0} lost"), lost), PipitTheme.Bad, _calloutTween, hold: 1.0, grow: 1.1f);
+    }
+
+    /// <summary>Shows a callout that bounces in and fades out.</summary>
+    private Tween Pop(Label label, string text, Color colour, Tween? running, double hold, float grow)
+    {
+        running?.Kill();
+        label.Text = text;
+        label.AddThemeColorOverride("font_color", colour);
+        label.Modulate = Colors.White;
+        var size = label.GetCombinedMinimumSize();
+        label.PivotOffset = new Vector2(Math.Max(label.Size.X, size.X) / 2, size.Y / 2);
+        label.Scale = new Vector2(grow, grow);
+        var tween = CreateTween();
+        tween.TweenProperty(label, "scale", Vector2.One, 0.18).SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        tween.TweenInterval(hold);
+        tween.TweenProperty(label, "modulate:a", 0.0, 0.35);
+        return tween;
     }
 
     private void UpdateSurvival(SurvivalState state)
@@ -763,6 +836,8 @@ public partial class PlayScreen : Screen
             summary.AddChild(Ui.Label(st.Alive
                 ? Ui.T("You survived to the end!")
                 : string.Format(Ui.T("Out of life after {0:0}% of the song."), 100.0 * st.Judged / _expected.Count), 18, st.Alive ? PipitTheme.Good : PipitTheme.Bad));
+            if (Callouts.FullCombo(st, _expected.Count))
+                summary.AddChild(Ui.Label(Ui.T("Full combo! Every note hit."), 20, PipitTheme.Accent));
             summary.AddChild(Ui.Label(string.Format(Ui.T("Best combo {0}"), st.BestCombo) + (_rank is { } r ? "   " + string.Format(Ui.T("Rank {0} on this song's board"), r) : ""), 16));
             var board = S.Progress.Leaderboards.GetValueOrDefault(PlayerProgress.SongKey(_song.Id, S.Instrument.Kind.ToString())) ?? new List<ScoreEntry>();
             var rows = Ui.VBox(2);
@@ -922,6 +997,16 @@ public partial class PlayScreen : Screen
     {
         _bars.Visible = _staff.Visible = false;
         _highway.Visible = true;
+    }
+
+    /// <summary>For `--shots`: a survival run's callouts after ten perfect notes (a milestone).</summary>
+    public void DebugSurvivalCallouts()
+    {
+        var notes = _song.Melody.Performance.Take(10)
+            .Select(n => new NoteJudgement(new ExpectedNote(n.Index, n.Pitch.Midi, n.StartBeat, n.EndBeat), NoteResult.Hit, null, 0, Timing.Perfect, true, true, 0)).ToList();
+        _survivalBar.Visible = true;
+        UpdateSurvival(Survival.Evaluate(notes));
+        CallOut(notes);
     }
 
     /// <summary>For `--shots`: show the score instead of the bars.</summary>

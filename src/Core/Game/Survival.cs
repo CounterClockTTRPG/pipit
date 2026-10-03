@@ -55,6 +55,54 @@ public static class Survival
     public static int MultiplierFor(int combo) => Math.Min(4, 1 + combo / 10);
 }
 
+/// <summary>How one note in a survival run is called out.</summary>
+public enum Grade { Perfect, Great, Good, Early, Late, Miss, Wrong }
+
+/// <summary>
+/// What to show for one newly judged note: its grade, the streak after it, a milestone reached
+/// (10, 20, 30 in a row raise the multiplier; then every 25), and a streak of 5 or more that it broke.
+/// </summary>
+public sealed record Callout(Grade Grade, int Streak, int Multiplier, int? Milestone, int? StreakLost);
+
+public static class Callouts
+{
+    public static Grade GradeOf(NoteJudgement j) => j.Result switch
+    {
+        NoteResult.Missed => Grade.Miss,
+        NoteResult.WrongNote => Grade.Wrong,
+        _ => j.Timing switch
+        {
+            Timing.Perfect => Grade.Perfect,
+            Timing.Great => Grade.Great,
+            Timing.Good => Grade.Good,
+            Timing.Early => Grade.Early,
+            _ => Grade.Late,
+        },
+    };
+
+    public static bool IsMilestone(int streak) => streak > 0 && (streak <= 30 ? streak % 10 == 0 : streak % 25 == 0);
+
+    /// <summary>Callouts for the judgements from <paramref name="from"/> on (all of them in time order, as Survival replays them).</summary>
+    public static IReadOnlyList<Callout> From(IEnumerable<NoteJudgement> judgements, int from)
+    {
+        var result = new List<Callout>();
+        var streak = 0;
+        var i = 0;
+        foreach (var j in judgements.OrderBy(j => j.Expected.Start))
+        {
+            var hit = j.Result == NoteResult.Hit;
+            var lost = !hit && streak >= 5 ? streak : (int?)null;
+            streak = hit ? streak + 1 : 0;
+            if (i++ >= from)
+                result.Add(new Callout(GradeOf(j), streak, Survival.MultiplierFor(streak), IsMilestone(streak) ? streak : null, lost));
+        }
+        return result;
+    }
+
+    /// <summary>Every note of the song hit, none missed or wrong.</summary>
+    public static bool FullCombo(SurvivalState state, int noteCount) => state.Alive && state.Judged == noteCount && state.BestCombo == noteCount;
+}
+
 /// <summary>One leaderboard entry. <see cref="Reached"/> is how far into the song the run got (0-1).</summary>
 public sealed record ScoreEntry(string Player, long Score, double Accuracy, double Reached, int BestCombo, double TempoFactor, DateTime When);
 

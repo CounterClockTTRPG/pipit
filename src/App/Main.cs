@@ -266,6 +266,17 @@ public partial class Main : Control
         GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "highway.png"));
         Back();
 
+        // Survival callouts: a grade, the streak and a milestone over the highway.
+        var survival = new PlayScreen(Services.Instance.Songs.Get("ode-to-joy")!);
+        Show(survival);
+        survival.DebugShowHighway();
+        for (var i = 0; i < 10; i++)
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        survival.DebugSurvivalCallouts();
+        await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
+        GetViewport().GetTexture().GetImage().SavePng(System.IO.Path.Combine(dir, "survival-callouts.png"));
+        Back();
+
         // The Studio conductor during a held note and during the rest after it.
         var studio = new StudioScreen();
         Show(studio);
