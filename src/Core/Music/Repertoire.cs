@@ -6,6 +6,9 @@ namespace Pipit.Core.Music;
 /// <summary>How the Songs screen groups the repertoire.</summary>
 public enum RepertoireGrouping { Period, Composer, Difficulty }
 
+/// <summary>The order of songs within each group.</summary>
+public enum RepertoireSort { Difficulty, Name }
+
 /// <summary>A heading and its songs. <see cref="Key"/> is a period id, a composer name, "" for an ungrouped list, or <see cref="Repertoire.FavouritesKey"/>.</summary>
 public sealed record SongGroup(string Key, IReadOnlyList<Song> Songs);
 
@@ -58,13 +61,16 @@ public static class Repertoire
     }
 
     /// <summary>
-    /// The songs (already in display order) filtered by period, composer and query, then grouped;
-    /// favourites come first in a group of their own and are not repeated below.
+    /// The songs (already easiest first) filtered by period, composer and query, sorted, then
+    /// grouped; favourites come first in a group of their own and are not repeated below.
+    /// <paramref name="language"/> picks the titles that <see cref="RepertoireSort.Name"/> sorts by.
     /// </summary>
     public static IReadOnlyList<SongGroup> Arrange(IEnumerable<Song> songs, RepertoireGrouping by, IReadOnlySet<string> favourites,
-        string? period = null, string? composer = null, string query = "")
+        string? period = null, string? composer = null, string query = "", RepertoireSort sort = RepertoireSort.Difficulty, string language = "en")
     {
         var shown = songs.Where(s => (period is null || s.Period == period) && (composer is null || ComposerName(s.Composer) == composer) && Matches(s, query)).ToList();
+        if (sort == RepertoireSort.Name)
+            shown = shown.OrderBy(s => Fold(s.Title(language)).Trim(), StringComparer.Ordinal).ToList();
         var groups = new List<SongGroup>();
         var favourite = shown.Where(s => favourites.Contains(s.Id)).ToList();
         if (favourite.Count > 0)

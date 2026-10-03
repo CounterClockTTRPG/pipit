@@ -71,4 +71,16 @@ public class RepertoireTests
         Assert.Equal("la-folia-theme", Assert.Single(Assert.Single(groups).Songs).Id);
         Assert.Empty(Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Difficulty, None, query: "no such song"));
     }
+
+    [Fact]
+    public void Sorting_by_name_ignores_accents_and_uses_the_language()
+    {
+        static string Fold(string t) => new string(t.Normalize(System.Text.NormalizationForm.FormD)
+            .Where(c => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+            .Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray()).Trim();
+        var titles = Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Difficulty, None, sort: RepertoireSort.Name, language: "nl")
+            .Single().Songs.Select(s => Fold(s.Title("nl"))).ToList();
+        Assert.All(titles.Zip(titles.Skip(1)), pair => Assert.True(string.CompareOrdinal(pair.First, pair.Second) <= 0, $"{pair.First} before {pair.Second}"));
+        Assert.StartsWith("a", titles[0]);
+    }
 }

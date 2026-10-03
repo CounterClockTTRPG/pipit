@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -53,6 +54,7 @@ public partial class LibraryScreen : Screen
 
     // Remembered while the app runs, so coming back from a song keeps the view.
     private static RepertoireGrouping _grouping = RepertoireGrouping.Period;
+    private static RepertoireSort _sort = RepertoireSort.Difficulty;
     private static string _query = "";
     private readonly VBoxContainer _repertoire = Ui.VBox(14);
 
@@ -69,34 +71,50 @@ public partial class LibraryScreen : Screen
             _list.AddChild(Grid(chapter.Select(song => SongTile(song, false))));
         }
         _list.AddChild(Ui.VBox(0, Heading(Ui.T("Repertoire")),
-            Ui.Label("More music, from easiest to hardest. The dots show how hard a piece is; tap ♡ to keep a piece at the top.", PipitTheme.Small + 1, PipitTheme.InkSoft)));
+            Ui.Label("More music. The dots show how hard a piece is; tap ♡ to keep a piece at the top.", PipitTheme.Small + 1, PipitTheme.InkSoft)));
         _list.AddChild(Controls());
         _list.AddChild(_repertoire);
         FillRepertoire();
     }
 
-    /// <summary>Search and the grouping toggle (Show all / By type / By composer).</summary>
+    /// <summary>Search, the grouping toggle (Show all / By type / By composer) and the order (Easiest first / A-Z).</summary>
     private Control Controls()
     {
         var search = new LineEdit { Text = _query, PlaceholderText = Ui.T("Search: title, composer, style…"), ClearButtonEnabled = true, CustomMinimumSize = new Vector2(320, 0) };
         search.AddThemeColorOverride("font_placeholder_color", PipitTheme.InkSoft);
         search.TextChanged += text => { _query = text; FillRepertoire(); };
-        var row = Ui.HBox(8, search, new Control { CustomMinimumSize = new Vector2(12, 0) });
-        var group = new ButtonGroup();
-        foreach (var (grouping, label) in new[] { (RepertoireGrouping.Difficulty, "Show all"), (RepertoireGrouping.Period, "By type"), (RepertoireGrouping.Composer, "By composer") })
-        {
-            var button = new Button { Text = Ui.T(label), ToggleMode = true, ButtonGroup = group, ButtonPressed = _grouping == grouping };
-            button.Pressed += () => { _grouping = grouping; FillRepertoire(); };
-            row.AddChild(button);
-        }
+        // A flow, so the controls wrap onto a second line in a narrow window.
+        var row = new HFlowContainer();
+        row.AddThemeConstantOverride("h_separation", 8);
+        row.AddThemeConstantOverride("v_separation", 8);
+        row.AddChild(search);
+        row.AddChild(Toggles(new[] { (RepertoireGrouping.Difficulty, "Show all"), (RepertoireGrouping.Period, "By type"), (RepertoireGrouping.Composer, "By composer") },
+            _grouping, g => _grouping = g));
+        row.AddChild(Toggles(new[] { (RepertoireSort.Difficulty, "Easiest first"), (RepertoireSort.Name, "A–Z") }, _sort, o => _sort = o));
         return row;
+    }
+
+    /// <summary>A row of toggle buttons of which one is pressed.</summary>
+    private HBoxContainer Toggles<T>((T Value, string Label)[] options, T current, Action<T> choose) where T : struct, Enum
+    {
+        var box = Ui.HBox(6);
+        var group = new ButtonGroup();
+        box.AddChild(new Control { CustomMinimumSize = new Vector2(10, 0) });
+        foreach (var (value, label) in options)
+        {
+            var button = new Button { Text = Ui.T(label), ToggleMode = true, ButtonGroup = group, ButtonPressed = value.Equals(current) };
+            button.Pressed += () => { choose(value); FillRepertoire(); };
+            box.AddChild(button);
+        }
+        return box;
     }
 
     private void FillRepertoire()
     {
         foreach (var child in _repertoire.GetChildren())
             child.QueueFree();
-        var groups = Repertoire.Arrange(S.Songs.Songs.Where(s => s.Chapter == 0), _grouping, S.Progress.Favourites, query: _query);
+        var groups = Repertoire.Arrange(S.Songs.Songs.Where(s => s.Chapter == 0), _grouping, S.Progress.Favourites, query: _query,
+            sort: _sort, language: S.Settings.Language);
         if (groups.Count == 0)
             _repertoire.AddChild(Ui.Label("No songs match your search.", PipitTheme.Small + 1, PipitTheme.InkSoft));
         foreach (var group in groups)
