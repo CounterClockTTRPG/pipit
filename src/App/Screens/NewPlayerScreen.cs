@@ -49,11 +49,11 @@ public partial class NewPlayerScreen : Screen
             birds.AddChild(button);
         }
 
-        _save = Ui.Button(editing is null ? "Create player" : "Save", Save, 22);
+        _save = Ui.Primary(Ui.Button(editing is null ? "Create player" : "Save", Save, 22));
         _save.Disabled = _name.Text.Trim() == "";
         var actions = Ui.HBox(16, _save);
         if (editing is not null)
-            actions.AddChild(Ui.Button("Remove player", ConfirmRemove, 18));
+            actions.AddChild(Ui.Quiet(Ui.Button("Remove player", ConfirmRemove, 18)));
 
         var form = Ui.VBox(14,
             Ui.Label("Name", 20), _name,

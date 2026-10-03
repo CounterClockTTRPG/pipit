@@ -53,7 +53,7 @@ public partial class TrainerScreen : Screen
         _random.Toggled += _ => Restart();
         var range = Ui.Options(Ranges.Select(r => r.Name).ToArray(), 0, ix => { _range = ix; Restart(); });
 
-        var controls = Ui.HBox(16, Ui.Label("Notes:"), range, _random, _showFingering, Ui.Spacer(), Ui.Button("Skip", Next, 18));
+        var controls = Ui.HBox(16, Ui.Label("Notes:"), range, _random, _showFingering, Ui.Spacer(), Ui.Quiet(Ui.Button("Skip", Next, 18)));
         var center = Ui.VBox(8, _target, _feedback, _gauge, _score, Ui.HBox(0, Ui.Spacer(), _pip, Ui.Spacer()));
         var main = Ui.HBox(40, Ui.Expand(center), Ui.MinSize(_diagram, 200, 420));
         AddChild(Ui.VBox(20, controls, Ui.Expand(main, true, true)));

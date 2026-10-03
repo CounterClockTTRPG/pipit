@@ -46,8 +46,8 @@ public partial class LessonScreen : Screen
             }
         }
         _progress = Ui.Label("", 18, PipitTheme.InkSoft);
-        _finish = Ui.Button("✓ Finish lesson", Finish, 20);
-        _next = Ui.Button("Next step →", Next, 20);
+        _finish = Ui.Primary(Ui.Button("✓ Finish lesson", Finish, 20));
+        _next = Ui.Primary(Ui.Button("Next step →", Next, 20));
         _next.Visible = false;
         page.AddChild(Ui.HBox(16, _progress, Ui.Spacer(), _finish, _next));
 

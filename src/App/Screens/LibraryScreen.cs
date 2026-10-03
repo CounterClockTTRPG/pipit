@@ -48,11 +48,11 @@ public partial class LibraryScreen : Screen
         foreach (var chapter in S.Songs.Songs.GroupBy(s => s.Chapter))
         {
             var repertoire = chapter.Key == 0;
-            _list.AddChild(Ui.Label(repertoire ? Ui.T("Repertoire") : string.Format(Ui.T("Chapter {0}"), chapter.Key), 28, PipitTheme.Accent));
-            if (repertoire)
-                _list.AddChild(Ui.Label("More music, from easiest to hardest. The dots show how hard a piece is.", 17, PipitTheme.InkSoft));
-            else if (ChapterNotes.TryGetValue(chapter.Key, out var notes))
-                _list.AddChild(Ui.Label(notes, 17, PipitTheme.InkSoft));
+            var heading = Ui.Label(repertoire ? Ui.T("Repertoire") : string.Format(Ui.T("Chapter {0}"), chapter.Key), PipitTheme.Heading, PipitTheme.Ink);
+            heading.AddThemeFontOverride("font", PipitTheme.BoldFont);
+            var note = repertoire ? "More music, from easiest to hardest. The dots show how hard a piece is."
+                : ChapterNotes.TryGetValue(chapter.Key, out var notes) ? notes : "";
+            _list.AddChild(Ui.VBox(0, heading, Ui.Label(note, PipitTheme.Small + 1, PipitTheme.InkSoft)));
             // A flow, not a fixed grid: as many cards per row as the window holds. Cards have a
             // fixed width and wrap their text, so a long composer name cannot widen the page
             // (which pushed the scrollbar off-screen).
@@ -68,11 +68,9 @@ public partial class LibraryScreen : Screen
                 var playable = fit is not null;
                 var moved = fit is { Semitones: not 0 } ? "  ↕" : "";
                 var dots = new string('●', song.Difficulty) + new string('○', 5 - song.Difficulty);
-                var button = Ui.Button(song.Title(S.Settings.Language) + "\n" + (repertoire ? Ui.Composer(song.Composer) + "  " + dots + moved + "\n" : "") + stars + (record.Plays > 0 ? $"  {record.BestAccuracy:0}%" : ""),
-                    () => Main.Instance.Show(new PlayScreen(song)), 20);
-                button.CustomMinimumSize = new Vector2(360, repertoire ? 118 : 90);
-                button.AutowrapMode = TextServer.AutowrapMode.WordSmart;
-                button.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
+                var sub = (repertoire ? Ui.Composer(song.Composer) + "   " + dots + moved + "\n" : "") + stars + (record.Plays > 0 ? $"   {record.BestAccuracy:0}%" : "");
+                var button = Ui.Tile(song.Title(S.Settings.Language), sub, () => Main.Instance.Show(new PlayScreen(song)),
+                    300, repertoire ? 104 : 84, record.BestStars > 0 ? Ui.TileState.Done : Ui.TileState.Normal, translate: false);
                 button.Disabled = !playable;
                 button.TooltipText = !playable ? Ui.T("Some notes are outside this recorder's range.")
                     : fit is { Semitones: not 0 } f ? PlayScreen.TransposedText(f.Semitones) : Ui.Composer(song.Composer);

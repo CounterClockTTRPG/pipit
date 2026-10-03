@@ -47,12 +47,12 @@ public partial class IntroScreen : Screen
 
     public IntroScreen()
     {
-        _section = Ui.Label("", 30, PipitTheme.Accent);
+        _section = Ui.Heading("", 30);
         _text = Ui.Text("", 24, PipitTheme.Ink);
-        _back = Ui.Button("Back", () => Go(_page - 1), 20);
+        _back = Ui.Quiet(Ui.Button("Back", () => Go(_page - 1), 20));
         _next = Ui.Button("Next", () => { if (_page == Pages.Count - 1) Finish(calibrate: false); else Go(_page + 1); }, 22);
-        _calibrate = Ui.Button("Calibrate now", () => Finish(calibrate: true), 22);
-        var skip = Ui.Button("Skip", () => Finish(calibrate: false), 18);
+        _calibrate = Ui.Primary(Ui.Button("Calibrate now", () => Finish(calibrate: true), 22));
+        var skip = Ui.Quiet(Ui.Button("Skip", () => Finish(calibrate: false), 18));
         var bubble = new PanelContainer();
         bubble.AddThemeStyleboxOverride("panel", PipitTheme.Box(Colors.White, PipitTheme.Accent, 24));
         bubble.AddChild(Ui.VBox(14, _section, _text));
@@ -74,6 +74,8 @@ public partial class IntroScreen : Screen
         var last = _page == Pages.Count - 1;
         _next.Text = Ui.T(last ? "Go to Home" : "Next");
         _calibrate.Visible = last;
+        // One orange button per page: Next, or on the last page Calibrate now.
+        _next.ThemeTypeVariation = last ? "" : "PrimaryButton";
     }
 
     private void Finish(bool calibrate)

@@ -50,14 +50,21 @@ public partial class PitchStrip : Control
         float Y(double written) => (float)(Size.Y - (written - LowWritten + 0.5) * rowH);
         var font = PipitTheme.Font;
 
+        // Natural notes are labelled; where two are a semitone apart (Mi-Fa, Si-Do) and the rows
+        // are short, the upper label is left out rather than drawn over the lower one.
+        var fontSize = (int)Math.Min(rowH * 1.7f, 16);
+        var lastLabel = float.MaxValue;
         for (var m = LowWritten; m <= HighWritten; m++)
         {
             var natural = Services.Spell(m).Alter == 0;
             if (Target == m)
                 DrawRect(new Rect2(labelW, Y(m) - rowH / 2, Size.X - labelW, rowH), PipitTheme.Accent with { A = 0.25f });
             DrawLine(new Vector2(labelW, Y(m)), new Vector2(Size.X, Y(m)), natural ? PipitTheme.PaperDark : PipitTheme.Paper, 1);
-            if (natural && rowH >= 5)
-                DrawString(font, new Vector2(4, Y(m) + Math.Min(rowH * 1.7f, 16) * 0.35f), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, (int)Math.Min(rowH * 1.7f, 16), PipitTheme.InkSoft);
+            if (natural && rowH >= 5 && lastLabel - Y(m) >= fontSize * 1.05f)
+            {
+                DrawString(font, new Vector2(4, Y(m) + fontSize * 0.35f), NoteLabel(m), HorizontalAlignment.Left, labelW - 6, fontSize, PipitTheme.InkSoft);
+                lastLabel = Y(m);
+            }
         }
 
         if (_frames.Count == 0)

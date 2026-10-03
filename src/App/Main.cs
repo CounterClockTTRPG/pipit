@@ -13,6 +13,7 @@ public partial class Main : Control
     private Control _content = null!;
     private Label _title = null!;
     private Button _back = null!;
+    private PanelContainer _bar = null!;
     private int _smokeFrame = -1;
     private readonly Queue<System.Func<Screen>> _smokeScreens = new();
 
@@ -30,10 +31,18 @@ public partial class Main : Control
         layout.SetAnchorsPreset(LayoutPreset.FullRect);
         AddChild(layout);
 
-        var bar = new PanelContainer();
-        bar.AddThemeStyleboxOverride("panel", new StyleBoxFlat { BgColor = PipitTheme.PaperDark, ContentMarginLeft = 16, ContentMarginRight = 16, ContentMarginTop = 8, ContentMarginBottom = 8 });
-        _back = Ui.Button("← Back", Back, 18);
-        _title = Ui.Label("", 24, PipitTheme.Ink);
+        var bar = _bar = new PanelContainer();
+        // A quiet header: the page title, a text-only back button, a thin wooden rule under it.
+        bar.AddThemeStyleboxOverride("panel", new StyleBoxFlat
+        {
+            BgColor = PipitTheme.Paper, BorderColor = PipitTheme.Wood, BorderWidthBottom = 2,
+            ContentMarginLeft = 16, ContentMarginRight = 16, ContentMarginTop = 6, ContentMarginBottom = 6,
+        });
+        _back = Ui.Quiet(Ui.Button("← Back", Back, PipitTheme.Body));
+        _title = Ui.Label("", PipitTheme.Lead, PipitTheme.Ink);
+        _title.AddThemeFontOverride("font", PipitTheme.BoldFont);
+        _title.CustomMinimumSize = new Vector2(0, 44);
+        _title.VerticalAlignment = VerticalAlignment.Center;
         bar.AddChild(Ui.HBox(16, _back, _title));
         layout.AddChild(bar);
 
@@ -312,8 +321,9 @@ public partial class Main : Control
     {
         screen.SetAnchorsPreset(LayoutPreset.FullRect);
         _content.AddChild(screen);
-        _title.Text = Ui.T(screen.Title);
+        _title.Text = screen.ShowTitle ? Ui.T(screen.Title) : "";
         _back.Visible = _stack.Count > 1;
+        _bar.Visible = screen.ShowTitle || _back.Visible;
         screen.Enter();
     }
 

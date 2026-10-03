@@ -17,7 +17,7 @@ public partial class ProfileScreen : Screen
     {
         _cards.AddThemeConstantOverride("h_separation", 20);
         _cards.AddThemeConstantOverride("v_separation", 20);
-        var heading = Ui.Label("Who's playing?", 48, PipitTheme.Accent, HorizontalAlignment.Center);
+        var heading = Ui.Heading("Who's playing?", PipitTheme.Display, HorizontalAlignment.Center);
         var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         scroll.AddChild(Ui.Expand(Ui.VBox(30, heading, _cards)));
         AddChild(scroll);
@@ -46,7 +46,7 @@ public partial class ProfileScreen : Screen
         content.MouseFilter = MouseFilterEnum.Ignore;
         button.AddChild(content);
         button.Pressed += () => Choose(player);
-        var edit = Ui.Button("✎ " + Ui.T("Edit"), () => Main.Instance.Show(new NewPlayerScreen(player)), 15);
+        var edit = Ui.Quiet(Ui.Button("✎ " + Ui.T("Edit"), () => Main.Instance.Show(new NewPlayerScreen(player)), 15));
         return Ui.VBox(6, button, edit);
     }
 

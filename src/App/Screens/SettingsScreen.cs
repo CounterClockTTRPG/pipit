@@ -39,7 +39,7 @@ public partial class SettingsScreen : Screen
         var naming = Ui.Options(new[] { "Do Re Mi (fixed Do)", "C D E (letters)" }, (int)S.Settings.Naming, ix => { S.Settings.Naming = (NoteNaming)ix; S.Save(); });
 
         var instrument = Ui.VBox(10,
-            Ui.Label("Your recorders", 26, PipitTheme.Accent),
+            Ui.Heading("Your recorders", 26),
             editor,
             Ui.Label("Language"), language,
             Ui.Label("Note names"), naming,
@@ -54,7 +54,7 @@ public partial class SettingsScreen : Screen
         _checkButton = Ui.Button("Check for Windows voice processing", RunCheck, 18);
         _checkStatus = Ui.Text("", 16, PipitTheme.InkSoft);
         var mic = Ui.VBox(10,
-            Ui.Label("Microphone", 26, PipitTheme.Accent),
+            Ui.Heading("Microphone", 26),
             Ui.Text("Play or speak: the bar shows what the selected microphone hears. \"Default\" is the Windows default device, normally the built-in microphone.", 15, PipitTheme.InkSoft),
             _devices, _meter, _testButton, _testStatus,
             Ui.Text("The check plays a short tone through your speakers (take headphones off) and listens whether the microphone keeps hearing it.", 15, PipitTheme.InkSoft),

@@ -60,7 +60,7 @@ public partial class StudioScreen : Screen
             _record,
             Ui.Text("Guided takes record what Pipit asks for, so they can check recognition and become test recordings.", 14, PipitTheme.InkSoft),
             _sessions, Ui.HBox(8, Ui.Label("Speed", 16), Ui.Expand(_speed), _speedLabel), _guided,
-            Ui.Label("Takes", 20, PipitTheme.Accent), _takes,
+            Ui.Heading("Takes", 20), _takes,
             Ui.HBox(8, _play, _star, _delete), openFolder,
             Ui.HBox(8, Ui.Label("Input", 14, PipitTheme.InkSoft), Ui.Expand(_meter))), 340, 0);
 

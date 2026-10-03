@@ -617,6 +617,26 @@ Each milestone ends with something you can run and try with your own recorder.
 
 ---
 
+## 18. Visual design (2026-10-03)
+
+The look is defined in code in `src/App/UI/PipitTheme.cs` and the helpers in `Ui`.
+
+- **Type:** Andika (SIL, OFL), a typeface made for children learning to read: unambiguous
+  letters, generous spacing. Bundled in `assets/fonts/`, so it no longer depends on Windows
+  fonts. Symbols it lacks (♯ ♭, emoji) fall back to the system fonts. Scale: 15 / 19 / 22 /
+  28 / 44 px (`PipitTheme.Small`, `Body`, `Lead`, `Heading`, `Display`).
+- **Colour carries meaning:** Pip's orange marks the one main action on a screen (Continue,
+  Start, Create player, the current study step) and rewards (scores, unlocked badges);
+  meadow green means done or right; sky blue (the left hand's colour) is information; wood is
+  the surface of everything else. Headings are bold ink, not orange.
+- **Three button weights:** `Ui.Primary` (filled orange), the default wooden button, and
+  `Ui.Quiet` (text only: Back, Skip, Edit, the less-used places on Home).
+- **Tiles** (`Ui.Tile`): a bold title and a soft line, growing with their text; Done (green,
+  ✓), Current (orange), Locked (faded). Used on Home, the study path and the song library.
+- **Home** greets the player by name next to Pip, with one big Continue button into the next
+  study step; Studio, Achievements, Calibrate and Settings are quiet links below the tiles.
+- Tick boxes are drawn images (`assets/ui/`), keyboard focus is a visible ring.
+
 ## 17. Requests from play-testing (2026-10-01)
 
 Done in M2: casual (wait) mode, speed dial (songs and Studio), XP and levels, achievements,

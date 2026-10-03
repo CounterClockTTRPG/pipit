@@ -39,7 +39,7 @@ public partial class PlayScreen : Screen
     private readonly VBoxContainer _resultsBox = Ui.VBox(8);
     private readonly Button _start, _listen;
     private readonly OptionButton _modeOption, _difficultyOption;
-    private readonly HSlider _speed = new() { MinValue = 50, MaxValue = 120, Step = 5, Value = 100, CustomMinimumSize = new Vector2(160, 0) };
+    private readonly HSlider _speed = new() { MinValue = 50, MaxValue = 120, Step = 5, Value = 100, CustomMinimumSize = new Vector2(120, 0), SizeFlagsVertical = SizeFlags.ShrinkCenter };
     private readonly CheckBox _metronome = new() { ButtonPressed = true };
     private readonly CheckBox _help = new() { ButtonPressed = true };
     private readonly AudioStreamPlayer _player = new();
@@ -86,6 +86,7 @@ public partial class PlayScreen : Screen
     private double _previewLead;
 
     public override string Title => _song.Title(S.Settings.Language);
+    public override bool ShowTitle => false;
 
     private readonly bool _fromPath;
 
@@ -116,7 +117,9 @@ public partial class PlayScreen : Screen
         _barNotes = song.Melody.Performance.Select(n => new BarNote(n.Index, n.Pitch.Midi, n.StartBeat, n.Beats) { Pitch = n.Pitch }).ToList();
         var language = S.Settings.Language;
 
-        var header = Ui.HBox(16, Ui.Label(Title, 30, PipitTheme.Ink), Ui.Label(Ui.Composer(song.Composer), 18, PipitTheme.InkSoft), Ui.Spacer());
+        var titleLabel = Ui.Label(Title, PipitTheme.Heading + 4, PipitTheme.Ink);
+        titleLabel.AddThemeFontOverride("font", PipitTheme.BoldFont);
+        var header = Ui.HBox(16, titleLabel, Ui.VBox(0, Ui.Spacer(), Ui.Label(Ui.Composer(song.Composer), PipitTheme.Body, PipitTheme.InkSoft)), Ui.Spacer());
         _best = Ui.Label("", 18, PipitTheme.Accent);
         if (_transposed != 0)
             header.AddChild(Ui.Label(TransposedText(_transposed), 16, PipitTheme.InkSoft));
@@ -154,7 +157,8 @@ public partial class PlayScreen : Screen
         _modeOption = Ui.Options(new[] { "Rhythm", "Casual", "Survival" }, 0, ix => { _mode = (Mode)ix; UpdateControls(); });
         _modeOption.TooltipText = Ui.T("Rhythm: play along with the beat. Casual: the song waits for each note. Survival: keep going until your life runs out, for a high score.");
         _difficultyOption = Ui.Options(Tolerances.All.Select(t => t.Name).ToArray(), 1, ix => _tolerances = Tolerances.All[ix]);
-        _speedLabel = Ui.Label("", 16, PipitTheme.Ink);
+        _speedLabel = Ui.Label("", PipitTheme.Small + 1, PipitTheme.Ink);
+        _speedLabel.CustomMinimumSize = new Vector2(44, 0);
         _speed.ValueChanged += v =>
         {
             _tempoFactor = v / 100;
@@ -165,9 +169,10 @@ public partial class PlayScreen : Screen
         _metronome.Text = Ui.T("Metronome");
         _help.Text = Ui.T("Fingering");
         _help.Toggled += on => side.Visible = on;
-        _listen = Ui.Button("♪ Listen", ToggleListen, 18);
-        _start = Ui.Button("▶ Start", ToggleRun, 20);
-        _start.CustomMinimumSize = new Vector2(140, 48);
+        _listen = Ui.Button("♪ Listen", ToggleListen, PipitTheme.Body);
+        _listen.CustomMinimumSize = new Vector2(120, 52);
+        _start = Ui.Primary(Ui.Button("▶ Start", ToggleRun, PipitTheme.Lead));
+        _start.CustomMinimumSize = new Vector2(160, 56);
         var viewOption = Ui.Options(new[] { "Bars", "Score", "Highway" }, view, ix =>
         {
             _bars.Visible = ix == 0;
@@ -200,11 +205,15 @@ public partial class PlayScreen : Screen
             _ = Synth.Renderer(); // start loading the SoundFont now
         // The options wrap onto a second line in a narrow window instead of widening the screen.
         var options = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
-        options.AddThemeConstantOverride("h_separation", 14);
+        options.AddThemeConstantOverride("h_separation", 10);
         options.AddThemeConstantOverride("v_separation", 8);
-        foreach (var c in new Control[] { viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", 16), _speed, _speedLabel, _difficultyOption, _metronome, _help })
+        foreach (var c in new Control[] { viewOption, _names, partOption, _band, _modeOption, Ui.Label("Speed", PipitTheme.Small + 1, PipitTheme.InkSoft), _speed, _speedLabel, _difficultyOption, _metronome, _help })
+        {
+            if (c is CheckBox or OptionButton)
+                c.AddThemeFontSizeOverride("font_size", PipitTheme.Small + 2);
             options.AddChild(c);
-        var controls = Ui.HBox(14, options, _listen, _start);
+        }
+        var controls = Ui.HBox(14, options, Ui.VBox(0, Ui.Spacer(), _listen, Ui.Spacer()), _start);
 
         // Results (and the optional analysis) scroll inside their own area, which shares the
         // height with the music instead of pushing the controls off the screen.
@@ -804,7 +813,7 @@ public partial class PlayScreen : Screen
                 ? "✓ This step of the study path is done."
                 : "To finish this step: earn a star in Rhythm mode, or find at least 80% of the notes first time in Casual mode."), 16, done ? PipitTheme.Good : PipitTheme.InkSoft));
             if (done && S.Study.After(pathStep) is { } next)
-                nextStep = Ui.Button("Next step →", () => { Main.Instance.Back(); StudyScreen.Open(next); }, 16);
+                nextStep = Ui.Primary(Ui.Button("Next step →", () => { Main.Instance.Back(); StudyScreen.Open(next); }, 18));
         }
         var back = Ui.Button(_fromPath ? "Study path" : "Songs", Main.Instance.Back, 16);
         var buttons = Ui.VBox(8, analyse, replay, back);

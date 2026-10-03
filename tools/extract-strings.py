@@ -13,7 +13,7 @@ import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # A text may be several literals joined with +, which the compiler turns into one string.
-CALL = re.compile(r'Ui\.(?:T|Label|Text|Button)\(\s*((?:"(?:[^"\\]|\\.)*"\s*\+\s*)*"(?:[^"\\]|\\.)*")')
+CALL = re.compile(r'Ui\.(?:T|Label|Text|Button|Heading)\(\s*((?:"(?:[^"\\]|\\.)*"\s*\+\s*)*"(?:[^"\\]|\\.)*")')
 OPTIONS = re.compile(r'Ui\.Options\(\s*new\[\]\s*\{([^}]*)\}')
 TITLE = re.compile(r'override string Title => "((?:[^"\\]|\\.)*)"')
 TILE = re.compile(r'Tile\(\s*"((?:[^"\\]|\\.)*)",\s*"((?:[^"\\]|\\.)*)"')

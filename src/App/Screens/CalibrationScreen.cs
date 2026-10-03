@@ -43,7 +43,7 @@ public partial class CalibrationScreen : Screen
 
     public CalibrationScreen()
     {
-        _heading = Ui.Label("", 36, PipitTheme.Accent);
+        _heading = Ui.Heading("", 34);
         _body = Ui.Text("", 22, PipitTheme.Ink);
         _status = Ui.Text("", 20, PipitTheme.InkSoft);
         _primary = Ui.Button("", OnPrimary);

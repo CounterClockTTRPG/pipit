@@ -21,7 +21,8 @@ public partial class TunerScreen : Screen
 
     public TunerScreen()
     {
-        _note = Ui.Label("–", 96, PipitTheme.Ink, HorizontalAlignment.Center);
+        _note = Ui.Label("–", 112, PipitTheme.Ink, HorizontalAlignment.Center);
+        _note.AddThemeFontOverride("font", PipitTheme.BoldFont);
         _detail = Ui.Text(" ", 20, PipitTheme.InkSoft, HorizontalAlignment.Center);
         var left = Ui.VBox(8, _note, _detail, _gauge);
         var top = Ui.HBox(32, Ui.Expand(left), Ui.MinSize(_diagram, 200, 360));

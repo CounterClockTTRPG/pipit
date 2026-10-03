@@ -77,7 +77,7 @@ public partial class LocalisationTests
         Assert.Empty(broken);
     }
 
-    [GeneratedRegex("""Ui\.(?:T|Label|Text|Button)\(\s*((?:"(?:[^"\\]|\\.)*"\s*\+\s*)*"(?:[^"\\]|\\.)*")""")]
+    [GeneratedRegex("""Ui\.(?:T|Label|Text|Button|Heading)\(\s*((?:"(?:[^"\\]|\\.)*"\s*\+\s*)*"(?:[^"\\]|\\.)*")""")]
     private static partial Regex Call();
     [GeneratedRegex("""Ui\.Options\(\s*new\[\]\s*\{([^}]*)\}""")]
     private static partial Regex Options();

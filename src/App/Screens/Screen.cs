@@ -9,6 +9,9 @@ public abstract partial class Screen : MarginContainer
 
     public abstract string Title { get; }
 
+    /// <summary>False where the page says it itself (Home greets the player instead).</summary>
+    public virtual bool ShowTitle => true;
+
     protected Screen()
     {
         SizeFlagsHorizontal = SizeFlags.ExpandFill;

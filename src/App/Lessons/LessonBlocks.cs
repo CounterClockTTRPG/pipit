@@ -28,7 +28,7 @@ public static partial class LessonBlocks
 
     public static Control Build(LessonBlock block, LessonContext context) => block switch
     {
-        HeadingBlock h => Ui.Label(h.Text, h.Level == 1 ? 32 : 24, PipitTheme.Accent),
+        HeadingBlock h => Ui.Heading(h.Text, h.Level == 1 ? 34 : 26),
         ParagraphBlock p => Rich(p.Text),
         ListBlock l => Rich(string.Join("\n", l.Items.Select(i => "•  " + i))),
         DirectiveBlock d => d.Name switch
