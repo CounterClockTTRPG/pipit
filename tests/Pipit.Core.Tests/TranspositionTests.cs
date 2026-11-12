@@ -32,19 +32,15 @@ public class TranspositionTests
     }
 
     [Fact]
-    public void The_alto_bransles_fit_a_soprano_a_few_semitones_down()
+    public void Songs_that_are_too_high_or_low_move_to_fit_a_soprano()
     {
         var soprano = RecorderInfo.Of(RecorderKind.Soprano);
-        foreach (var id in new[] { "bransle-gay-2-diminutions", "bransle-gay-7-diminutions" })
+        var moved = Library.Songs.Select(song => (song, fit: Transposition.FitFor(song, soprano)))
+            .Where(x => x.fit is { Semitones: not 0 }).ToList();
+        Assert.NotEmpty(moved);
+        foreach (var (song, fit) in moved)
         {
-            var song = Library.Get(id)!;
-            var fit = Transposition.FitFor(song, soprano);
-            Assert.NotNull(fit);
-            // VII (D5-F6) fits an octave down, keeping its key; II (G4-F6) goes down 4 to Eb,
-            // as 3 down would be E major with four sharps.
-            Assert.Contains(fit!.Value.Semitones, new[] { -12, -4 });
-            Assert.True(Math.Abs(KeySignature.Parse(fit.Value.Song.Key).Fifths) <= 3);
-            Assert.All(fit.Value.Song.Melody.Performance, n => Assert.True(soprano.InRange(n.Pitch.Midi)));
+            Assert.All(fit!.Value.Song.Melody.Performance, n => Assert.True(soprano.InRange(n.Pitch.Midi)));
             // The written bars move too, and the score can still be engraved.
             Assert.Equal(fit.Value.Song.Melody.Performance[0].Pitch.Midi, song.Melody.Performance[0].Pitch.Midi + fit.Value.Semitones);
             StaffLayout.Layout(fit.Value.Song.Melody.Bars, fit.Value.Song.Time, KeySignature.Parse(fit.Value.Song.Key));

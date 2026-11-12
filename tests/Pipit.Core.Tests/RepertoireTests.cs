@@ -34,7 +34,6 @@ public class RepertoireTests
         Assert.True(Repertoire.Matches(song, "vader jacob"));     // the Dutch title
         Assert.True(Repertoire.Matches(song, "traditional"));
         Assert.False(Repertoire.Matches(song, "jacob handel"));   // every word must match
-        Assert.True(Repertoire.Matches(Library.Get("ultima5-stones")!, "game ultima"));
     }
 
     [Fact]
@@ -49,15 +48,15 @@ public class RepertoireTests
     public void Composers_sort_by_surname_with_anonymous_last()
     {
         var keys = Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Composer, None).Select(g => g.Key).ToList();
-        Assert.True(keys.IndexOf("Johann Sebastian Bach") < keys.IndexOf("Jacob van Eyck"));
-        Assert.True(keys.IndexOf("Jacob van Eyck") < keys.IndexOf("George Frideric Handel"));
+        Assert.True(keys.IndexOf("Johann Sebastian Bach") < keys.IndexOf("George Frideric Handel"));
+        Assert.True(keys.IndexOf("George Frideric Handel") < keys.IndexOf("Georg Philipp Telemann"));
         Assert.Equal("Anonymous", keys.Last());
     }
 
     [Fact]
     public void Favourites_come_first_and_are_not_repeated()
     {
-        var favourites = new HashSet<string> { "ultima5-stones", "la-folia-theme" };
+        var favourites = new HashSet<string> { "la-mourisque", "greensleeves-to-a-ground-theme" };
         var groups = Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Period, favourites);
         Assert.Equal(Repertoire.FavouritesKey, groups[0].Key);
         Assert.Equal(favourites, groups[0].Songs.Select(s => s.Id).ToHashSet());
@@ -67,8 +66,8 @@ public class RepertoireTests
     [Fact]
     public void Filters_combine()
     {
-        var groups = Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Difficulty, None, period: "baroque", composer: "Arcangelo Corelli", query: "theme");
-        Assert.Equal("la-folia-theme", Assert.Single(Assert.Single(groups).Songs).Id);
+        var groups = Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Difficulty, None, period: "baroque", composer: "Anonymous", query: "theme");
+        Assert.Equal("greensleeves-to-a-ground-theme", Assert.Single(Assert.Single(groups).Songs).Id);
         Assert.Empty(Repertoire.Arrange(RepertoireSongs, RepertoireGrouping.Difficulty, None, query: "no such song"));
     }
 
